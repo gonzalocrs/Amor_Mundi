@@ -1,0 +1,10 @@
+# Rhino models are large - stored with Git LFS (GitHub's limit is 100 MB per normal file)
+*.3dm filter=lfs diff=lfs merge=lfs -text
+
+# Grasshopper files are binary: Git can't merge them, only replace them
+*.gh binary
+*.ghx binary
+
+# Python scripts: consistent line endings on every computer
+*.py text eol=lf
+*.md text eol=lf
