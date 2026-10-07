@@ -7,7 +7,8 @@ horizontally, like the print) tapers from t_bottom at the eaves to t_top at the 
 Every piece is HOLLOW and open top and bottom: a room-side wall, an outside wall,
 end walls and cross ribs, all `wall` thick (horizontal, i.e. print width).
 
-The lap between courses is made by offsetting the walls:
+By default (lap = 0) courses simply stack on flat bed joints and the rebar ties them.
+With lap > 0, courses also hook into each other by offsetting the walls:
   - room-side wall: runs the full course height
   - outside wall: shifted down by the lap depth - it hangs below the course line
     as a nose and stops short at the top, so the bed joints of the two walls
@@ -38,7 +39,7 @@ INPUTS  (only `rooms` is required - add the others as sliders when you want them
     step         item  float        inward step per course (sets pitch)    (default 150)
     t_bottom     item  float        thickness at the bottom course         (default 300)
     t_top        item  float        thickness at the top course            (default 100)
-    lap          item  float        lap depth as a share of thickness      (default 0.5)
+    lap          item  float        lap depth as a share of thickness, 0 = flat bed joints (default 0)
     wall         item  float        wall / rib thickness (print width)     (default 20)
     rib_spacing  item  float        target spacing of cross ribs           (default 500)
     hollow       item  bool         False = solid pieces, fast preview     (default True)
@@ -47,6 +48,10 @@ INPUTS  (only `rooms` is required - add the others as sliders when you want them
     speed        item  float        print speed in mm/s, for the check     (default 100)
     min_layer_t  item  float        shortest safe layer time in s          (default 30)
     piece        item  str          piece id to pick out, e.g. R0-C3-W-02  (default none)
+    rebar        item  bool         leave holes for rebar + model the bars  (default True)
+    bar_spacing  item  float        bar spacing along each row of bars     (default 500)
+    bar_d        item  float        bar diameter                           (default 12)
+    hole_d       item  float        printed hole diameter                  (default 30)
     min_open     item  float        stop when the top opening < this       (default 1000)
     max_courses  item  int          hard cap on courses                    (default 60)
     min_stagger  item  float        min offset from joints below           (default 250)
@@ -61,11 +66,24 @@ OUTPUTS
     toolpaths    print path per layer, tree {room; course; piece} - one branch = one piece,
                  layers in print order, each starting where the last one ended
                  (feed a branch to SaladSlicer: Join Open Contours -> Curve Slicer -> Program Generator)
-    beads        printed bead preview (meshes), same tree
+    beads        printed bead preview, ONE mesh per piece, tree {room; course} - same order
+                 as blocks / ids, so item i of a branch is the same piece in all three
     check        printability rating of every piece that isn't OK (RED / AMBER + reasons)
     piece_paths  layer paths of the picked `piece` - wire straight into Join Open Contours
-    piece_beads  bead preview of the picked `piece`
+    piece_beads  bead preview of the picked `piece`, one mesh
     piece_check  rating of the picked `piece`
+    rebar        the bars as Breps, tree {room}
+    rebar_list   bar schedule: id, length
+
+REBAR (rebar = True)
+Bars follow the slope of each face (straight, inside the shell), in two rows: one a bead
+in from the room-side wall, one a bead in from the outside wall, staggered by half a
+spacing. The zig-zag touches alternate walls exactly at the bars, in every course, and
+loops around each bar in an arc - the wall on one side and the arc on the other enclose
+the hole with one bead of concrete all round. Piece joints are moved to fall between bars.
+A bar runs up as long as every course has its hole: it stops where the piece gets too
+thin (3 beads + hole) or where it runs into a corner. Needs print_paths for the holes;
+the bars are modelled either way. With rebar on, bar_spacing replaces rib_spacing.
 
 PRINTABILITY CHECK (per piece, needs print_paths)
   RED   - a layer prints faster than min_layer_t (concrete below hasn't stiffened)
@@ -103,7 +121,7 @@ H = float(_d('course_H', 300.0))
 S = float(_d('step', 150.0))
 T0 = float(_d('t_bottom', 300.0))
 T1 = float(_d('t_top', 100.0))
-LAP = float(_d('lap', 0.5))
+LAP = float(_d('lap', 0.0))
 W = float(_d('wall', 20.0))
 RIB = float(_d('rib_spacing', 500.0))
 HOLLOW = bool(_d('hollow', True))
@@ -112,6 +130,10 @@ LH = float(_d('layer_H', 15.0))
 SPEED = float(_d('speed', 100.0))
 MIN_T = float(_d('min_layer_t', 30.0))
 PICK = str(_d('piece', '')).strip()
+REBAR = bool(_d('rebar', True))
+BAR_SP = float(_d('bar_spacing', 500.0))
+BAR_D = float(_d('bar_d', 12.0))
+HOLE_D = float(_d('hole_d', 30.0))
 MIN_OPEN = float(_d('min_open', 1000.0))
 MAX_C = int(_d('max_courses', 60))
 STAGGER = float(_d('min_stagger', 250.0))
@@ -123,6 +145,10 @@ MIN_CAV = 3.0  # narrower than this and the piece is printed solid
 SQ2 = math.sqrt(2.0)
 
 K = S / H                                  # inward run per unit of height
+
+R_H = HOLE_D / 2.0                         # rebar hole radius
+RA = R_H + W / 2.0                         # radius of the bead arc around a hole (centreline)
+T_NEED = 3 * W + HOLE_D                    # thinnest piece that fits wall + hole + arc + wall
 
 doc = Rhino.RhinoDoc.ActiveDoc
 TOL = doc.ModelAbsoluteTolerance if doc else 0.01
@@ -317,9 +343,12 @@ toolpaths = DataTree[object]()
 beads = DataTree[object]()
 check = []
 piece_paths = []
-piece_beads = []
+piece_beads = None
 piece_check = "no piece picked" if not PICK else "{} not found (needs print_paths on)".format(PICK)
 n_rating = {"OK": 0, "AMBER": 0, "RED": 0}
+rebar = DataTree[object]()
+rebar_list = []
+bar_lengths = []
 layer_heights = []
 n_zig = 0
 n_loop = 0
@@ -360,12 +389,12 @@ for r_i, rect in enumerate(rooms or []):
         """(w, z) outline of course c before hollowing. w is outward from the base rectangle."""
         z0, z1 = c * H, (c + 1) * H
         pts = [(inner(z0), z0)]
-        if c == n_c - 1:
+        if c == n_c - 1 or LAP <= 0:          # flat top
             pts += [(inner(z1), z1), (outer(z1), z1)]
         else:                                 # outside wall stops lap-depth below the course line
             zr = z1 - LAP * thick(z1)
             pts += [(inner(z1), z1), (inner(z1) + W, z1), (inner(zr) + W, zr), (outer(zr), zr)]
-        if c > 0:                             # outside wall + ribs hang down into the band below
+        if c > 0 and LAP > 0:                 # outside wall + ribs hang down into the band below
             zn = z0 - LAP * thick(z0)
             pts += [(outer(zn), zn), (inner(zn) + W + CLR, zn), (inner(z0) + W + CLR, z0)]
         else:
@@ -380,19 +409,50 @@ for r_i, rect in enumerate(rooms or []):
         return [(inner(zb) + W + NUDGE, zb), (inner(zt) + W + NUDGE, zt),
                 (outer(zt) - W, zt), (outer(zb) - W, zb)]
 
-    def layer_path(zm, band, ea, eb):
-        """One print layer of a piece as (u, w) points + closed flag.
-        ea / eb: centreline of the start / far end wall as a function of w."""
+    def bar_w(z, row):
+        """Bar axis at height z: one bead in from the room-side ('i') or outside ('o') wall.
+        Both faces are planes, so this is a straight line up the slope."""
+        return inner(z) + W + R_H if row == 'i' else outer(z) - W - R_H
+
+    def node_fits(u, row, zm, ea, eb):
+        """Does the arc around a hole at u fit between this piece's end walls?"""
+        wa = bar_w(zm, row)
+        return all(ea(w) + RA + W <= u <= eb(w) - RA - W for w in (wa - RA, wa, wa + RA))
+
+    def node_chain(nodes, zm, band, forward):
+        """Zig-zag through the bar nodes: straight legs, and an arc around each hole on the
+        cavity side - the wall closes the hole on the other side. In the hanging lap band the
+        room-side arcs are shortened to clear the room-side wall of the piece below."""
+        pts = []
+        for u_n, row in (nodes if forward else list(reversed(nodes))):
+            wa = bar_w(zm, row)
+            if row == 'i':
+                a0, a1 = (150.0, 30.0) if band == 'nose' else (180.0, 0.0)
+            else:
+                a0, a1 = 180.0, 360.0
+            arc = [(u_n + RA * math.cos(math.radians(a0 + (a1 - a0) * j / 8.0)),
+                    wa + RA * math.sin(math.radians(a0 + (a1 - a0) * j / 8.0))) for j in range(9)]
+            pts += arc if forward else arc[::-1]
+        return pts
+
+    def layer_path(zm, band, ea, eb, nodes=None):
+        """One print layer of a piece as (u, w) points + closed flag + whether it has a zig-zag.
+        ea / eb: centreline of the start / far end wall as a function of w.
+        nodes: rebar positions [(u, row)] in this piece - the zig-zag then runs through them."""
         wi = inner(zm) + W / 2.0              # room-side wall centreline
         wo = outer(zm) - W / 2.0              # outside wall centreline
         if band == 'top':                     # lap band above the outside wall: room-side wall only
             return [(ea(wi), wi), (eb(wi), wi)], False, False
+        if nodes and thick(zm) < T_NEED:
+            nodes = None
         # zig-zag touch lines: one bead in from each wall (in the nose band, clear of the wall below)
         zi = inner(zm) + 1.5 * W + CLR if band == 'nose' else wi + W
         zo = wo - W
         fits = zo - zi >= 0.5 * W
         if band == 'main':
             loop = [(ea(wi), wi), (eb(wi), wi), (eb(wo), wo), (ea(wo), wo)]
+            if nodes:
+                return loop + [(ea(zi), zi)] + node_chain(nodes, zm, band, True), False, True
             zig = zigzag(ea(zi), min(eb(zi), eb(zo)) - W, zi, zo, ea, eb) if fits else None
             if zig is None:
                 return loop + [loop[0]], True, False
@@ -401,6 +461,8 @@ for r_i, rect in enumerate(rooms or []):
         if zi >= wo - 0.5 * W:
             return [(ea(wo), wo), (eb(wo), wo)], False, False
         u = [(ea(zi), zi), (ea(wo), wo), (eb(wo), wo)]
+        if nodes:
+            return u + [(eb(zi), zi)] + node_chain(nodes, zm, band, False), False, True
         zig = zigzag(eb(zi), max(ea(zi), ea(zo)) + W, zi, zo, ea, eb) if fits else None
         if zig is None:
             return u + [(eb(zi), zi)], False, False
@@ -413,6 +475,17 @@ for r_i, rect in enumerate(rooms or []):
              ('W', 'y', ix0, -1, iy0, iy1),
              ('E', 'y', ix1, 1, iy0, iy1)]
 
+    # rebar positions along each side - the same in every course, so the holes line up.
+    # Centred on the side, alternating room-side ('i') and outside ('o') rows, half a spacing apart.
+    nodes = {}
+    for name, d, face, out, ua, ub in sides:
+        half_sp = BAR_SP / 2.0
+        k_max = int((ub - ua) / 2.0 / half_sp)
+        nodes[name] = [((ua + ub) / 2.0 + k * half_sp, 'i' if k % 2 == 0 else 'o')
+                       for k in range(-k_max, k_max + 1)]
+    bar_top = {}                              # (side, node index) -> last course it has a hole in
+    bar_alive = set((name, i) for name in nodes for i in range(len(nodes[name])))
+
     for c in range(n_c):
         z0, z1 = c * H, (c + 1) * H
         env = envelope(c)
@@ -421,6 +494,8 @@ for r_i, rect in enumerate(rooms or []):
         wm = (inner(zm) + outer(zm)) / 2.0    # mid-thickness, where lengths are measured
         t_here = thick(zm)
         can_hollow = HOLLOW and thick(z1) - 2 * W >= MIN_CAV
+        holes_here = REBAR and thick(z1) >= T_NEED
+        present = set()
         path = GH_Path(r_i, c)
         k_piece = 0
 
@@ -431,6 +506,26 @@ for r_i, rect in enumerate(rooms or []):
             if jb - ja < 50:                   # side too short: corner pieces meet in the middle
                 ja = jb = (hip_a + hip_b) / 2.0
             js = lay_run(ja, jb, below[name]) if jb > ja else []
+            if REBAR and jb > ja and len(nodes[name]) > 1:
+                # move every joint to the middle between two bars, so no joint cuts a hole
+                us = [u for u, row in nodes[name]]
+                mids = [(a + b) / 2.0 for a, b in zip(us, us[1:])]
+                up = [m for m in mids if m >= ja]
+                dn = [m for m in mids if m <= jb]
+                ja2 = up[0] if up else ja      # corner pieces only get longer, never shorter
+                jb2 = dn[-1] if dn else jb
+                if jb2 - ja2 < 0.5 * P_MIN:    # too little left between the corners: they meet at a bar gap
+                    centre = min(mids, key=lambda m: abs(m - (ja + jb) / 2.0))
+                    ja = jb = centre
+                    js = []
+                elif jb2 > ja2:
+                    ja, jb = ja2, jb2
+                    snapped = sorted(set(min(mids, key=lambda m: abs(m - j)) for j in js))
+                    js, last = [], ja         # drop joints that would leave a piece under half piece_min
+                    for j in snapped:
+                        if j - last >= 0.5 * P_MIN and jb - j >= 0.5 * P_MIN:
+                            js.append(j)
+                            last = j
             below[name] = [ja] + js + [jb]
 
             # (label, piece start/end, cavity cells, end wall centrelines for printing,
@@ -455,6 +550,12 @@ for r_i, rect in enumerate(rooms or []):
                 if brep is None:
                     failed.append(pid)
                     continue
+                piece_nodes = []              # rebar holes in this piece
+                if holes_here:
+                    for i_n, (u_n, row) in enumerate(nodes[name]):
+                        if node_fits(u_n, row, zm, ea, eb):
+                            piece_nodes.append((u_n, row))
+                            present.add((name, i_n))
                 if can_hollow:
                     cutters = [ruled(pl, d, face, out, cav, ca, cb) for ca, cb in cells]
                     cutters = [x for x in cutters if x is not None]
@@ -486,10 +587,11 @@ for r_i, rect in enumerate(rooms or []):
                     prev = None
                     picked = pid == PICK
                     worst_t, min_seg, sharpest, stub = 1e9, 1e9, 180.0, None
+                    piece_mesh = rg.Mesh()    # all layers of this piece as one mesh
                     for li in range(n_l):
                         zm = z_bot + (li + 0.5) * lh
                         band = 'nose' if (c > 0 and zm < z0) else ('top' if zm > zr else 'main')
-                        uw, closed, has_zig = layer_path(zm, band, ea, eb)
+                        uw, closed, has_zig = layer_path(zm, band, ea, eb, piece_nodes)
                         if has_zig:
                             n_zig += 1
                         else:
@@ -518,11 +620,9 @@ for r_i, rect in enumerate(rooms or []):
                         flat = [rg.Point3d(p.X, p.Y, p.Z) for p in (pts[:-1] if closed else pts)]
                         bm = bead_mesh(flat, closed, zt - lh / 2.0, W, lh)
                         if bm:
-                            beads.Add(bm, ppath)
+                            piece_mesh.Append(bm)
                         if picked:
                             piece_paths.append(crv)
-                            if bm:
-                                piece_beads.append(bm)
 
                         # printability numbers for this layer
                         segs = [pts[i].DistanceTo(pts[i + 1]) for i in range(len(pts) - 1)]
@@ -531,6 +631,12 @@ for r_i, rect in enumerate(rooms or []):
                         sharpest = min(sharpest, sharpest_corner(flat, closed))
                         if band == 'top':
                             stub = sum(segs) if stub is None else min(stub, sum(segs))
+
+                    piece_mesh.Normals.ComputeNormals()
+                    piece_mesh.Compact()
+                    beads.Add(piece_mesh, path)   # one mesh per piece, same order as blocks / ids
+                    if picked:
+                        piece_beads = piece_mesh
 
                     red, amber = [], []
                     if worst_t < MIN_T:
@@ -551,6 +657,30 @@ for r_i, rect in enumerate(rooms or []):
                     if picked:
                         piece_check = line
                 k_piece += 1
+
+        # a bar carries on only while every course has its hole
+        for key in list(bar_alive):
+            if key in present:
+                bar_top[key] = c
+            else:
+                bar_alive.discard(key)
+
+    # the bars: straight, up the slope, from the eave to the top of their last course
+    if REBAR:
+        side_of = dict((s[0], s) for s in sides)
+        for (name, i_n), c_last in sorted(bar_top.items()):
+            _, d, face, out, ua, ub = side_of[name]
+            u_n, row = nodes[name][i_n]
+            ends = []
+            for z in (0.0, (c_last + 1) * H):
+                x, y = xy(u_n, face + out * bar_w(z, row), d)
+                ends.append(pl.PointAt(x, y, z))
+            axis = rg.Line(ends[0], ends[1])
+            cyl = rg.Cylinder(rg.Circle(rg.Plane(ends[0], axis.Direction), BAR_D / 2.0), axis.Length)
+            rebar.Add(cyl.ToBrep(True, True), GH_Path(r_i))
+            bar_id = "R{}-{}-{}{:02d}".format(r_i, name, row, i_n + 1)
+            rebar_list.append("{}  {:.0f} mm  (courses 0-{})".format(bar_id, axis.Length, c_last))
+            bar_lengths.append(axis.Length)
 
     info.append("room {}: {} courses, rise {:.0f}, top opening {:.0f} x {:.0f}".format(
         r_i, n_c, z_top, ix1 - ix0 - 2 * K * z_top, iy1 - iy0 - 2 * K * z_top))
@@ -580,8 +710,22 @@ if PATHS and layer_heights:
         info.append("note: `hollow` shows straight ribs - the print paths use a zig-zag; "
                     "turn hollow off and look at `beads` for the printed result")
 
-if LAP <= 0 or LAP >= 1:
-    info.append("WARNING: lap should be between 0 and 1 (share of thickness)")
+if REBAR:
+    if bar_lengths:
+        info.append("rebar: {} bars, {:.1f} m total, longest {:.0f} mm, {:.0f} mm bars in {:.0f} mm holes".format(
+            len(bar_lengths), sum(bar_lengths) / 1000.0, max(bar_lengths), BAR_D, HOLE_D))
+    else:
+        info.append("rebar: no bars fit - pieces need at least {:.0f} mm thickness (3 beads + hole)".format(T_NEED))
+    if T_NEED > T1:
+        info.append("rebar: bars stop where the roof gets thinner than {:.0f} mm".format(T_NEED))
+    if BAR_SP / 4.0 < RA + W:
+        info.append("WARNING: bar_spacing too tight - joints can't fit between bars (need >= {:.0f})".format(
+            4 * (RA + W)))
+    if not PATHS:
+        info.append("rebar: bars modelled, but the holes are only in the print paths - turn print_paths on")
+
+if LAP < 0 or LAP >= 1:
+    info.append("WARNING: lap should be between 0 (no lap) and 1 (share of thickness)")
 if HOLLOW and n_solid:
     info.append("note: {} pieces too thin to hollow with {:.0f} mm walls - left solid".format(n_solid, W))
 if P_MAX < 1.5 * P_MIN:
