@@ -12,6 +12,7 @@ hollow, lapped pieces for **3D concrete printing**, sliced to printer programs w
 | `scripts/concrete_slicer.py` | General slicer: turns any closed geometry into printed-bead geometry (visual only) |
 | `grasshopper/Pyramide 10_1_2026.gh` | The Grasshopper definition (scripts pasted into Py3 components + SaladSlicer chain) |
 | `rhino/10_1_2026.3dm` | The Rhino model (stored with Git LFS) |
+| `details/` | Eave / roof-to-wall construction section 1:10 (PDF, SVG, PNG) and `eave_section.py`, the script that draws it |
 
 The input/output list for each script is at the top of each `.py` file.
 
