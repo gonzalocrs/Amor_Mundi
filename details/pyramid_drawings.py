@@ -41,36 +41,51 @@ class Sheet:
         self.s, self.ox, self.oz, self.w, self.h = 1.0 / scale, ox, oz, w, h
         self.scale = scale
         self.o = []; self.title, self.sub, self.legend, self.notes = title, sub, legend, notes
+        self.rec = []; self.layer = None; self.mute = 0     # recorder for the CAD (DXF) export: model-space geometry, mm
+    def _rec(self, *a):
+        if not self.mute: self.rec.append(a)
     def P(self, x, z): return (self.ox + x * self.s, self.oz - z * self.s)
     def pts(self, ps): return " ".join("{:.2f},{:.2f}".format(*self.P(*p)) for p in ps)
-    def poly(self, ps, fill="none", sw=0.25, stroke="#000", extra="", join="round"):
+    def poly(self, ps, fill="none", sw=0.25, stroke="#000", extra="", join="round", tw=None):
         if fill == PINK:
             fill = "#fff"                  # lattice cells are open air pockets (ventilation)
+        self._rec("poly", list(ps), fill, sw, stroke, self.layer, tw)
         self.o.append('<polygon points="{}" fill="{}" stroke="{}" stroke-width="{}" stroke-linejoin="{}" {}/>'.format(self.pts(ps), fill, stroke, sw, join, extra))
-    def line(self, ps, sw=0.25, color="#000", dash=None, extra=""):
+    def line(self, ps, sw=0.25, color="#000", dash=None, extra="", tw=None):
+        self._rec("line", list(ps), sw, color, dash, self.layer, tw)
         self.o.append('<polyline points="{}" fill="none" stroke="{}" stroke-width="{}" stroke-linejoin="round"{} {}/>'.format(
             self.pts(ps), color, sw, ' stroke-dasharray="{}"'.format(dash) if dash else "", extra))
-    def paths(self, polys, sw=0.25, color="#000"):
+    def paths(self, polys, sw=0.25, color="#000", layer=None):
+        self._rec("paths", [list(p) for p in polys], sw, layer or self.layer)
         d = " ".join("M" + " L".join("{:.1f},{:.1f}".format(*self.P(*q)) for q in pl) for pl in polys)
         self.o.append('<path d="{}" fill="none" stroke="{}" stroke-width="{}" stroke-linejoin="round"/>'.format(d, color, sw))
     def dot(self, x, z, r_mm, color=BLUE):
+        self._rec("circle", x, z, max(r_mm, 0.35 * self.scale), True, self.layer)
         px, py = self.P(x, z)
         self.o.append('<circle cx="{:.2f}" cy="{:.2f}" r="{:.2f}" fill="{}"/>'.format(px, py, max(r_mm * self.s, 0.35), color))
     def text(self, x, z, s, size=2.6, anchor="middle", weight="normal", rot=0, color="#000", italic=False):
+        self._rec("text", x, z, s, size, anchor, rot, self.layer)
         px, py = self.P(x, z)
         tr = ' transform="rotate({} {:.2f} {:.2f})"'.format(rot, px, py) if rot else ""
         self.o.append('<text x="{:.2f}" y="{:.2f}" font-size="{}" text-anchor="{}" font-weight="{}" fill="{}"{}{}>{}</text>'.format(
             px, py, size, anchor, weight, color, ' font-style="italic"' if italic else "", tr, s))
     def circle_label(self, x, z, label, r=2.6, fill="#fff", tc="#000"):
+        self._rec("circle", x, z, r * self.scale, False, "ANNOTATION")
+        self._rec("text", x, z - r * 0.36 * self.scale, str(label), r * 1.15, "middle", 0, "ANNOTATION")
+        self.mute += 1
         px, py = self.P(x, z)
         self.o.append('<circle cx="{:.2f}" cy="{:.2f}" r="{}" fill="{}" stroke="#000" stroke-width="0.3"/>'.format(px, py, r, fill))
         self.o.append('<text x="{:.2f}" y="{:.2f}" font-size="{}" text-anchor="middle" fill="{}">{}</text>'.format(px, py + r * 0.36, r * 1.15, tc, label))
+        self.mute -= 1
     def callout(self, n, x, z, tx, tz):
+        old, self.layer = self.layer, "ANNOTATION"
         self.line([(x, z), (tx, tz)], 0.2)
         self.dot(tx, tz, 0, "#000")
         self.circle_label(x, z, n, 2.4)
+        self.layer = old
     def dim_h(self, xs, z, text_off=1.0, ext=None, labels=None, size=2.5):
         """horizontal dimension chain at height z; ext = z the extension lines start from."""
+        _ol, self.layer = self.layer, "DIMS"
         s = self.s; tick = 1.2 / s
         self.line([(xs[0] - 1.5 / s, z), (xs[-1] + 1.5 / s, z)], 0.2)
         for x in xs:
@@ -81,7 +96,9 @@ class Sheet:
         for i, (a, b) in enumerate(zip(xs, xs[1:])):
             t = labels[i] if labels else "{:g}".format(round(b - a))
             self.text((a + b) / 2, z + 0.9 / s, t, size)
+        self.layer = _ol
     def dim_v(self, zs, x, ext=None, labels=None, size=2.5):
+        _ol, self.layer = self.layer, "DIMS"
         s = self.s; tick = 1.2 / s
         self.line([(x, zs[0] - 1.5 / s), (x, zs[-1] + 1.5 / s)], 0.2)
         for z in zs:
@@ -92,11 +109,14 @@ class Sheet:
         for i, (a, b) in enumerate(zip(zs, zs[1:])):
             t = labels[i] if labels else "{:g}".format(round(b - a))
             self.text(x - 0.9 / self.s, (a + b) / 2, t, size, rot=-90)
+        self.layer = _ol
     def level(self, x, z, label, side=1):
+        _ol, self.layer = self.layer, "DIMS"
         s = self.s
         self.line([(x, z), (x + side * 6 / s, z)], 0.2)
         self.poly([(x, z), (x + 1.2 / s, z + 1.6 / s), (x - 1.2 / s, z + 1.6 / s)], "#000", 0.1)
         self.text(x + side * 7 / s, z - 0.5 / s, label, 2.5, "start" if side > 0 else "end")
+        self.layer = _ol
     def svg(self):
         W, H = self.w, self.h
         tb = W - 112                      # title block x
@@ -182,7 +202,7 @@ def loops_g(sh, cid, origin, e_along, e_across, W, v0, v1, clip, sw=0.2):
             vc = ((vr(k) + vr(k + 1)) if side == 1 else (vl(k) + vl(k + 1))) / 2
             th = math.atan2(pitch / 2, abs(e_u - c_u) * W)
             polys.append([M(c_u + side * R_ * math.cos(-th + 2 * th * i / 12), vc + R_ * W * math.sin(-th + 2 * th * i / 12)) for i in range(13)])
-    sh.paths(polys, sw)
+    sh.paths(polys, sw, layer="AIR-ZONE-SYMBOL")
     clip_end(sh)
 
 def loops(sh, cid, xa, xb, z0, z1, sw=0.2):
@@ -206,7 +226,7 @@ def layers(sh, ps, z0, sw=0.12):
                 xs.append(a[0] + (b[0] - a[0]) * (z - a[1]) / (b[1] - a[1]))
         if len(xs) >= 2:
             segs.append([(min(xs), z), (max(xs), z)])
-    sh.paths(segs, sw)
+    sh.paths(segs, sw, layer="PRINT-LAYERS")
 
 def conc(sh, ps): sh.poly(ps, "#fff", 0.0); sh.poly(ps, "url(#conc)", 0.0)
 
@@ -248,6 +268,7 @@ def plan():
     sq = lambda h: [(-h, -h), (h, -h), (h, h), (-h, h)]
     dair = "M" + " L".join("{:.2f},{:.2f}".format(*sh.P(*q)) for q in sq(z1_)) + "Z M" + " L".join("{:.2f},{:.2f}".format(*sh.P(*q)) for q in sq(z0_)) + "Z"
     sh.o.append('<path d="{}" fill="#fff" fill-rule="evenodd"/>'.format(dair))
+    sh._rec("hatch", [ring, sq(z1_), sq(z0_), inner], "conc", "HATCH-PRINTED")     # wall = leaf + outer layer, air zone left open
     for h_ in (a + 80, z0_, z1_):
         sh.poly(sq(h_), "none", 0.1 if h_ == a + 80 else 0.15)
     # printed zig-zag bead as one continuous ring, so it turns the corners: vertices touch the outer layer at every corner
@@ -270,8 +291,11 @@ def plan():
         r = m_o if k % 2 == 0 else m_i
         ring.append((-r, m_o - k * step))                   # west side, north to south
     ring.append(ring[0])
+    sh.mute += 1
     sh.line(ring, BW * sh.s + 0.1, "#000", extra='stroke-linecap="butt"')
     sh.line(ring, BW * sh.s, "#fff", extra='stroke-linecap="butt"')
+    sh.mute -= 1
+    sh._rec("bead", ring, BW, False, "PRINTED-BEAD")
     for p in fins:                                          # buttresses: solid black fill only (no rim), so it ends exactly on the wall faces
         sh.poly(p, "#000", 0.0)
     # outline of the union (outer ring edge only where not covered by fins) handled by the black pass above
@@ -325,7 +349,9 @@ def plan():
     sh.line([(-L, 0), (-b - BUT_L - 350, 0)], 0.5, dash="6 1.5 1 1.5"); sh.line([(b + BUT_L + 350, 0), (L, 0)], 0.5, dash="6 1.5 1 1.5")
     for sgn in (-1, 1):
         px_, py_ = sh.P(sgn * L, 0)
-        sh.o.append('<polygon points="{:.2f},{:.2f} {:.2f},{:.2f} {:.2f},{:.2f}" fill="#000"/>'.format(px_, py_ - 0.2, px_ - sgn * -0 + 0, py_ - 4.5, px_ + sgn * 3, py_ - 2.2).replace("", ""))
+        tri = [(px_, py_ - 0.2), (px_, py_ - 4.5), (px_ + sgn * 3, py_ - 2.2)]
+        sh.o.append('<polygon points="{:.2f},{:.2f} {:.2f},{:.2f} {:.2f},{:.2f}" fill="#000"/>'.format(*[c for p in tri for c in p]))
+        sh._rec("solid", [((q[0] - sh.ox) / sh.s, (sh.oz - q[1]) / sh.s) for q in tri], "ANNOTATION")
         sh.circle_label(sgn * (L + 500), 0, "A", 2.6, "#000", "#fff")
     # detail D1 marker around the east eave
     sh.line([(b - 450, -450), (b + 450, -450), (b + 450, 450), (b - 450, 450), (b - 450, -450)], 0.25, dash="1.5 0.8")
@@ -458,17 +484,23 @@ def section():
 # 3. DETAIL D1  eave, 1:10
 # =====================================================================
 def clip_begin(sh, cid, x0, z0, x1, z1):
+    sh._rec("clip", (x0, z0, x1, z1))
     (ax, ay), (bx, by) = sh.P(x0, z0), sh.P(x1, z1)
     sh.o.append('<clipPath id="{}"><rect x="{:.2f}" y="{:.2f}" width="{:.2f}" height="{:.2f}"/></clipPath><g clip-path="url(#{})">'.format(
         cid, min(ax, bx), min(ay, by), abs(bx - ax), abs(by - ay), cid))
 
-def clip_end(sh): sh.o.append('</g>')
+def clip_end(sh):
+    sh._rec("clipend")
+    sh.o.append('</g>')
 
 def printed(sh, pts, w_mm, f, fill="url(#conc)"):
     """a printed bead drawn as a wide stroke: black rim, white body, hatch. w_mm = bead width in mm, f = model-to-paper factor."""
     w = w_mm * sh.s * f
     ext = 'stroke-linecap="butt"'
+    sh.mute += 1
     sh.line(pts, w + 0.5, "#000", extra=ext); sh.line(pts, w, "#fff", extra=ext); sh.line(pts, w - 0.04, fill, extra=ext)
+    sh.mute -= 1
+    sh._rec("bead", list(pts), w_mm * f, fill == "url(#conc)", "PRINTED-BEAD")
 
 def piece_plan(sh, X0, Z0):
     """Plan of one roof piece, 1:5 (model mm = local mm * F in sh coordinates). inside on the right."""
@@ -501,6 +533,8 @@ def piece_plan(sh, X0, Z0):
     # rebar: Ø55 hole with Ø12 bar
     cu, cv = U_L1 - SAG / 2 - 3, v0
     px, py = sh.P(*M(cu, cv))
+    sh._rec("circle", X0 + F * cu, Z0 + F * cv, 27.5 * F, False, "REBAR-POCKET")
+    sh._rec("circle", X0 + F * cu, Z0 + F * cv, 6 * F, True, "REBAR")
     sh.o.append('<circle cx="{:.2f}" cy="{:.2f}" r="{:.2f}" fill="#fff" stroke="#000" stroke-width="0.3"/>'.format(px, py, 27.5 * sh.s * F))
     sh.o.append('<circle cx="{:.2f}" cy="{:.2f}" r="{:.2f}" fill="{}"/>'.format(px, py, 6 * sh.s * F, BLUE))
     # frame ends (break)
@@ -584,10 +618,12 @@ def detail():
     sh.line([(c[0] - nrm[0] * 380, c[1] - nrm[1] * 380), (c[0] + nrm[0] * 560, c[1] + nrm[1] * 560)], 0.5, "#000", dash="7 1.5 1.2 1.5")
     # ---- rebar: every bar is drawn at its true diameter (1:10, so Ø16 = 1.6 mm on the sheet); black = steel
     xb = lambda h: rx(h)[0] + 80 * SH                                  # centre of the pocket = joint of layers 1 and 2
-    bar = lambda pts, d: sh.line(pts, d / sh.scale, BLUE)
+    bar = lambda pts, d: sh.line(pts, d / sh.scale, BLUE, tw=d)
+    sh.layer = "REBAR-POCKET"
     for sgn in (-1, 1):
         sh.line([(xb(0) + sgn * 27.5 * SH, ZH), (xb(h1) + sgn * 27.5 * SH, ZH + h1)], 0.15, "#555", dash="2 0.8")     # pocket Ø55
         sh.line([(80 + sgn * 27.5, ZB), (80 + sgn * 27.5, WALL_H - BEAM_H)], 0.15, "#555", dash="2 0.8")
+    sh.layer = "REBAR"
     # A  wall bar Ø16: footing to the top of the ring beam, 90 deg hook (10d) into the beam core
     A_X, HOOK_Z = 95.0, WALL_H - 110
     bar([(A_X, ZB), (A_X, HOOK_Z), (A_X + 160, HOOK_Z)], 16)
@@ -600,12 +636,13 @@ def detail():
     for h in range(300, int(h1), 300):
         sh.dot(xb(h), ZH + h, 6)                                                                         # ring bars Ø12 in the pocket zone
     # ring beam: 8 Ø16 (3 top, 3 bottom, 1 each side at mid depth), closed stirrups Ø10 / 150
-    sh.poly(rect(30, WALL_H - BEAM_H + 30, WALL - 30, WALL_H - 30), "none", 10 / sh.scale, BLUE)
+    sh.poly(rect(30, WALL_H - BEAM_H + 30, WALL - 30, WALL_H - 30), "none", 10 / sh.scale, BLUE, tw=10)
     for x in (60, WALL / 2, WALL - 60):
         for z in (WALL_H - BEAM_H + 60, WALL_H - 60):
             sh.dot(x, z, 8)
     for x in (60, WALL - 60):
         sh.dot(x, WALL_H - BEAM_H / 2, 8)
+    sh.layer = None
     # ---- dimensions
     sh.dim_v([WALL_H - BEAM_H, WALL_H], -260, ext=-30, labels=["{:g}".format(BEAM_H)])
     sh.dim_h([0, li, li + ll, WALL], ZB - 130, ext=ZB, labels=["{:g}".format(li), "{:g}".format(ll), "{:g}".format(WALL - li - ll)])
