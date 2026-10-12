@@ -532,14 +532,14 @@ def detail():
                 (2, False, "Zig-zag bead 80 in a 160 zone; it touches the outer layer and layer 2 every ≈ 600; the cells between are open air pockets for ventilation."),
                 (3, False, "Layer 2, 80: printed bead that curves to leave a pocket for the bar."),
                 (4, False, "Inner layer 1, 80, room side. Layers 1 and 2 together are the structural leaf: 160 at the base, 80 at the crown (layer 2 ends)."),
-                (5, True, "Rebar pocket Ø55 in the leaf, bar Ø12 every ≈ 600 along the path, grouted after placing."),
-                (6, True, "Starter bars Ø12 from the ring beam into the pockets, lap 650; roof bars stop where the load allows (open)."),
+                (5, True, "Rebar pocket Ø55 in the leaf, grouted after placing. Roof bars R Ø12 every ≈ 600 along the path, lapped 650 with the knee bars B."),
+                (6, True, "Knee bars B Ø12 every ≈ 600, one continuous bar over the eave: 1100 down the wall pocket (laps wall bars A), through the beam, 650 up the roof."),
                 (7, True, "Ring bars Ø12 in the pocket zone every 300 (assumed)."),
-                (8, True, "Ring beam 400 x 500, cast in place: 6 Ø16, stirrups Ø8 / 150; embedded in the buttress notch."),
+                (8, True, "Ring beam 400 x 500, cast in place: 8 Ø16, closed stirrups Ø10 / 150; wall bars A hook into it. Embedded in the buttress notch."),
                 (9, False, "Buttress 400 wide, 700 from the inner face (300 beyond the wall), L-shaped around the ring beam; top flush with the roof base at +2.50."),
-                (10, True, "Wall 400 printed, same pattern as the roof; Ø16 bars in the pockets run from the footing into the beam and on into the roof pockets (assumed).")],
+                (10, True, "Wall 400 printed, same pattern as the roof; wall bars A Ø16 run from the footing up into the beam and end in a 160 hook (assumed).")],
                ["Layer pattern from your drawing: from the inside, 80 + 80 printed layers (the second curves round the bar), then a 160 zig-zag zone, then the 80 outer layer; 400 in total.",
-                "Wall and roof are 3D printed in 10 mm layers (horizontal joints drawn every 10). Roof thicknesses are square to the slope; the wall is vertical. Black heavy lines and dots = rebar, white lattice cells = open air, thin horizontal lines = printed layers, single hatch = other concrete, crossed hatch = ring beam cut in the section plane."])
+                "Wall and roof are 3D printed in 10 mm layers (horizontal joints drawn every 10). Roof thicknesses are square to the slope; the wall is vertical. All rebar is black and drawn at true diameter (Ø16 = 1.6 mm on the sheet); bar sizes and spacings are assumed, to be checked by the structural engineer. Black lines and dots = rebar, white lattice cells = open air, thin horizontal lines = printed layers, single hatch = other concrete, crossed hatch = ring beam cut in the section plane."])
     ZH = WALL_H
     # --- wall + buttress + beam
     wall = rect(0, ZB, WALL, WALL_H - BEAM_H)
@@ -582,21 +582,30 @@ def detail():
     sh.line([(rx(0)[3] + nrm[0] * off, ZH + nrm[1] * off), (rx(h1)[3] + nrm[0] * off, ZH + h1 + nrm[1] * off)], 0.7, "#000", dash="1.3 0.9")
     # the roof continues: dash-dot line at the top of the detail, square to the slope
     sh.line([(c[0] - nrm[0] * 380, c[1] - nrm[1] * 380), (c[0] + nrm[0] * 560, c[1] + nrm[1] * 560)], 0.5, "#000", dash="7 1.5 1.2 1.5")
-    # ---- rebar
+    # ---- rebar: every bar is drawn at its true diameter (1:10, so Ø16 = 1.6 mm on the sheet); black = steel
     xb = lambda h: rx(h)[0] + 80 * SH                                  # centre of the pocket = joint of layers 1 and 2
+    bar = lambda pts, d: sh.line(pts, d / sh.scale, BLUE)
     for sgn in (-1, 1):
         sh.line([(xb(0) + sgn * 27.5 * SH, ZH), (xb(h1) + sgn * 27.5 * SH, ZH + h1)], 0.15, "#555", dash="2 0.8")     # pocket Ø55
-    sh.line([(xb(0) - 14, WALL_H - 380), (xb(0) - 14, ZH), (xb(566) - 14, ZH + 566)], 0.7, BLUE)           # starter, lap 650 along the slope
-    sh.line([(xb(0) + 14, ZH), (xb(h1) + 14, ZH + h1)], 0.7, BLUE)                                        # roof bar
-    for h in range(300, int(h1), 300):
-        sh.dot(xb(h), ZH + h, 6)
-    # ring beam
-    sh.poly(rect(30, WALL_H - BEAM_H + 30, WALL - 30, WALL_H - 30), "none", 0.35, BLUE)
-    for (x, z) in [(60, WALL_H - BEAM_H + 60), (WALL - 60, WALL_H - BEAM_H + 60), (60, WALL_H - 60), (WALL - 60, WALL_H - 60), (60, WALL_H - BEAM_H / 2), (WALL - 60, WALL_H - BEAM_H / 2)]:
-        sh.dot(x, z, 8)
-    for sgn in (-1, 1):
         sh.line([(80 + sgn * 27.5, ZB), (80 + sgn * 27.5, WALL_H - BEAM_H)], 0.15, "#555", dash="2 0.8")
-    sh.line([(80, ZB), (80, WALL_H - 60)], 0.7, BLUE)
+    # A  wall bar Ø16: footing to the top of the ring beam, 90 deg hook (10d) into the beam core
+    A_X, HOOK_Z = 95.0, WALL_H - 110
+    bar([(A_X, ZB), (A_X, HOOK_Z), (A_X + 160, HOOK_Z)], 16)
+    # B  knee bar Ø12, continuous over the eave (no splice at the critical section): down the wall pocket, through the beam,
+    #    up the roof pocket; 1100 below the eave (laps A over about 90d) and 650 along the roof lapped with R
+    B_X = xb(0) - 26
+    bar([(B_X, WALL_H - 1100), (B_X, ZH), (xb(566) - 26, ZH + 566)], 12)
+    # R  roof bar Ø12, lapped 650 with B, then continues up (open)
+    bar([(xb(0) + 14, ZH), (xb(h1) + 14, ZH + h1)], 12)
+    for h in range(300, int(h1), 300):
+        sh.dot(xb(h), ZH + h, 6)                                                                         # ring bars Ø12 in the pocket zone
+    # ring beam: 8 Ø16 (3 top, 3 bottom, 1 each side at mid depth), closed stirrups Ø10 / 150
+    sh.poly(rect(30, WALL_H - BEAM_H + 30, WALL - 30, WALL_H - 30), "none", 10 / sh.scale, BLUE)
+    for x in (60, WALL / 2, WALL - 60):
+        for z in (WALL_H - BEAM_H + 60, WALL_H - 60):
+            sh.dot(x, z, 8)
+    for x in (60, WALL - 60):
+        sh.dot(x, WALL_H - BEAM_H / 2, 8)
     # ---- dimensions
     sh.dim_v([WALL_H - BEAM_H, WALL_H], -260, ext=-30, labels=["{:g}".format(BEAM_H)])
     sh.dim_h([0, li, li + ll, WALL], ZB - 130, ext=ZB, labels=["{:g}".format(li), "{:g}".format(ll), "{:g}".format(WALL - li - ll)])

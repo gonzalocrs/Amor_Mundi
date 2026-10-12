@@ -36,21 +36,23 @@
 <polyline points="146.59,169.60 94.93,79.60" fill="none" stroke="#000" stroke-width="0.7" stroke-linejoin="round" stroke-dasharray="1.3 0.9" />
 <polyline points="33.74,98.92 115.27,52.12" fill="none" stroke="#000" stroke-width="0.5" stroke-linejoin="round" stroke-dasharray="7 1.5 1.2 1.5" />
 <polyline points="106.02,170.00 55.40,80.00" fill="none" stroke="#555" stroke-width="0.15" stroke-linejoin="round" stroke-dasharray="2 0.8" />
+<polyline points="105.25,270.00 105.25,220.00" fill="none" stroke="#555" stroke-width="0.15" stroke-linejoin="round" stroke-dasharray="2 0.8" />
 <polyline points="112.33,170.00 61.71,80.00" fill="none" stroke="#555" stroke-width="0.15" stroke-linejoin="round" stroke-dasharray="2 0.8" />
-<polyline points="107.78,208.00 107.78,170.00 75.94,113.40" fill="none" stroke="#000" stroke-width="0.7" stroke-linejoin="round" />
-<polyline points="110.58,170.00 59.95,80.00" fill="none" stroke="#000" stroke-width="0.7" stroke-linejoin="round" />
+<polyline points="110.75,270.00 110.75,220.00" fill="none" stroke="#555" stroke-width="0.15" stroke-linejoin="round" stroke-dasharray="2 0.8" />
+<polyline points="109.50,270.00 109.50,181.00 125.50,181.00" fill="none" stroke="#000" stroke-width="1.6" stroke-linejoin="round" />
+<polyline points="106.58,280.00 106.58,170.00 74.74,113.40" fill="none" stroke="#000" stroke-width="1.2" stroke-linejoin="round" />
+<polyline points="110.58,170.00 59.95,80.00" fill="none" stroke="#000" stroke-width="1.2" stroke-linejoin="round" />
 <circle cx="92.30" cy="140.00" r="0.60" fill="#000"/>
 <circle cx="75.43" cy="110.00" r="0.60" fill="#000"/>
-<polygon points="103.00,217.00 137.00,217.00 137.00,173.00 103.00,173.00" fill="none" stroke="#000" stroke-width="0.35" stroke-linejoin="round" />
+<polygon points="103.00,217.00 137.00,217.00 137.00,173.00 103.00,173.00" fill="none" stroke="#000" stroke-width="1.0" stroke-linejoin="round" />
 <circle cx="106.00" cy="214.00" r="0.80" fill="#000"/>
-<circle cx="134.00" cy="214.00" r="0.80" fill="#000"/>
 <circle cx="106.00" cy="176.00" r="0.80" fill="#000"/>
+<circle cx="120.00" cy="214.00" r="0.80" fill="#000"/>
+<circle cx="120.00" cy="176.00" r="0.80" fill="#000"/>
+<circle cx="134.00" cy="214.00" r="0.80" fill="#000"/>
 <circle cx="134.00" cy="176.00" r="0.80" fill="#000"/>
 <circle cx="106.00" cy="195.00" r="0.80" fill="#000"/>
 <circle cx="134.00" cy="195.00" r="0.80" fill="#000"/>
-<polyline points="105.25,270.00 105.25,220.00" fill="none" stroke="#555" stroke-width="0.15" stroke-linejoin="round" stroke-dasharray="2 0.8" />
-<polyline points="110.75,270.00 110.75,220.00" fill="none" stroke="#555" stroke-width="0.15" stroke-linejoin="round" stroke-dasharray="2 0.8" />
-<polyline points="108.00,270.00 108.00,176.00" fill="none" stroke="#000" stroke-width="0.7" stroke-linejoin="round" />
 <polyline points="74.00,221.50 74.00,168.50" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
 <polyline points="96.20,220.00 72.80,220.00" fill="none" stroke="#000" stroke-width="0.12" stroke-linejoin="round" />
 <polyline points="73.40,220.60 74.60,219.40" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
@@ -218,43 +220,48 @@
 <text x="319" y="72.0" font-size="2.8">80 at the crown (layer 2 ends).</text>
 <circle cx="314.3" cy="76.5" r="2.3" fill="#fff" stroke="#000" stroke-width="0.3"/>
 <text x="314.3" y="77.5" font-size="2.7" text-anchor="middle" fill="#000">5</text>
-<text x="319" y="77.5" font-size="2.8">Rebar pocket Ø55 in the leaf, bar Ø12 every ≈ 600</text>
-<text x="319" y="81.0" font-size="2.8">along the path, grouted after placing.</text>
-<circle cx="314.3" cy="85.5" r="2.3" fill="#fff" stroke="#000" stroke-width="0.3"/>
-<text x="314.3" y="86.5" font-size="2.7" text-anchor="middle" fill="#000">6</text>
-<text x="319" y="86.5" font-size="2.8">Starter bars Ø12 from the ring beam into the</text>
-<text x="319" y="90.0" font-size="2.8">pockets, lap 650; roof bars stop where the load</text>
-<text x="319" y="93.5" font-size="2.8">allows (open).</text>
-<circle cx="314.3" cy="98.0" r="2.3" fill="#fff" stroke="#000" stroke-width="0.3"/>
-<text x="314.3" y="99.0" font-size="2.7" text-anchor="middle" fill="#000">7</text>
-<text x="319" y="99.0" font-size="2.8">Ring bars Ø12 in the pocket zone every 300</text>
-<text x="319" y="102.5" font-size="2.8">(assumed).</text>
-<circle cx="314.3" cy="107.0" r="2.3" fill="#fff" stroke="#000" stroke-width="0.3"/>
-<text x="314.3" y="108.0" font-size="2.7" text-anchor="middle" fill="#000">8</text>
-<text x="319" y="108.0" font-size="2.8">Ring beam 400 x 500, cast in place: 6 Ø16, stirrups</text>
-<text x="319" y="111.5" font-size="2.8">Ø8 / 150; embedded in the buttress notch.</text>
-<circle cx="314.3" cy="116.0" r="2.3" fill="#000" stroke="#000" stroke-width="0.3"/>
-<text x="314.3" y="117.0" font-size="2.7" text-anchor="middle" fill="#fff">9</text>
-<text x="319" y="117.0" font-size="2.8">Buttress 400 wide, 700 from the inner face (300</text>
-<text x="319" y="120.5" font-size="2.8">beyond the wall), L-shaped around the ring beam; top</text>
-<text x="319" y="124.0" font-size="2.8">flush with the roof base at +2.50.</text>
-<circle cx="314.3" cy="128.5" r="2.3" fill="#fff" stroke="#000" stroke-width="0.3"/>
-<text x="314.3" y="129.5" font-size="2.7" text-anchor="middle" fill="#000">10</text>
-<text x="319" y="129.5" font-size="2.8">Wall 400 printed, same pattern as the roof; Ø16 bars</text>
-<text x="319" y="133.0" font-size="2.8">in the pockets run from the footing into the beam</text>
-<text x="319" y="136.5" font-size="2.8">and on into the roof pockets (assumed).</text>
-<circle cx="314.3" cy="143.0" r="2" fill="#000"/><text x="319" y="144.0" font-size="2.7">from your sketches</text>
-<circle cx="314.3" cy="148.0" r="2" fill="#fff" stroke="#000" stroke-width="0.3"/><text x="319" y="149.0" font-size="2.7">assumed by me, to confirm</text>
-<text x="312" y="157.0" font-size="3.1" font-weight="bold">Notes</text>
-<text x="312" y="161.5" font-size="2.8">Layer pattern from your drawing: from the inside, 80 + 80</text>
-<text x="314" y="165.0" font-size="2.8">printed layers (the second curves round the bar), then a</text>
-<text x="314" y="168.5" font-size="2.8">160 zig-zag zone, then the 80 outer layer; 400 in total.</text>
-<text x="312" y="173.0" font-size="2.8">Wall and roof are 3D printed in 10 mm layers (horizontal</text>
-<text x="314" y="176.5" font-size="2.8">joints drawn every 10). Roof thicknesses are square to the</text>
-<text x="314" y="180.0" font-size="2.8">slope; the wall is vertical. Black heavy lines and dots =</text>
-<text x="314" y="183.5" font-size="2.8">rebar, white lattice cells = open air, thin horizontal</text>
-<text x="314" y="187.0" font-size="2.8">lines = printed layers, single hatch = other concrete,</text>
-<text x="314" y="190.5" font-size="2.8">crossed hatch = ring beam cut in the section plane.</text>
+<text x="319" y="77.5" font-size="2.8">Rebar pocket Ø55 in the leaf, grouted after placing.</text>
+<text x="319" y="81.0" font-size="2.8">Roof bars R Ø12 every ≈ 600 along the path, lapped</text>
+<text x="319" y="84.5" font-size="2.8">650 with the knee bars B.</text>
+<circle cx="314.3" cy="89.0" r="2.3" fill="#fff" stroke="#000" stroke-width="0.3"/>
+<text x="314.3" y="90.0" font-size="2.7" text-anchor="middle" fill="#000">6</text>
+<text x="319" y="90.0" font-size="2.8">Knee bars B Ø12 every ≈ 600, one continuous bar over</text>
+<text x="319" y="93.5" font-size="2.8">the eave: 1100 down the wall pocket (laps wall bars</text>
+<text x="319" y="97.0" font-size="2.8">A), through the beam, 650 up the roof.</text>
+<circle cx="314.3" cy="101.5" r="2.3" fill="#fff" stroke="#000" stroke-width="0.3"/>
+<text x="314.3" y="102.5" font-size="2.7" text-anchor="middle" fill="#000">7</text>
+<text x="319" y="102.5" font-size="2.8">Ring bars Ø12 in the pocket zone every 300</text>
+<text x="319" y="106.0" font-size="2.8">(assumed).</text>
+<circle cx="314.3" cy="110.5" r="2.3" fill="#fff" stroke="#000" stroke-width="0.3"/>
+<text x="314.3" y="111.5" font-size="2.7" text-anchor="middle" fill="#000">8</text>
+<text x="319" y="111.5" font-size="2.8">Ring beam 400 x 500, cast in place: 8 Ø16, closed</text>
+<text x="319" y="115.0" font-size="2.8">stirrups Ø10 / 150; wall bars A hook into it.</text>
+<text x="319" y="118.5" font-size="2.8">Embedded in the buttress notch.</text>
+<circle cx="314.3" cy="123.0" r="2.3" fill="#000" stroke="#000" stroke-width="0.3"/>
+<text x="314.3" y="124.0" font-size="2.7" text-anchor="middle" fill="#fff">9</text>
+<text x="319" y="124.0" font-size="2.8">Buttress 400 wide, 700 from the inner face (300</text>
+<text x="319" y="127.5" font-size="2.8">beyond the wall), L-shaped around the ring beam; top</text>
+<text x="319" y="131.0" font-size="2.8">flush with the roof base at +2.50.</text>
+<circle cx="314.3" cy="135.5" r="2.3" fill="#fff" stroke="#000" stroke-width="0.3"/>
+<text x="314.3" y="136.5" font-size="2.7" text-anchor="middle" fill="#000">10</text>
+<text x="319" y="136.5" font-size="2.8">Wall 400 printed, same pattern as the roof; wall</text>
+<text x="319" y="140.0" font-size="2.8">bars A Ø16 run from the footing up into the beam and</text>
+<text x="319" y="143.5" font-size="2.8">end in a 160 hook (assumed).</text>
+<circle cx="314.3" cy="150.0" r="2" fill="#000"/><text x="319" y="151.0" font-size="2.7">from your sketches</text>
+<circle cx="314.3" cy="155.0" r="2" fill="#fff" stroke="#000" stroke-width="0.3"/><text x="319" y="156.0" font-size="2.7">assumed by me, to confirm</text>
+<text x="312" y="164.0" font-size="3.1" font-weight="bold">Notes</text>
+<text x="312" y="168.5" font-size="2.8">Layer pattern from your drawing: from the inside, 80 + 80</text>
+<text x="314" y="172.0" font-size="2.8">printed layers (the second curves round the bar), then a</text>
+<text x="314" y="175.5" font-size="2.8">160 zig-zag zone, then the 80 outer layer; 400 in total.</text>
+<text x="312" y="180.0" font-size="2.8">Wall and roof are 3D printed in 10 mm layers (horizontal</text>
+<text x="314" y="183.5" font-size="2.8">joints drawn every 10). Roof thicknesses are square to the</text>
+<text x="314" y="187.0" font-size="2.8">slope; the wall is vertical. All rebar is black and drawn</text>
+<text x="314" y="190.5" font-size="2.8">at true diameter (Ø16 = 1.6 mm on the sheet); bar sizes</text>
+<text x="314" y="194.0" font-size="2.8">and spacings are assumed, to be checked by the structural</text>
+<text x="314" y="197.5" font-size="2.8">engineer. Black lines and dots = rebar, white lattice</text>
+<text x="314" y="201.0" font-size="2.8">cells = open air, thin horizontal lines = printed layers,</text>
+<text x="314" y="204.5" font-size="2.8">single hatch = other concrete, crossed hatch = ring beam</text>
+<text x="314" y="208.0" font-size="2.8">cut in the section plane.</text>
 <rect x="312.00" y="277" width="10.00" height="1.6" fill="#000" stroke="#000" stroke-width="0.2"/>
 <text x="312.00" y="276" font-size="2.5" text-anchor="middle">0</text>
 <rect x="322.00" y="277" width="10.00" height="1.6" fill="#fff" stroke="#000" stroke-width="0.2"/>
