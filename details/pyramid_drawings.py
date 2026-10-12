@@ -192,6 +192,22 @@ def loops(sh, cid, xa, xb, z0, z1, sw=0.2):
 
 R = lambda x, z: (x, z)
 def rect(x0, z0, x1, z1): return [(x0, z0), (x1, z0), (x1, z1), (x0, z1)]
+LAYER_H = 10.0             # 3D-printed concrete layer height (wall and roof)
+def layers(sh, ps, z0, sw=0.12):
+    """Horizontal joints between printed layers every LAYER_H, from z0 up, clipped to the convex polygon ps."""
+    zs = [p[1] for p in ps]
+    segs = []
+    k = math.floor((min(zs) - z0) / LAYER_H) + 1
+    while z0 + k * LAYER_H < max(zs) - 1e-6:
+        z = z0 + k * LAYER_H; k += 1
+        xs = []
+        for a, b in zip(ps, ps[1:] + ps[:1]):
+            if (a[1] - z) * (b[1] - z) < 0:
+                xs.append(a[0] + (b[0] - a[0]) * (z - a[1]) / (b[1] - a[1]))
+        if len(xs) >= 2:
+            segs.append([(min(xs), z), (max(xs), z)])
+    sh.paths(segs, sw)
+
 def conc(sh, ps): sh.poly(ps, "#fff", 0.0); sh.poly(ps, "url(#conc)", 0.0)
 
 # =====================================================================
@@ -523,7 +539,7 @@ def detail():
                 (9, False, "Buttress 400 wide, 700 from the inner face (300 beyond the wall), L-shaped around the ring beam; top flush with the roof base at +2.50."),
                 (10, True, "Wall 400 printed, same pattern as the roof; Ø16 bars in the pockets run from the footing into the beam and on into the roof pockets (assumed).")],
                ["Layer pattern from your drawing: from the inside, 80 + 80 printed layers (the second curves round the bar), then a 160 zig-zag zone, then the 80 outer layer; 400 in total.",
-                "Roof thicknesses are square to the slope; the wall is vertical. Black heavy lines and dots = rebar, white lattice cells = open air, single hatch = printed concrete, crossed hatch = ring beam cut in the section plane."])
+                "Wall and roof are 3D printed in 10 mm layers (horizontal joints drawn every 10). Roof thicknesses are square to the slope; the wall is vertical. Black heavy lines and dots = rebar, white lattice cells = open air, thin horizontal lines = printed layers, single hatch = other concrete, crossed hatch = ring beam cut in the section plane."])
     ZH = WALL_H
     # --- wall + buttress + beam
     wall = rect(0, ZB, WALL, WALL_H - BEAM_H)
@@ -532,7 +548,10 @@ def detail():
     for p in (wall, beam, but):
         sh.poly(p, "#000", 0.7)
     for p in (wall, beam, but):
-        sh.poly(p, "#fff", 0.0); sh.poly(p, "url(#cast)" if p is beam else "url(#conc)", 0.0)    # beam is cut in the section plane: crossed hatch
+        sh.poly(p, "#fff", 0.0)
+        if p is not wall:
+            sh.poly(p, "url(#cast)" if p is beam else "url(#conc)", 0.0)    # beam is cut in the section plane: crossed hatch
+    layers(sh, wall, ZB)                                                      # wall: printed layers, 10 each
     li, ll, ls_ = WALL_LAYERS
     sh.poly(rect(li, ZB, li + ll, WALL_H - BEAM_H), PINK, 0.0)
     sh.line([(li, ZB), (li, WALL_H - BEAM_H)], 0.3); sh.line([(li + ll, ZB), (li + ll, WALL_H - BEAM_H)], 0.3)
@@ -553,7 +572,7 @@ def detail():
     latp = [(rx(0)[1], ZH), tip(1), tip(2), (rx(0)[2], ZH)]
     skinp = [(rx(0)[2], ZH), tip(2), tip(3), (rx(0)[3], ZH)]
     for p in (layer1, layer2, skinp):
-        sh.poly(p, "#fff", 0.0); sh.poly(p, "url(#conc)", 0.0)
+        sh.poly(p, "#fff", 0.0); layers(sh, p, ZH)                            # roof: printed layers, 10 each
     sh.poly(latp, PINK, 0.0)
     for p in (layer1, layer2, latp, skinp):
         sh.poly(p, "none", 0.45)
