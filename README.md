@@ -13,6 +13,7 @@ hollow, lapped pieces for **3D concrete printing**, sliced to printer programs w
 | `grasshopper/Pyramide 10_1_2026.gh` | The Grasshopper definition (scripts pasted into Py3 components + SaladSlicer chain) |
 | `rhino/10_1_2026.3dm` | The Rhino model (stored with Git LFS) |
 | `details/` | Eave / roof-to-wall construction section 1:10 (PDF, SVG, PNG) and `eave_section.py`, the script that draws it |
+| `details/pyramid_drawings.py` | Buttressed 10 x 10 m pyramid roof: floor plan, total section A-A and eave detail D1 (`pyramid-plan`, `pyramid-section`, `pyramid-detail`, SVG + PDF, A3) |
 
 The input/output list for each script is at the top of each `.py` file.
 
