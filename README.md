@@ -12,6 +12,8 @@ hollow, lapped pieces for **3D concrete printing**, sliced to printer programs w
 | `scripts/concrete_slicer.py` | General slicer: turns any closed geometry into printed-bead geometry (visual only) |
 | `grasshopper/Pyramide 10_1_2026.gh` | The Grasshopper definition (scripts pasted into Py3 components + SaladSlicer chain) |
 | `rhino/10_1_2026.3dm` | The Rhino model (stored with Git LFS) |
+| `scripts/karamba_model.py` | Karamba3D model: roof/wall/buttress shells, ring beams, supports, wind and cladding loads |
+| `details/structural_check.py` | Hand-calculation screening check (thrust, ring beam, buttress, wind, footing) |
 | `details/` | Eave / roof-to-wall construction section 1:10 (PDF, SVG, PNG) and `eave_section.py`, the script that draws it |
 | `details/pyramid_drawings.py` | Buttressed 10 x 10 m pyramid roof: floor plan, total section A-A and eave detail D1 (`pyramid-plan`, `pyramid-section`, `pyramid-detail`, SVG + PDF, A3) |
 
@@ -54,3 +56,22 @@ Rec (rectangles) ──► roof Py3 (cork_house_roof.py)
 
 SaladSlicer © 3D Concrete Printing Research Group, TU Eindhoven, GPL-3.0. Cite:
 Deetman, Bos, Ferguson, Versteege, *Salad Slicer: An open-source slicer toolkit for 3D concrete printing*, Zenodo, doi:10.5281/zenodo.7818240.
+
+## Karamba model
+
+`scripts/karamba_model.py` (Py3 Script component, millimetres). Wire its outputs like this:
+
+| Output | Karamba component |
+|---|---|
+| `roof_meshes`, `wall_meshes`, `but_meshes` | one **Mesh to Shell** each, with a Shell cross-section of thickness `t_roof` / `t_wall` / `t_but` and a material from `material` (use `gamma_roof` / `gamma_wall` as the density so the hollow printed layers weigh the right amount) |
+| `ring_lines` | **Line to Beam**, rectangular 400 x 500 |
+| `crown_lines` | **Line to Beam**, e.g. 200 x 200 (assumed crown compression ring; set `crown_ring` False to drop it) |
+| `supports` | **Support** (fixed, or pinned with `fixed` = False) |
+| gravity | Karamba **Gravity** load |
+| `cladding` | **Mesh Load** on `roof_meshes` |
+| `wind_vecs`, `wind_walls` | **Mesh Load**, one per mesh, same order (4 load cases: rotate `wind_dir` 0 / 90 / 180 / 270) |
+
+Then **Assemble** all, **Analyze**, and read utilisation, reactions at `supports` and the displacement.
+Compare: the self weight should match `info` and `details/structural_check.py`. The buttress base reactions
+settle how much of the roof thrust the buttresses take (see the bracket in the check script).
+Idealisations (ring beam centroid = roof base, no footing, buttress attached along the wall mid-plane) are listed at the top of the script.
