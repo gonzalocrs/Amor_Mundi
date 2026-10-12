@@ -147,7 +147,8 @@ class Sheet:
             y += 2
             parts.append('<circle cx="{}" cy="{}" r="2" fill="#000"/><text x="{}" y="{}" font-size="2.7">from your sketches</text>'.format(x0 + 2.3, y - 1, x0 + 7, y)); y += 5
             parts.append('<circle cx="{}" cy="{}" r="2" fill="#fff" stroke="#000" stroke-width="0.3"/><text x="{}" y="{}" font-size="2.7">assumed by me, to confirm</text>'.format(x0 + 2.3, y - 1, x0 + 7, y)); y += 8
-        parts.append('<text x="{}" y="{}" font-size="3.1" font-weight="bold">Notes</text>'.format(x0, y)); y += 4.5
+        if self.notes:
+            parts.append('<text x="{}" y="{}" font-size="3.1" font-weight="bold">Notes</text>'.format(x0, y)); y += 4.5
         for n_ in self.notes:
             for i, l in enumerate(wrap(n_, 58)):
                 parts.append('<text x="{}" y="{:.1f}" font-size="2.8">{}</text>'.format(x0 + (0 if i == 0 else 2), y, l)); y += 3.5
@@ -541,7 +542,7 @@ def piece_plan(sh, X0, Z0):
     for v in (0, P):
         sh.line([M(-40, v), M(440, v)], 0.25, "#000", dash="3 1 0.6 1")
     # dimensions (horizontal, paper-true: 1:5)
-    z_d = Z0 - 140
+    z_d = Z0 - 100
     xs = [X0 + F * u for u in (0, 80, 240, 320, 400)]
     sh.dim_h(xs, z_d, ext=Z0 - 30, labels=["80", "160", "80", "80"])
     # numbered callouts on the right, same numbers as the legend
@@ -555,25 +556,59 @@ def piece_plan(sh, X0, Z0):
     num(4, 360, 80, Z0 + F * 60)
     num(5, 318, 300, Z0 + F * 345)
     sh.text(X0 + F * 400, Z0 + F * P + 60, "inside", 2.6, "end", weight="bold"); sh.text(X0, Z0 + F * P + 60, "outside", 2.6, "start", weight="bold")
-    sh.text(X0, Z0 + F * P + 240, "Plan of one roof piece, 1:5", 3.4, "start", weight="bold")
-    sh.text(X0, Z0 + F * P + 150, "layer pattern, bars every ≈ 600 along the path", 2.4, "start")
+    sh.text(X0, Z0 + F * P + 200, "Plan of one roof piece, 1:5", 3.4, "start", weight="bold")
+    sh.text(X0, Z0 + F * P + 130, "layer pattern, bars every @ 600 along the path", 2.4, "start")
+
+def piece_plan_b(sh, X0, Z0):
+    """Variant B of the roof piece plan, 1:5: layer 2 straight, the bar pocket sits in a bulge of the inner layer 1."""
+    F = 2.0
+    M = lambda u, v: (X0 + F * u, Z0 + F * v)
+    P, v0 = 600.0, 300.0
+    def arc(HL, SAG):
+        R_ = (HL ** 2 + SAG ** 2) / (2 * SAG)
+        return lambda dv: max(0.0, math.sqrt(R_ ** 2 - dv ** 2) - (R_ - SAG)) if abs(dv) < HL else 0.0
+    bulge, lens = arc(130.0, 70.0), arc(80.0, 65.0)
+    vs = [i * 10.0 for i in range(61)]
+    clip_begin(sh, "pq", X0, Z0, X0 + F * 480, Z0 + F * P)
+    sh.poly([M(0, 0), M(480, 0), M(480, P), M(0, P)], "#fff", 0.0)
+    # outer skin
+    sh.poly([M(0, -50), M(80, -50), M(80, P + 50), M(0, P + 50)], "#fff", 0.5, "#000")
+    sh.poly([M(0, -50), M(80, -50), M(80, P + 50), M(0, P + 50)], "url(#conc)", 0.0)
+    # layer 2: straight
+    sh.poly([M(240, -50), M(320, -50), M(320, P + 50), M(240, P + 50)], "#fff", 0.5, "#000")
+    sh.poly([M(240, -50), M(320, -50), M(320, P + 50), M(240, P + 50)], "url(#conc)", 0.0)
+    # zig-zag bead: touches the outer layer at v = 0, 300, 600 and layer 2 at v = 150, 450
+    printed(sh, [M(200, -150), M(120, 0), M(200, 150), M(120, 300), M(200, 450), M(120, 600), M(200, 750)], 80, F)
+    # inner layer 1 with the bulge on the room side and the pocket notch on the layer-2 side
+    l1 = [M(320, -50), M(400, -50)] + [M(400 + bulge(v - v0), v) for v in vs] + [M(400, P + 50), M(320, P + 50)] + [M(320 + lens(v - v0), v) for v in reversed(vs)]
+    sh.poly(l1, "#fff", 0.5, "#000")
+    sh.poly(l1, "url(#conc)", 0.0)
+    clip_end(sh)
+    # rebar: Ø55 hole with Ø12 bar
+    cu, cv = 357.5, v0
+    px, py = sh.P(*M(cu, cv))
+    sh._rec("circle", X0 + F * cu, Z0 + F * cv, 27.5 * F, False, "REBAR-POCKET")
+    sh._rec("circle", X0 + F * cu, Z0 + F * cv, 6 * F, True, "REBAR")
+    sh.o.append('<circle cx="{:.2f}" cy="{:.2f}" r="{:.2f}" fill="#fff" stroke="#000" stroke-width="0.3"/>'.format(px, py, 27.5 * sh.s * F))
+    sh.o.append('<circle cx="{:.2f}" cy="{:.2f}" r="{:.2f}" fill="{}"/>'.format(px, py, 6 * sh.s * F, BLUE))
+    for v in (0, P):
+        sh.line([(M(-40, v)), M(500, v)], 0.25, "#000", dash="3 1 0.6 1")
 
 def detail():
     ZB, ZT = 1500.0, 3400.0
     sh = Sheet(10, 100, 420, "Detail D1: eave, roof to wall",
-               "at the mid-span buttress, section A-A, 1:10 · piece plan 1:5",
+               "",
                [(1, False, "Roof outer layer 80, printed with the rest of the piece; cladding on the outside face (dashed line)."),
-                (2, False, "Zig-zag bead 80 in a 160 zone; it touches the outer layer and layer 2 every ≈ 600; the cells between are open air pockets for ventilation."),
+                (2, False, "Zig-zag lattice 80 in a 160 zone; it touches the outer layer and layer 2 every @ 600; the cells between are open air pockets for ventilation."),
                 (3, False, "Layer 2, 80: printed bead that curves to leave a pocket for the bar."),
                 (4, False, "Inner layer 1, 80, room side. Layers 1 and 2 together are the structural leaf: 160 at the base, 80 at the crown (layer 2 ends)."),
-                (5, True, "Rebar pocket Ø55 in the leaf, grouted after placing. Roof bars R Ø12 every ≈ 600 along the path, lapped 650 with the knee bars B."),
-                (6, True, "Knee bars B Ø12 every ≈ 600, one continuous bar over the eave: 1100 down the wall pocket (laps wall bars A), through the beam, 650 up the roof."),
-                (7, True, "Ring bars Ø12 in the pocket zone every 300 (assumed)."),
+                (5, True, "Rebar pocket Ø55 in the leaf, grouted after placing. Roof bars R Ø12 every @ 600 along the path."),
+                (6, True, "Knee bars B Ø12 every @ 600, one continuous bar over the eave: 1100 down the wall pocket (laps wall bars A), through the beam, 650 up the roof."),
+                (7, True, "Ring bars Ø12 in the pocket zone every 300."),
                 (8, True, "Ring beam 400 x 500, cast in place: 8 Ø16, closed stirrups Ø10 / 150; wall bars A hook into it. Embedded in the buttress notch."),
-                (9, False, "Buttress 400 wide, 700 from the inner face (300 beyond the wall), L-shaped around the ring beam; top flush with the roof base at +2.50."),
+                (9, False, "Buttress 400 wide, 1000 from the inner face (600 beyond the wall), L-shaped around the ring beam; top flush with the roof base at +2.50."),
                 (10, True, "Wall 400 printed, same pattern as the roof; wall bars A Ø16 run from the footing up into the beam and end in a 160 hook (assumed).")],
-               ["Layer pattern from your drawing: from the inside, 80 + 80 printed layers (the second curves round the bar), then a 160 zig-zag zone, then the 80 outer layer; 400 in total.",
-                "Wall and roof are 3D printed in 10 mm layers (horizontal joints drawn every 10). Roof thicknesses are square to the slope; the wall is vertical. All rebar is black and drawn at true diameter (Ø16 = 1.6 mm on the sheet); bar sizes and spacings are assumed, to be checked by the structural engineer. Black lines and dots = rebar, white lattice cells = open air, thin horizontal lines = printed layers, single hatch = other concrete, crossed hatch = ring beam cut in the section plane."])
+               [])
     ZH = WALL_H
     # --- wall + buttress + beam
     wall = rect(0, ZB, WALL, WALL_H - BEAM_H)
@@ -674,8 +709,9 @@ def detail():
     sh.callout(7, -620, ZH + 160, xb(300), ZH + 300)
     sh.callout(8, 760, WALL_H - 120, WALL - 60, WALL_H - 150)
     sh.callout(9, 800, WALL_H - 800, WALL + 150, WALL_H - 840)
-    sh.callout(10, 1100, ZB + 600, li + ll / 2, ZB + 600)
-    piece_plan(sh, 1000, 2600)
+    sh.callout(10, -620, ZB + 400, li + ll / 2, ZB + 600)
+    piece_plan(sh, 1000, 2690)
+    piece_plan_b(sh, 1000, 1340)
     return sh
 
 def export(sh, path):
