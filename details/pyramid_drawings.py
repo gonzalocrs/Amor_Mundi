@@ -41,6 +41,7 @@ class Sheet:
         self.s, self.ox, self.oz, self.w, self.h = 1.0 / scale, ox, oz, w, h
         self.scale = scale
         self.o = []; self.title, self.sub, self.legend, self.notes = title, sub, legend, notes
+        self.plain_legend = False
         self.rec = []; self.layer = None; self.mute = 0     # recorder for the CAD (DXF) export: model-space geometry, mm
     def _rec(self, *a):
         if not self.mute: self.rec.append(a)
@@ -136,14 +137,23 @@ class Sheet:
         x0, y = tb + 4, 20
         parts.append('<text x="{}" y="{}" font-size="5.4" font-weight="bold">{}</text>'.format(x0, y, self.title)); y += 5.5
         parts.append('<text x="{}" y="{}" font-size="3.1">{}</text>'.format(x0, y, self.sub)); y += 9
-        for n, assumed, txt in self.legend:
+        if self.plain_legend:
+            for n, assumed, txt in self.legend:
+                lines = wrap("({}{}) {}".format(n, "*" if assumed else "", txt), 66)
+                for i, l in enumerate(lines):
+                    parts.append('<text x="{}" y="{:.1f}" font-size="2.8">{}</text>'.format(x0 + (0 if i == 0 else 4), y + i * 3.5, l))
+                y += 3.5 * len(lines) + 1.5
+            y += 1
+            parts.append('<text x="{}" y="{}" font-size="2.8">* = assumed, to confirm</text>'.format(x0, y)); y += 8
+        else:
+          for n, assumed, txt in self.legend:
             lines = wrap(txt, 52)
             parts.append('<circle cx="{}" cy="{}" r="2.3" fill="{}" stroke="#000" stroke-width="0.3"/>'.format(x0 + 2.3, y - 1, "#fff" if assumed else "#000"))
             parts.append('<text x="{}" y="{}" font-size="2.7" text-anchor="middle" fill="{}">{}</text>'.format(x0 + 2.3, y, "#000" if assumed else "#fff", n))
             for i, l in enumerate(lines):
                 parts.append('<text x="{}" y="{:.1f}" font-size="2.8">{}</text>'.format(x0 + 7, y + i * 3.5, l))
             y += 3.5 * len(lines) + 2
-        if self.legend:
+          if self.legend:
             y += 2
             parts.append('<circle cx="{}" cy="{}" r="2" fill="#000"/><text x="{}" y="{}" font-size="2.7">from your sketches</text>'.format(x0 + 2.3, y - 1, x0 + 7, y)); y += 5
             parts.append('<circle cx="{}" cy="{}" r="2" fill="#fff" stroke="#000" stroke-width="0.3"/><text x="{}" y="{}" font-size="2.7">assumed by me, to confirm</text>'.format(x0 + 2.3, y - 1, x0 + 7, y)); y += 8
@@ -609,6 +619,7 @@ def detail():
                 (9, False, "Buttress 400 wide, 1000 from the inner face (600 beyond the wall), L-shaped around the ring beam; top flush with the roof base at +2.50."),
                 (10, True, "Wall 400 printed, same pattern as the roof; wall bars A Ø16 run from the footing up into the beam and end in a 160 hook (assumed).")],
                [])
+    sh.plain_legend = True
     ZH = WALL_H
     # --- wall + buttress + beam
     wall = rect(0, ZB, WALL, WALL_H - BEAM_H)
