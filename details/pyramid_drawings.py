@@ -10,7 +10,7 @@ CLEAR = 10000.0            # clear inside dimension, square plan
 WALL = 400.0               # wall thickness = ring beam width = roof base width
 BEAM_H = 500.0             # ring beam depth
 WALL_H = 2500.0            # ground to top of ring beam (= eave, roof base)
-BUT_TOTAL, BUT_W = 700.0, 300.0   # buttress: 700 long measured from the inner wall face (flush with wall and beam), 300 wide
+BUT_TOTAL, BUT_W = 700.0, 400.0   # buttress: 700 long measured from the inner wall face (flush with wall and beam), 400 wide (= the wall thickness, constant along its length)
 BUT_L = BUT_TOTAL - WALL          # so it projects only this far beyond the outer wall face
 OPEN = 1000.0              # square opening at the crown (inner face)
 RISE = 8000.0              # roof height
@@ -43,10 +43,10 @@ class Sheet:
         self.o = []; self.title, self.sub, self.legend, self.notes = title, sub, legend, notes
     def P(self, x, z): return (self.ox + x * self.s, self.oz - z * self.s)
     def pts(self, ps): return " ".join("{:.2f},{:.2f}".format(*self.P(*p)) for p in ps)
-    def poly(self, ps, fill="none", sw=0.25, stroke="#000", extra=""):
+    def poly(self, ps, fill="none", sw=0.25, stroke="#000", extra="", join="round"):
         if fill == PINK:
             fill = "#fff"                  # lattice cells are open air pockets (ventilation)
-        self.o.append('<polygon points="{}" fill="{}" stroke="{}" stroke-width="{}" stroke-linejoin="round" {}/>'.format(self.pts(ps), fill, stroke, sw, extra))
+        self.o.append('<polygon points="{}" fill="{}" stroke="{}" stroke-width="{}" stroke-linejoin="{}" {}/>'.format(self.pts(ps), fill, stroke, sw, join, extra))
     def line(self, ps, sw=0.25, color="#000", dash=None, extra=""):
         self.o.append('<polyline points="{}" fill="none" stroke="{}" stroke-width="{}" stroke-linejoin="round"{} {}/>'.format(
             self.pts(ps), color, sw, ' stroke-dasharray="{}"'.format(dash) if dash else "", extra))
@@ -200,7 +200,7 @@ def conc(sh, ps): sh.poly(ps, "#fff", 0.0); sh.poly(ps, "url(#conc)", 0.0)
 def plan():
     sh = Sheet(50, 150, 148.5, "Floor plan",
                "10 x 10 m clear · 8 buttresses · printed walls",
-               [(1, True, "Printed wall 400 (= ring beam width = roof base width). Buttresses 300 wide, 700 long from the inner face (flush with the wall inside), so they project 300 outside."),
+               [(1, True, "Printed wall 400 (= ring beam width = roof base width). Buttresses solid black: 400 wide (same as the wall), 700 deep from the inner face (flush with the wall inside), so they project 300 outside."),
                 (2, True, "Openings, one per bay between the buttresses: doors 1000 (south-west and north-east bays), windows 1800 in the other six. Positions and sizes are placeholders."),
                 (3, False, "Pyramid roof above (dashed): 1000 square crown, hips to the corners, roof base 400 thick square to the slope, so its outer edge lands about 59 outside the wall face."),
                 (4, True, "Buttresses at the 4 corners and the 4 mid-spans, axes 5200 apart (centre to centre of wall).")],
@@ -210,25 +210,19 @@ def plan():
     c = HALF + WALL / 2                 # wall centreline
     xs = [-c, 0, c]
     # strokes first, fills second so overlapping joints disappear
-    shapes = [rect(-b, -b, b, b)]       # placeholder, replaced below by ring + fins
     fins = []
-    for cx in xs:
-        for cy in (-c, c):
-            pass
     fin = lambda x0, y0, x1, y1: [(x0, y0), (x1, y0), (x1, y1), (x0, y1)]
     for v in xs:                         # east / west fins and north / south fins
-        fins.append(fin(b, v - BUT_W / 2, b + BUT_L, v + BUT_W / 2))
-        fins.append(fin(-b - BUT_L, v - BUT_W / 2, -b, v + BUT_W / 2))
-        fins.append(fin(v - BUT_W / 2, b, v + BUT_W / 2, b + BUT_L))
-        fins.append(fin(v - BUT_W / 2, -b - BUT_L, v + BUT_W / 2, -b))
+        # each buttress runs 700 from the inner wall face, through the wall, to 300 beyond the outer face
+        fins.append(fin(a, v - BUT_W / 2, b + BUT_L, v + BUT_W / 2))
+        fins.append(fin(-b - BUT_L, v - BUT_W / 2, -a, v + BUT_W / 2))
+        fins.append(fin(v - BUT_W / 2, a, v + BUT_W / 2, b + BUT_L))
+        fins.append(fin(v - BUT_W / 2, -b - BUT_L, v + BUT_W / 2, -a))
     ring = rect(-b, -b, b, b)
     inner = rect(-a, -a, a, a)
     # corner fins of the neighbouring wall at a corner are the same rectangles twice; fine (drawn on top of each other)
-    for p in [ring] + fins:
-        sh.poly(p, "none", 1.0)
+    sh.poly(ring, "none", 1.0)
     px = " ".join("{:.2f},{:.2f}".format(*sh.P(*p)) for p in ring)
-    for p in fins:
-        sh.poly(p, "#fff", 0.0); sh.poly(p, "url(#conc)", 0.0)
     d = "M" + " L".join("{:.2f},{:.2f}".format(*sh.P(*p)) for p in ring) + "Z M" + " L".join("{:.2f},{:.2f}".format(*sh.P(*p)) for p in inner) + "Z"
     sh.o.append('<path d="{0}" fill="#fff" fill-rule="evenodd"/><path d="{0}" fill="url(#conc)" fill-rule="evenodd"/>'.format(d))
     sh.poly(inner, "none", 0.5)
@@ -262,6 +256,8 @@ def plan():
     ring.append(ring[0])
     sh.line(ring, BW * sh.s + 0.1, "#000", extra='stroke-linecap="butt"')
     sh.line(ring, BW * sh.s, "#fff", extra='stroke-linecap="butt"')
+    for p in fins:                                          # buttresses: solid black fill only (no rim), so it ends exactly on the wall faces
+        sh.poly(p, "#000", 0.0)
     # outline of the union (outer ring edge only where not covered by fins) handled by the black pass above
     # openings: every bay between the buttresses gets a door or a window
     def pt(side, al, ac):
@@ -333,7 +329,7 @@ def section():
                [(1, True, "Footing {:g} x {:g}, underside at {:g} (frost depth and bearing are guesses).".format(FOOT_W, FOOT_T, FOOT_Z)),
                 (2, True, "Printed wall 400, same pattern as the roof: two 80 inner layers, a 160 air zone, an 80 outer layer."),
                 (3, False, "Ring beam 400 wide x 500 deep, embedded in the buttress notch; top at +2.50, flush with the buttress top."),
-                (4, False, "Buttress 300 wide, 700 from the inner face (300 beyond the wall), L-shaped around the ring beam: it rises to +2.50, flush with the roof base."),
+                (4, False, "Buttress 400 wide, 700 from the inner face (300 beyond the wall), L-shaped around the ring beam: it rises to +2.50, flush with the roof base."),
                 (5, False, "Roof shell: 400 thick square to the slope at the base (two 80 inner layers, a 160 air zone, an 80 outer layer), 320 at the crown; about 459 / 367 horizontally."),
                 (6, False, "Crown opening 1000 clear; roof rises 8000 over {:g}, slope {:.1f}°.".format(RUN, SLOPE))],
                ["Layer pattern from your drawing; at the crown the second inner layer ends, so the leaf is 80 there (assumed).",
@@ -524,7 +520,7 @@ def detail():
                 (6, True, "Starter bars Ø12 from the ring beam into the pockets, lap 650; roof bars stop where the load allows (open)."),
                 (7, True, "Ring bars Ø12 in the pocket zone every 300 (assumed)."),
                 (8, True, "Ring beam 400 x 500, cast in place: 6 Ø16, stirrups Ø8 / 150; embedded in the buttress notch."),
-                (9, False, "Buttress 300 wide, 700 from the inner face (300 beyond the wall), L-shaped around the ring beam; top flush with the roof base at +2.50."),
+                (9, False, "Buttress 400 wide, 700 from the inner face (300 beyond the wall), L-shaped around the ring beam; top flush with the roof base at +2.50."),
                 (10, True, "Wall 400 printed, same pattern as the roof; Ø16 bars in the pockets run from the footing into the beam and on into the roof pockets (assumed).")],
                ["Layer pattern from your drawing: from the inside, 80 + 80 printed layers (the second curves round the bar), then a 160 zig-zag zone, then the 80 outer layer; 400 in total.",
                 "Roof thicknesses are square to the slope; the wall is vertical. Black heavy lines and dots = rebar, white lattice cells = open air, single hatch = printed concrete, crossed hatch = ring beam cut in the section plane."])
