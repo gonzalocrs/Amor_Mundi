@@ -33,6 +33,18 @@
 <polyline points="235.29,150.00 257.00,150.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
 <polyline points="246.14,180.00 246.14,170.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
 <polyline points="246.14,160.00 246.14,150.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polygon points="86.71,190.00 108.43,190.00 108.43,140.00 86.71,140.00" fill="#fff" stroke="#444" stroke-width="0.35" stroke-linejoin="round" />
+<polygon points="87.51,189.20 107.63,189.20 107.63,140.80 87.51,140.80" fill="none" stroke="#444" stroke-width="0.15" stroke-linejoin="round" />
+<polyline points="97.57,189.20 97.57,140.80" fill="none" stroke="#444" stroke-width="0.2" stroke-linejoin="round" />
+<polyline points="87.51,173.33 107.63,173.33" fill="none" stroke="#444" stroke-width="0.15" stroke-linejoin="round" />
+<polyline points="87.51,156.67 107.63,156.67" fill="none" stroke="#444" stroke-width="0.15" stroke-linejoin="round" />
+<polygon points="147.00,190.00 167.00,190.00 167.00,150.00 147.00,150.00" fill="#fff" stroke="#444" stroke-width="0.3" stroke-linejoin="round" />
+<polygon points="146.20,190.00 167.80,190.00 167.80,149.20 146.20,149.20" fill="none" stroke="#444" stroke-width="0.15" stroke-linejoin="round" />
+<polygon points="205.57,190.00 227.29,190.00 227.29,140.00 205.57,140.00" fill="#fff" stroke="#444" stroke-width="0.35" stroke-linejoin="round" />
+<polygon points="206.37,189.20 226.49,189.20 226.49,140.80 206.37,140.80" fill="none" stroke="#444" stroke-width="0.15" stroke-linejoin="round" />
+<polyline points="216.43,189.20 216.43,140.80" fill="none" stroke="#444" stroke-width="0.2" stroke-linejoin="round" />
+<polyline points="206.37,173.33 226.49,173.33" fill="none" stroke="#444" stroke-width="0.15" stroke-linejoin="round" />
+<polyline points="206.37,156.67 226.49,156.67" fill="none" stroke="#444" stroke-width="0.15" stroke-linejoin="round" />
 <polygon points="49.00,190.00 57.00,190.00 57.00,140.00 49.00,140.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
 <path d="M49.0,188.0 L57.0,188.0 M49.0,186.0 L57.0,186.0 M49.0,184.0 L57.0,184.0 M49.0,182.0 L57.0,182.0 M49.0,180.0 L57.0,180.0 M49.0,178.0 L57.0,178.0 M49.0,176.0 L57.0,176.0 M49.0,174.0 L57.0,174.0 M49.0,172.0 L57.0,172.0 M49.0,170.0 L57.0,170.0 M49.0,168.0 L57.0,168.0 M49.0,166.0 L57.0,166.0 M49.0,164.0 L57.0,164.0 M49.0,162.0 L57.0,162.0 M49.0,160.0 L57.0,160.0 M49.0,158.0 L57.0,158.0 M49.0,156.0 L57.0,156.0 M49.0,154.0 L57.0,154.0 M49.0,152.0 L57.0,152.0 M49.0,150.0 L57.0,150.0 M49.0,148.0 L57.0,148.0 M49.0,146.0 L57.0,146.0 M49.0,144.0 L57.0,144.0 M49.0,142.0 L57.0,142.0" fill="none" stroke="#c4c4c4" stroke-width="0.03" stroke-linejoin="round"/>
 <polygon points="49.00,190.00 57.00,190.00 57.00,140.00 49.00,140.00" fill="none" stroke="#000" stroke-width="0.5" stroke-linejoin="round" />
@@ -399,10 +411,10 @@
 <text x="312" y="104.5" font-size="2.8">(8) Buttresses 400 wide, 1000 from the inner face (600 outside),</text>
 <text x="316" y="108.0" font-size="2.8">about every 1.5 m (7 bays of 1486 on the wall centreline, 8 per</text>
 <text x="316" y="111.5" font-size="2.8">side, corners included); every other bay shows the printed wall</text>
-<text x="316" y="115.0" font-size="2.8">(layer joints, dashed piece divisions), the rest are only</text>
-<text x="316" y="118.5" font-size="2.8">outlined. Each buttress is one continuous strip 400 thick, also at</text>
-<text x="316" y="122.0" font-size="2.8">the corners. Roof ribs and wall bars tie into the solid base above</text>
-<text x="316" y="125.5" font-size="2.8">them.</text>
+<text x="316" y="115.0" font-size="2.8">(layer joints, dashed piece divisions), the bays between are</text>
+<text x="316" y="118.5" font-size="2.8">full-height curtain wall (door in the middle one). Each buttress</text>
+<text x="316" y="122.0" font-size="2.8">is one continuous strip 400 thick, also at the corners. Roof ribs</text>
+<text x="316" y="125.5" font-size="2.8">and wall bars tie into the solid base above them.</text>
 <text x="312" y="130.5" font-size="2.8">(9*) Strip footing 1800 x 250, underside at -1.00 (hidden,</text>
 <text x="316" y="134.0" font-size="2.8">dashed): printed edge formwork, cast core.</text>
 <text x="312" y="139.0" font-size="2.8">(10) Printed channel walls, 80 each side of the rib: permanent</text>

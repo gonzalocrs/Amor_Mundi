@@ -225,6 +225,17 @@ def building(sh):
             sh.line([(xa, z), (xb, z)], 0.1, **dash)
         for r in range(wr):
             if r % 2: sh.line([((xa + xb) / 2, zg + r * g.WALL_H / wr), ((xa + xb) / 2, zg + (r + 1) * g.WALL_H / wr)], 0.1, **dash)
+    for j in (1, 3, 5):                                                                  # odd bays: full curtain wall, or the door in the middle bay
+        xa, xb = xs[j] + BUT_W / 2, xs[j + 1] - BUT_W / 2
+        if j == 3:
+            cxm = (xa + xb) / 2
+            sh.poly(rect(cxm - 500, zg, cxm + 500, zg + 2000), "#fff", 0.3, "#444")
+            sh.poly(rect(cxm - 540, zg, cxm + 540, zg + 2040), "none", 0.15, "#444")
+        else:
+            sh.poly(rect(xa, zg, xb, 0), "#fff", 0.35, "#444")
+            sh.poly(rect(xa + 40, zg + 40, xb - 40, -40), "none", 0.15, "#444")
+            sh.line([((xa + xb) / 2, zg + 40), ((xa + xb) / 2, -40)], 0.2, "#444")
+            for zz in (zg + g.WALL_H / 3, zg + 2 * g.WALL_H / 3): sh.line([(xa + 40, zz), (xb - 40, zz)], 0.15, "#444")
     for x in xs:                                                                         # buttresses: one continuous strip each, 400 wide, corners included
         q = rect(x - BUT_W / 2, zg, x + BUT_W / 2, 0)
         sh.poly(q, "#fff", 0.0); pr(q); sh.poly(q, "none", 0.5)
@@ -288,7 +299,7 @@ def sheet(opt):
                  "Diagonals do not stop as the roof narrows: the diamonds just get clipped by the hips."]
     legend = legend + common_legend(opt) + [(7, False, "Printed wall 400 (same layers as the roof), to +2.50."),
                                              (12, True, "Build-up outside the printed shell, seen at the sides of the roof: insulation 100 (type to be chosen), then the outer layer (cladding 30). The 160 air zone inside the shell stays open between the ribs."),
-                                             (8, False, "Buttresses 400 wide, 1000 from the inner face (600 outside), about every 1.5 m ({} bays of {:.0f} on the wall centreline, {} per side, corners included); every other bay shows the printed wall (layer joints, dashed piece divisions), the rest are only outlined. Each buttress is one continuous strip 400 thick, also at the corners. Roof ribs and wall bars tie into the solid base above them.".format(round(2 * (g.HALF + g.WALL / 2) / BUT_SPACING), 2 * (g.HALF + g.WALL / 2) / round(2 * (g.HALF + g.WALL / 2) / BUT_SPACING), round(2 * (g.HALF + g.WALL / 2) / BUT_SPACING) + 1)),
+                                             (8, False, "Buttresses 400 wide, 1000 from the inner face (600 outside), about every 1.5 m ({} bays of {:.0f} on the wall centreline, {} per side, corners included); every other bay shows the printed wall (layer joints, dashed piece divisions), the bays between are full-height curtain wall (door in the middle one). Each buttress is one continuous strip 400 thick, also at the corners. Roof ribs and wall bars tie into the solid base above them.".format(round(2 * (g.HALF + g.WALL / 2) / BUT_SPACING), 2 * (g.HALF + g.WALL / 2) / round(2 * (g.HALF + g.WALL / 2) / BUT_SPACING), round(2 * (g.HALF + g.WALL / 2) / BUT_SPACING) + 1)),
                                              (9, True, "Strip footing 1800 x 250, underside at -1.00 (hidden, dashed): printed edge formwork, cast core.")]
     notes += ["Dashed lines = divisions between printed pieces on the roof, in running bond (assumed about 1500 wide, 750 high). Very faint lines = printed layer joints.",
               "All 3D printed (after the Obayashi 3dpod paper, 2023): mortar beads are printed as permanent formwork, in 10 mm layers (joints drawn every 100 on the elevation), and the structural concrete is cast into them in lifts limited by formwork pressure; the shell, wall and buttress faces are the printed skin.",
