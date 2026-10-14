@@ -60,19 +60,27 @@ Deetman, Bos, Ferguson, Versteege, *Salad Slicer: An open-source slicer toolkit 
 
 ## Karamba model
 
-`scripts/karamba_model.py` (Py3 Script component, millimetres). Wire its outputs like this:
+`scripts/karamba_model.py` (Py3 Script component, millimetres). The `grid` input picks the roof:
+**A** (ruled-surface columns, sheet 08), **B** (diamond lattice, sheet 09) or **none** (plain shell, the baseline).
+All three have the same shell, walls and 32 buttresses (8 per side, as on the floor plan), so the results compare
+like for like. The roof mesh follows the ribs, so each rib is a chain of beams on shell nodes.
+Run `python scripts/karamba_model.py` to print the three variants and check that everything connects.
+
+Wire its outputs like this:
 
 | Output | Karamba component |
 |---|---|
 | `roof_meshes`, `wall_meshes`, `but_meshes` | one **Mesh to Shell** each, with a Shell cross-section of thickness `t_roof` / `t_wall` / `t_but` and a material from `material` (use `gamma_roof` / `gamma_wall` as the density so the hollow printed layers weigh the right amount) |
-| `ring_lines` | **Line to Beam**, rectangular 400 x 500 |
+| `ring_lines` | **Line to Beam**, rectangular 400 x 300 (the solid roof base) |
 | `crown_lines` | **Line to Beam**, e.g. 200 x 200 (assumed crown compression ring; set `crown_ring` False to drop it) |
+| `rib_lines` | **Line to Beam** with `rib_ids` into its Id input; rectangular `rib_w` x `rib_d` (160 x 240), full concrete density. The ids (`col`, `hring`, `hip` for A; `diag`, `hip` for B) let you give the hips or the horizontal ribs their own section. Empty for `none`. |
 | `supports` | **Support** (fixed, or pinned with `fixed` = False) |
 | gravity | Karamba **Gravity** load |
 | `cladding` | **Mesh Load** on `roof_meshes` |
 | `wind_vecs`, `wind_walls` | **Mesh Load**, one per mesh, same order (4 load cases: rotate `wind_dir` 0 / 90 / 180 / 270) |
 
-Then **Assemble** all, **Analyze**, and read utilisation, reactions at `supports` and the displacement.
-Compare: the self weight should match `info`. The buttress base reactions settle how much of the roof
-thrust the buttresses take and how much the solid roof base carries as a tension ring.
-Idealisations (ring beam centroid = roof base, no footing, buttress attached along the wall mid-plane) are listed at the top of the script.
+Then **Assemble** all, **Analyze**, and read utilisation, reactions at `supports` and the displacement. Run it once
+per `grid` value to compare the options. The self weight should match `info`. The buttress base reactions settle how
+much of the roof thrust the buttresses take and how much the solid roof base carries as a tension ring.
+Idealisations (ring beam at the centroid of the solid base, ribs start on the ring beam, crown ring snapped to the
+mesh, no footing) are listed at the top of the script.
