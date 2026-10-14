@@ -8,7 +8,7 @@ import pyramid_drawings as g
 import roof_grid as rg
 from pyramid_drawings import Sheet
 
-MAIN_H = 1500.0                  # large slice, above the eave (+4.00)
+MAIN_H = 3400.0                  # large slice, above the eave (+5.90): just below the middle horizontal rib of grid A (at +6.13)
 SMALL = [(4500.0, 250.0, 78.0), (5500.0, 250.0, 205.0)]    # (height above the eave, paper x, paper y of the centre) of the two small slices (+7.00, +8.00)
 SH = g.SH
 ALPHA = math.radians(g.SLOPE)
@@ -106,8 +106,8 @@ def sheet(opt):
               (4, True, "Corner blocks: the four hip ribs, cut across the corners (cast)."),
               (5, False, "Outer layer 80, printed."),
               (6, False, "Insulation 100 (very thin line), then the outer layer 30 (dark).")]
-    notes = ["Large slice at +4.00 ({} above the eave), 1:50; small slices at +7.00 and +8.00, 1:100.".format(int(h)),
-             "Option A: all columns at +4.00, every other column after they pass 500 spacing (+7.00), then only the hip columns (+8.00). Option B: the diamond lattice keeps the same two diagonal families at every height, clipped by the hips." if opt == "A" else
+    notes = ["Large slice at +{:.2f} ({} above the eave, just below the middle horizontal rib of option A), 1:50; small slices at +7.00 and +8.00, 1:100.".format((g.WALL_H + h) / 1000, int(h)),
+             ("Option A: all columns at +{:.2f}, every other column after they pass 500 spacing (+7.00), then only the hip columns (+8.00). Option B: the diamond lattice keeps the same two diagonal families at every height, clipped by the hips.".format((g.WALL_H + h) / 1000)) if opt == "A" else
              "Option B: the same two diagonal families at every height; the cut ribs move towards the corners as the roof narrows, the diamonds are clipped by the hips.",
              "Layer 2 thins towards the crown (the leaf is 160 at the base, 80 at the crown). Ribs use the same geometry as the roof-grid sheets; bars and stirrups are assumed."]
     sh = Sheet(50, 150, 148.5, title, sub, legend, notes)

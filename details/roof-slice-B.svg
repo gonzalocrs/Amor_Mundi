@@ -3,415 +3,303 @@
 <rect width="420" height="297" fill="#fff"/>
 <rect x="8" y="8" width="404" height="281" fill="none" stroke="#000" stroke-width="0.35"/>
 <g>
-<path d="M19.75,240.25 L200.25,240.25 L200.25,59.75 L19.75,59.75Z M20.50,239.50 L199.50,239.50 L199.50,60.50 L20.50,60.50Z" fill="#555" fill-rule="evenodd"/>
-<path d="M20.50,239.50 L199.50,239.50 L199.50,60.50 L20.50,60.50Z M23.00,237.00 L197.00,237.00 L197.00,63.00 L23.00,63.00Z" fill="#fff" fill-rule="evenodd"/>
-<path d="M20.50,239.50 L199.50,239.50 L199.50,60.50 L20.50,60.50Z M23.00,237.00 L197.00,237.00 L197.00,63.00 L23.00,63.00Z" fill="url(#dots)" fill-rule="evenodd"/>
-<path d="M23.00,237.00 L197.00,237.00 L197.00,63.00 L23.00,63.00Z M25.00,235.00 L195.00,235.00 L195.00,65.00 L25.00,65.00Z" fill="#fff" fill-rule="evenodd"/>
-<path d="M23.00,237.00 L197.00,237.00 L197.00,63.00 L23.00,63.00Z M25.00,235.00 L195.00,235.00 L195.00,65.00 L25.00,65.00Z" fill="url(#conc)" fill-rule="evenodd"/>
-<path d="M25.00,235.00 L195.00,235.00 L195.00,65.00 L25.00,65.00Z M29.00,231.00 L191.00,231.00 L191.00,69.00 L29.00,69.00Z" fill="#fff" fill-rule="evenodd"/>
-<path d="M25.00,235.00 L195.00,235.00 L195.00,65.00 L25.00,65.00Z M29.00,231.00 L191.00,231.00 L191.00,69.00 L29.00,69.00Z" fill="url(#dots)" fill-rule="evenodd"/>
-<path d="M29.00,231.00 L191.00,231.00 L191.00,69.00 L29.00,69.00Z M30.50,229.50 L189.50,229.50 L189.50,70.50 L30.50,70.50Z" fill="#fff" fill-rule="evenodd"/>
-<path d="M29.00,231.00 L191.00,231.00 L191.00,69.00 L29.00,69.00Z M30.50,229.50 L189.50,229.50 L189.50,70.50 L30.50,70.50Z" fill="url(#conc)" fill-rule="evenodd"/>
-<path d="M30.50,229.50 L189.50,229.50 L189.50,70.50 L30.50,70.50Z M32.50,227.50 L187.50,227.50 L187.50,72.50 L32.50,72.50Z" fill="#fff" fill-rule="evenodd"/>
-<path d="M30.50,229.50 L189.50,229.50 L189.50,70.50 L30.50,70.50Z M32.50,227.50 L187.50,227.50 L187.50,72.50 L32.50,72.50Z" fill="url(#conc)" fill-rule="evenodd"/>
-<polygon points="19.75,240.25 200.25,240.25 200.25,59.75 19.75,59.75" fill="none" stroke="#000" stroke-width="0.3" stroke-linejoin="round" />
-<polygon points="20.50,239.50 199.50,239.50 199.50,60.50 20.50,60.50" fill="none" stroke="#000" stroke-width="0.07" stroke-linejoin="round" />
-<polygon points="23.00,237.00 197.00,237.00 197.00,63.00 23.00,63.00" fill="none" stroke="#000" stroke-width="0.4" stroke-linejoin="round" />
-<polygon points="25.00,235.00 195.00,235.00 195.00,65.00 25.00,65.00" fill="none" stroke="#000" stroke-width="0.3" stroke-linejoin="round" />
-<polygon points="29.00,231.00 191.00,231.00 191.00,69.00 29.00,69.00" fill="none" stroke="#000" stroke-width="0.25" stroke-linejoin="round" />
-<polygon points="30.50,229.50 189.50,229.50 189.50,70.50 30.50,70.50" fill="none" stroke="#000" stroke-width="0.25" stroke-linejoin="round" />
-<polygon points="32.50,227.50 187.50,227.50 187.50,72.50 32.50,72.50" fill="none" stroke="#000" stroke-width="0.6" stroke-linejoin="round" />
-<polygon points="53.13,229.50 51.13,235.00 54.87,235.00 56.87,229.50" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="53.13,229.50 51.13,235.00 54.87,235.00 56.87,229.50" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="53.13,229.50 51.13,235.00 54.87,235.00 56.87,229.50" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="53.89" cy="231.00" r="0.35" fill="#000"/>
-<circle cx="55.01" cy="231.00" r="0.35" fill="#000"/>
-<circle cx="52.81" cy="234.00" r="0.35" fill="#000"/>
-<circle cx="53.93" cy="234.00" r="0.35" fill="#000"/>
-<polygon points="163.13,229.50 165.13,235.00 168.87,235.00 166.87,229.50" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="163.13,229.50 165.13,235.00 168.87,235.00 166.87,229.50" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="163.13,229.50 165.13,235.00 168.87,235.00 166.87,229.50" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="164.99" cy="231.00" r="0.35" fill="#000"/>
-<circle cx="166.11" cy="231.00" r="0.35" fill="#000"/>
-<circle cx="166.07" cy="234.00" r="0.35" fill="#000"/>
-<circle cx="167.19" cy="234.00" r="0.35" fill="#000"/>
-<polygon points="79.38,229.50 77.38,235.00 81.12,235.00 83.12,229.50" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="79.38,229.50 77.38,235.00 81.12,235.00 83.12,229.50" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="79.38,229.50 77.38,235.00 81.12,235.00 83.12,229.50" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="80.14" cy="231.00" r="0.35" fill="#000"/>
-<circle cx="81.26" cy="231.00" r="0.35" fill="#000"/>
-<circle cx="79.06" cy="234.00" r="0.35" fill="#000"/>
-<circle cx="80.18" cy="234.00" r="0.35" fill="#000"/>
-<polygon points="136.88,229.50 138.88,235.00 142.62,235.00 140.62,229.50" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="136.88,229.50 138.88,235.00 142.62,235.00 140.62,229.50" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="136.88,229.50 138.88,235.00 142.62,235.00 140.62,229.50" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="138.74" cy="231.00" r="0.35" fill="#000"/>
-<circle cx="139.86" cy="231.00" r="0.35" fill="#000"/>
-<circle cx="139.82" cy="234.00" r="0.35" fill="#000"/>
-<circle cx="140.94" cy="234.00" r="0.35" fill="#000"/>
-<polygon points="105.63,229.50 103.63,235.00 107.37,235.00 109.37,229.50" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="105.63,229.50 103.63,235.00 107.37,235.00 109.37,229.50" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="105.63,229.50 103.63,235.00 107.37,235.00 109.37,229.50" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="106.39" cy="231.00" r="0.35" fill="#000"/>
-<circle cx="107.51" cy="231.00" r="0.35" fill="#000"/>
-<circle cx="105.31" cy="234.00" r="0.35" fill="#000"/>
-<circle cx="106.43" cy="234.00" r="0.35" fill="#000"/>
-<polygon points="110.63,229.50 112.63,235.00 116.37,235.00 114.37,229.50" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="110.63,229.50 112.63,235.00 116.37,235.00 114.37,229.50" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="110.63,229.50 112.63,235.00 116.37,235.00 114.37,229.50" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="112.49" cy="231.00" r="0.35" fill="#000"/>
-<circle cx="113.61" cy="231.00" r="0.35" fill="#000"/>
-<circle cx="113.57" cy="234.00" r="0.35" fill="#000"/>
-<circle cx="114.69" cy="234.00" r="0.35" fill="#000"/>
-<polygon points="131.88,229.50 129.88,235.00 133.62,235.00 135.62,229.50" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="131.88,229.50 129.88,235.00 133.62,235.00 135.62,229.50" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="131.88,229.50 129.88,235.00 133.62,235.00 135.62,229.50" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="132.64" cy="231.00" r="0.35" fill="#000"/>
-<circle cx="133.76" cy="231.00" r="0.35" fill="#000"/>
-<circle cx="131.56" cy="234.00" r="0.35" fill="#000"/>
-<circle cx="132.68" cy="234.00" r="0.35" fill="#000"/>
-<polygon points="84.38,229.50 86.38,235.00 90.12,235.00 88.12,229.50" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="84.38,229.50 86.38,235.00 90.12,235.00 88.12,229.50" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="84.38,229.50 86.38,235.00 90.12,235.00 88.12,229.50" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="86.24" cy="231.00" r="0.35" fill="#000"/>
-<circle cx="87.36" cy="231.00" r="0.35" fill="#000"/>
-<circle cx="87.32" cy="234.00" r="0.35" fill="#000"/>
-<circle cx="88.44" cy="234.00" r="0.35" fill="#000"/>
-<polygon points="158.13,229.50 156.13,235.00 159.87,235.00 161.87,229.50" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="158.13,229.50 156.13,235.00 159.87,235.00 161.87,229.50" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="158.13,229.50 156.13,235.00 159.87,235.00 161.87,229.50" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="158.89" cy="231.00" r="0.35" fill="#000"/>
-<circle cx="160.01" cy="231.00" r="0.35" fill="#000"/>
-<circle cx="157.81" cy="234.00" r="0.35" fill="#000"/>
-<circle cx="158.93" cy="234.00" r="0.35" fill="#000"/>
-<polygon points="58.13,229.50 60.13,235.00 63.87,235.00 61.87,229.50" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="58.13,229.50 60.13,235.00 63.87,235.00 61.87,229.50" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="58.13,229.50 60.13,235.00 63.87,235.00 61.87,229.50" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="59.99" cy="231.00" r="0.35" fill="#000"/>
-<circle cx="61.11" cy="231.00" r="0.35" fill="#000"/>
-<circle cx="61.07" cy="234.00" r="0.35" fill="#000"/>
-<circle cx="62.19" cy="234.00" r="0.35" fill="#000"/>
-<polygon points="184.38,229.50 182.38,235.00 186.12,235.00 188.12,229.50" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="184.38,229.50 182.38,235.00 186.12,235.00 188.12,229.50" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="184.38,229.50 182.38,235.00 186.12,235.00 188.12,229.50" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="185.14" cy="231.00" r="0.35" fill="#000"/>
-<circle cx="186.26" cy="231.00" r="0.35" fill="#000"/>
-<circle cx="184.06" cy="234.00" r="0.35" fill="#000"/>
-<circle cx="185.18" cy="234.00" r="0.35" fill="#000"/>
-<polygon points="31.88,229.50 33.88,235.00 37.62,235.00 35.62,229.50" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="31.88,229.50 33.88,235.00 37.62,235.00 35.62,229.50" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="31.88,229.50 33.88,235.00 37.62,235.00 35.62,229.50" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="33.74" cy="231.00" r="0.35" fill="#000"/>
-<circle cx="34.86" cy="231.00" r="0.35" fill="#000"/>
-<circle cx="34.82" cy="234.00" r="0.35" fill="#000"/>
-<circle cx="35.94" cy="234.00" r="0.35" fill="#000"/>
-<polygon points="189.50,206.87 195.00,208.87 195.00,205.13 189.50,203.13" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="189.50,206.87 195.00,208.87 195.00,205.13 189.50,203.13" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="189.50,206.87 195.00,208.87 195.00,205.13 189.50,203.13" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="191.00" cy="206.11" r="0.35" fill="#000"/>
-<circle cx="191.00" cy="204.99" r="0.35" fill="#000"/>
-<circle cx="194.00" cy="207.19" r="0.35" fill="#000"/>
-<circle cx="194.00" cy="206.07" r="0.35" fill="#000"/>
-<polygon points="189.50,96.87 195.00,94.87 195.00,91.13 189.50,93.13" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="189.50,96.87 195.00,94.87 195.00,91.13 189.50,93.13" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="189.50,96.87 195.00,94.87 195.00,91.13 189.50,93.13" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="191.00" cy="95.01" r="0.35" fill="#000"/>
-<circle cx="191.00" cy="93.89" r="0.35" fill="#000"/>
-<circle cx="194.00" cy="93.93" r="0.35" fill="#000"/>
-<circle cx="194.00" cy="92.81" r="0.35" fill="#000"/>
-<polygon points="189.50,180.62 195.00,182.62 195.00,178.88 189.50,176.88" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="189.50,180.62 195.00,182.62 195.00,178.88 189.50,176.88" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="189.50,180.62 195.00,182.62 195.00,178.88 189.50,176.88" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="191.00" cy="179.86" r="0.35" fill="#000"/>
-<circle cx="191.00" cy="178.74" r="0.35" fill="#000"/>
-<circle cx="194.00" cy="180.94" r="0.35" fill="#000"/>
-<circle cx="194.00" cy="179.82" r="0.35" fill="#000"/>
-<polygon points="189.50,123.12 195.00,121.12 195.00,117.38 189.50,119.38" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="189.50,123.12 195.00,121.12 195.00,117.38 189.50,119.38" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="189.50,123.12 195.00,121.12 195.00,117.38 189.50,119.38" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="191.00" cy="121.26" r="0.35" fill="#000"/>
-<circle cx="191.00" cy="120.14" r="0.35" fill="#000"/>
-<circle cx="194.00" cy="120.18" r="0.35" fill="#000"/>
-<circle cx="194.00" cy="119.06" r="0.35" fill="#000"/>
-<polygon points="189.50,154.37 195.00,156.37 195.00,152.63 189.50,150.63" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="189.50,154.37 195.00,156.37 195.00,152.63 189.50,150.63" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="189.50,154.37 195.00,156.37 195.00,152.63 189.50,150.63" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="191.00" cy="153.61" r="0.35" fill="#000"/>
-<circle cx="191.00" cy="152.49" r="0.35" fill="#000"/>
-<circle cx="194.00" cy="154.69" r="0.35" fill="#000"/>
-<circle cx="194.00" cy="153.57" r="0.35" fill="#000"/>
-<polygon points="189.50,149.37 195.00,147.37 195.00,143.63 189.50,145.63" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="189.50,149.37 195.00,147.37 195.00,143.63 189.50,145.63" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="189.50,149.37 195.00,147.37 195.00,143.63 189.50,145.63" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="191.00" cy="147.51" r="0.35" fill="#000"/>
-<circle cx="191.00" cy="146.39" r="0.35" fill="#000"/>
-<circle cx="194.00" cy="146.43" r="0.35" fill="#000"/>
-<circle cx="194.00" cy="145.31" r="0.35" fill="#000"/>
-<polygon points="189.50,128.12 195.00,130.12 195.00,126.38 189.50,124.38" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="189.50,128.12 195.00,130.12 195.00,126.38 189.50,124.38" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="189.50,128.12 195.00,130.12 195.00,126.38 189.50,124.38" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="191.00" cy="127.36" r="0.35" fill="#000"/>
-<circle cx="191.00" cy="126.24" r="0.35" fill="#000"/>
-<circle cx="194.00" cy="128.44" r="0.35" fill="#000"/>
-<circle cx="194.00" cy="127.32" r="0.35" fill="#000"/>
-<polygon points="189.50,175.62 195.00,173.62 195.00,169.88 189.50,171.88" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="189.50,175.62 195.00,173.62 195.00,169.88 189.50,171.88" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="189.50,175.62 195.00,173.62 195.00,169.88 189.50,171.88" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="191.00" cy="173.76" r="0.35" fill="#000"/>
-<circle cx="191.00" cy="172.64" r="0.35" fill="#000"/>
-<circle cx="194.00" cy="172.68" r="0.35" fill="#000"/>
-<circle cx="194.00" cy="171.56" r="0.35" fill="#000"/>
-<polygon points="189.50,101.87 195.00,103.87 195.00,100.13 189.50,98.13" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="189.50,101.87 195.00,103.87 195.00,100.13 189.50,98.13" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="189.50,101.87 195.00,103.87 195.00,100.13 189.50,98.13" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="191.00" cy="101.11" r="0.35" fill="#000"/>
-<circle cx="191.00" cy="99.99" r="0.35" fill="#000"/>
-<circle cx="194.00" cy="102.19" r="0.35" fill="#000"/>
-<circle cx="194.00" cy="101.07" r="0.35" fill="#000"/>
-<polygon points="189.50,201.87 195.00,199.87 195.00,196.13 189.50,198.13" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="189.50,201.87 195.00,199.87 195.00,196.13 189.50,198.13" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="189.50,201.87 195.00,199.87 195.00,196.13 189.50,198.13" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="191.00" cy="200.01" r="0.35" fill="#000"/>
-<circle cx="191.00" cy="198.89" r="0.35" fill="#000"/>
-<circle cx="194.00" cy="198.93" r="0.35" fill="#000"/>
-<circle cx="194.00" cy="197.81" r="0.35" fill="#000"/>
-<polygon points="189.50,75.62 195.00,77.62 195.00,73.88 189.50,71.88" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="189.50,75.62 195.00,77.62 195.00,73.88 189.50,71.88" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="189.50,75.62 195.00,77.62 195.00,73.88 189.50,71.88" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="191.00" cy="74.86" r="0.35" fill="#000"/>
-<circle cx="191.00" cy="73.74" r="0.35" fill="#000"/>
-<circle cx="194.00" cy="75.94" r="0.35" fill="#000"/>
-<circle cx="194.00" cy="74.82" r="0.35" fill="#000"/>
-<polygon points="189.50,228.12 195.00,226.12 195.00,222.38 189.50,224.38" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="189.50,228.12 195.00,226.12 195.00,222.38 189.50,224.38" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="189.50,228.12 195.00,226.12 195.00,222.38 189.50,224.38" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="191.00" cy="226.26" r="0.35" fill="#000"/>
-<circle cx="191.00" cy="225.14" r="0.35" fill="#000"/>
-<circle cx="194.00" cy="225.18" r="0.35" fill="#000"/>
-<circle cx="194.00" cy="224.06" r="0.35" fill="#000"/>
-<polygon points="166.87,70.50 168.87,65.00 165.13,65.00 163.13,70.50" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="166.87,70.50 168.87,65.00 165.13,65.00 163.13,70.50" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="166.87,70.50 168.87,65.00 165.13,65.00 163.13,70.50" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="166.11" cy="69.00" r="0.35" fill="#000"/>
-<circle cx="164.99" cy="69.00" r="0.35" fill="#000"/>
-<circle cx="167.19" cy="66.00" r="0.35" fill="#000"/>
-<circle cx="166.07" cy="66.00" r="0.35" fill="#000"/>
-<polygon points="56.87,70.50 54.87,65.00 51.13,65.00 53.13,70.50" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="56.87,70.50 54.87,65.00 51.13,65.00 53.13,70.50" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="56.87,70.50 54.87,65.00 51.13,65.00 53.13,70.50" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="55.01" cy="69.00" r="0.35" fill="#000"/>
-<circle cx="53.89" cy="69.00" r="0.35" fill="#000"/>
-<circle cx="53.93" cy="66.00" r="0.35" fill="#000"/>
-<circle cx="52.81" cy="66.00" r="0.35" fill="#000"/>
-<polygon points="140.62,70.50 142.62,65.00 138.88,65.00 136.88,70.50" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="140.62,70.50 142.62,65.00 138.88,65.00 136.88,70.50" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="140.62,70.50 142.62,65.00 138.88,65.00 136.88,70.50" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="139.86" cy="69.00" r="0.35" fill="#000"/>
-<circle cx="138.74" cy="69.00" r="0.35" fill="#000"/>
-<circle cx="140.94" cy="66.00" r="0.35" fill="#000"/>
-<circle cx="139.82" cy="66.00" r="0.35" fill="#000"/>
-<polygon points="83.12,70.50 81.12,65.00 77.38,65.00 79.38,70.50" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="83.12,70.50 81.12,65.00 77.38,65.00 79.38,70.50" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="83.12,70.50 81.12,65.00 77.38,65.00 79.38,70.50" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="81.26" cy="69.00" r="0.35" fill="#000"/>
-<circle cx="80.14" cy="69.00" r="0.35" fill="#000"/>
-<circle cx="80.18" cy="66.00" r="0.35" fill="#000"/>
-<circle cx="79.06" cy="66.00" r="0.35" fill="#000"/>
-<polygon points="114.37,70.50 116.37,65.00 112.63,65.00 110.63,70.50" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="114.37,70.50 116.37,65.00 112.63,65.00 110.63,70.50" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="114.37,70.50 116.37,65.00 112.63,65.00 110.63,70.50" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="113.61" cy="69.00" r="0.35" fill="#000"/>
-<circle cx="112.49" cy="69.00" r="0.35" fill="#000"/>
-<circle cx="114.69" cy="66.00" r="0.35" fill="#000"/>
-<circle cx="113.57" cy="66.00" r="0.35" fill="#000"/>
-<polygon points="109.37,70.50 107.37,65.00 103.63,65.00 105.63,70.50" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="109.37,70.50 107.37,65.00 103.63,65.00 105.63,70.50" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="109.37,70.50 107.37,65.00 103.63,65.00 105.63,70.50" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="107.51" cy="69.00" r="0.35" fill="#000"/>
-<circle cx="106.39" cy="69.00" r="0.35" fill="#000"/>
-<circle cx="106.43" cy="66.00" r="0.35" fill="#000"/>
-<circle cx="105.31" cy="66.00" r="0.35" fill="#000"/>
-<polygon points="88.12,70.50 90.12,65.00 86.38,65.00 84.38,70.50" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="88.12,70.50 90.12,65.00 86.38,65.00 84.38,70.50" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="88.12,70.50 90.12,65.00 86.38,65.00 84.38,70.50" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="87.36" cy="69.00" r="0.35" fill="#000"/>
-<circle cx="86.24" cy="69.00" r="0.35" fill="#000"/>
-<circle cx="88.44" cy="66.00" r="0.35" fill="#000"/>
-<circle cx="87.32" cy="66.00" r="0.35" fill="#000"/>
-<polygon points="135.62,70.50 133.62,65.00 129.88,65.00 131.88,70.50" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="135.62,70.50 133.62,65.00 129.88,65.00 131.88,70.50" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="135.62,70.50 133.62,65.00 129.88,65.00 131.88,70.50" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="133.76" cy="69.00" r="0.35" fill="#000"/>
-<circle cx="132.64" cy="69.00" r="0.35" fill="#000"/>
-<circle cx="132.68" cy="66.00" r="0.35" fill="#000"/>
-<circle cx="131.56" cy="66.00" r="0.35" fill="#000"/>
-<polygon points="61.87,70.50 63.87,65.00 60.13,65.00 58.13,70.50" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="61.87,70.50 63.87,65.00 60.13,65.00 58.13,70.50" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="61.87,70.50 63.87,65.00 60.13,65.00 58.13,70.50" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="61.11" cy="69.00" r="0.35" fill="#000"/>
-<circle cx="59.99" cy="69.00" r="0.35" fill="#000"/>
-<circle cx="62.19" cy="66.00" r="0.35" fill="#000"/>
-<circle cx="61.07" cy="66.00" r="0.35" fill="#000"/>
-<polygon points="161.87,70.50 159.87,65.00 156.13,65.00 158.13,70.50" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="161.87,70.50 159.87,65.00 156.13,65.00 158.13,70.50" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="161.87,70.50 159.87,65.00 156.13,65.00 158.13,70.50" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="160.01" cy="69.00" r="0.35" fill="#000"/>
-<circle cx="158.89" cy="69.00" r="0.35" fill="#000"/>
-<circle cx="158.93" cy="66.00" r="0.35" fill="#000"/>
-<circle cx="157.81" cy="66.00" r="0.35" fill="#000"/>
-<polygon points="35.62,70.50 37.62,65.00 33.88,65.00 31.88,70.50" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="35.62,70.50 37.62,65.00 33.88,65.00 31.88,70.50" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="35.62,70.50 37.62,65.00 33.88,65.00 31.88,70.50" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="34.86" cy="69.00" r="0.35" fill="#000"/>
-<circle cx="33.74" cy="69.00" r="0.35" fill="#000"/>
-<circle cx="35.94" cy="66.00" r="0.35" fill="#000"/>
-<circle cx="34.82" cy="66.00" r="0.35" fill="#000"/>
-<polygon points="188.12,70.50 186.12,65.00 182.38,65.00 184.38,70.50" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="188.12,70.50 186.12,65.00 182.38,65.00 184.38,70.50" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="188.12,70.50 186.12,65.00 182.38,65.00 184.38,70.50" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="186.26" cy="69.00" r="0.35" fill="#000"/>
-<circle cx="185.14" cy="69.00" r="0.35" fill="#000"/>
-<circle cx="185.18" cy="66.00" r="0.35" fill="#000"/>
-<circle cx="184.06" cy="66.00" r="0.35" fill="#000"/>
-<polygon points="30.50,93.13 25.00,91.13 25.00,94.87 30.50,96.87" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="30.50,93.13 25.00,91.13 25.00,94.87 30.50,96.87" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="30.50,93.13 25.00,91.13 25.00,94.87 30.50,96.87" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="29.00" cy="93.89" r="0.35" fill="#000"/>
-<circle cx="29.00" cy="95.01" r="0.35" fill="#000"/>
-<circle cx="26.00" cy="92.81" r="0.35" fill="#000"/>
-<circle cx="26.00" cy="93.93" r="0.35" fill="#000"/>
-<polygon points="30.50,203.13 25.00,205.13 25.00,208.87 30.50,206.87" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="30.50,203.13 25.00,205.13 25.00,208.87 30.50,206.87" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="30.50,203.13 25.00,205.13 25.00,208.87 30.50,206.87" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="29.00" cy="204.99" r="0.35" fill="#000"/>
-<circle cx="29.00" cy="206.11" r="0.35" fill="#000"/>
-<circle cx="26.00" cy="206.07" r="0.35" fill="#000"/>
-<circle cx="26.00" cy="207.19" r="0.35" fill="#000"/>
-<polygon points="30.50,119.38 25.00,117.38 25.00,121.12 30.50,123.12" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="30.50,119.38 25.00,117.38 25.00,121.12 30.50,123.12" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="30.50,119.38 25.00,117.38 25.00,121.12 30.50,123.12" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="29.00" cy="120.14" r="0.35" fill="#000"/>
-<circle cx="29.00" cy="121.26" r="0.35" fill="#000"/>
-<circle cx="26.00" cy="119.06" r="0.35" fill="#000"/>
-<circle cx="26.00" cy="120.18" r="0.35" fill="#000"/>
-<polygon points="30.50,176.88 25.00,178.88 25.00,182.62 30.50,180.62" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="30.50,176.88 25.00,178.88 25.00,182.62 30.50,180.62" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="30.50,176.88 25.00,178.88 25.00,182.62 30.50,180.62" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="29.00" cy="178.74" r="0.35" fill="#000"/>
-<circle cx="29.00" cy="179.86" r="0.35" fill="#000"/>
-<circle cx="26.00" cy="179.82" r="0.35" fill="#000"/>
-<circle cx="26.00" cy="180.94" r="0.35" fill="#000"/>
-<polygon points="30.50,145.63 25.00,143.63 25.00,147.37 30.50,149.37" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="30.50,145.63 25.00,143.63 25.00,147.37 30.50,149.37" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="30.50,145.63 25.00,143.63 25.00,147.37 30.50,149.37" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="29.00" cy="146.39" r="0.35" fill="#000"/>
-<circle cx="29.00" cy="147.51" r="0.35" fill="#000"/>
-<circle cx="26.00" cy="145.31" r="0.35" fill="#000"/>
-<circle cx="26.00" cy="146.43" r="0.35" fill="#000"/>
-<polygon points="30.50,150.63 25.00,152.63 25.00,156.37 30.50,154.37" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="30.50,150.63 25.00,152.63 25.00,156.37 30.50,154.37" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="30.50,150.63 25.00,152.63 25.00,156.37 30.50,154.37" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="29.00" cy="152.49" r="0.35" fill="#000"/>
-<circle cx="29.00" cy="153.61" r="0.35" fill="#000"/>
-<circle cx="26.00" cy="153.57" r="0.35" fill="#000"/>
-<circle cx="26.00" cy="154.69" r="0.35" fill="#000"/>
-<polygon points="30.50,171.88 25.00,169.88 25.00,173.62 30.50,175.62" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="30.50,171.88 25.00,169.88 25.00,173.62 30.50,175.62" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="30.50,171.88 25.00,169.88 25.00,173.62 30.50,175.62" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="29.00" cy="172.64" r="0.35" fill="#000"/>
-<circle cx="29.00" cy="173.76" r="0.35" fill="#000"/>
-<circle cx="26.00" cy="171.56" r="0.35" fill="#000"/>
-<circle cx="26.00" cy="172.68" r="0.35" fill="#000"/>
-<polygon points="30.50,124.38 25.00,126.38 25.00,130.12 30.50,128.12" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="30.50,124.38 25.00,126.38 25.00,130.12 30.50,128.12" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="30.50,124.38 25.00,126.38 25.00,130.12 30.50,128.12" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="29.00" cy="126.24" r="0.35" fill="#000"/>
-<circle cx="29.00" cy="127.36" r="0.35" fill="#000"/>
-<circle cx="26.00" cy="127.32" r="0.35" fill="#000"/>
-<circle cx="26.00" cy="128.44" r="0.35" fill="#000"/>
-<polygon points="30.50,198.13 25.00,196.13 25.00,199.87 30.50,201.87" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="30.50,198.13 25.00,196.13 25.00,199.87 30.50,201.87" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="30.50,198.13 25.00,196.13 25.00,199.87 30.50,201.87" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="29.00" cy="198.89" r="0.35" fill="#000"/>
-<circle cx="29.00" cy="200.01" r="0.35" fill="#000"/>
-<circle cx="26.00" cy="197.81" r="0.35" fill="#000"/>
-<circle cx="26.00" cy="198.93" r="0.35" fill="#000"/>
-<polygon points="30.50,98.13 25.00,100.13 25.00,103.87 30.50,101.87" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="30.50,98.13 25.00,100.13 25.00,103.87 30.50,101.87" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="30.50,98.13 25.00,100.13 25.00,103.87 30.50,101.87" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="29.00" cy="99.99" r="0.35" fill="#000"/>
-<circle cx="29.00" cy="101.11" r="0.35" fill="#000"/>
-<circle cx="26.00" cy="101.07" r="0.35" fill="#000"/>
-<circle cx="26.00" cy="102.19" r="0.35" fill="#000"/>
-<polygon points="30.50,224.38 25.00,222.38 25.00,226.12 30.50,228.12" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="30.50,224.38 25.00,222.38 25.00,226.12 30.50,228.12" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="30.50,224.38 25.00,222.38 25.00,226.12 30.50,228.12" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="29.00" cy="225.14" r="0.35" fill="#000"/>
-<circle cx="29.00" cy="226.26" r="0.35" fill="#000"/>
-<circle cx="26.00" cy="224.06" r="0.35" fill="#000"/>
-<circle cx="26.00" cy="225.18" r="0.35" fill="#000"/>
-<polygon points="30.50,71.88 25.00,73.88 25.00,77.62 30.50,75.62" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="30.50,71.88 25.00,73.88 25.00,77.62 30.50,75.62" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="30.50,71.88 25.00,73.88 25.00,77.62 30.50,75.62" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<circle cx="29.00" cy="73.74" r="0.35" fill="#000"/>
-<circle cx="29.00" cy="74.86" r="0.35" fill="#000"/>
-<circle cx="26.00" cy="74.82" r="0.35" fill="#000"/>
-<circle cx="26.00" cy="75.94" r="0.35" fill="#000"/>
-<polygon points="30.50,229.50 25.00,229.50 25.00,235.00 30.50,235.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="30.50,229.50 25.00,229.50 25.00,235.00 30.50,235.00" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="30.50,229.50 25.00,229.50 25.00,235.00 30.50,235.00" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<polygon points="30.50,70.50 25.00,70.50 25.00,65.00 30.50,65.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="30.50,70.50 25.00,70.50 25.00,65.00 30.50,65.00" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="30.50,70.50 25.00,70.50 25.00,65.00 30.50,65.00" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<polygon points="189.50,229.50 195.00,229.50 195.00,235.00 189.50,235.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="189.50,229.50 195.00,229.50 195.00,235.00 189.50,235.00" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="189.50,229.50 195.00,229.50 195.00,235.00 189.50,235.00" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<polygon points="189.50,70.50 195.00,70.50 195.00,65.00 189.50,65.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="189.50,70.50 195.00,70.50 195.00,65.00 189.50,65.00" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="189.50,70.50 195.00,70.50 195.00,65.00 189.50,65.00" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<text x="110.00" y="50.75" font-size="3.0" text-anchor="middle" font-weight="bold" fill="#000">cut at +4.00 (1:50)</text>
-<polyline points="18.25,250.25 201.75,250.25" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
-<polyline points="19.75,242.25 19.75,251.45" fill="none" stroke="#000" stroke-width="0.12" stroke-linejoin="round" />
-<polyline points="19.15,250.85 20.35,249.65" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<polyline points="32.50,242.25 32.50,251.45" fill="none" stroke="#000" stroke-width="0.12" stroke-linejoin="round" />
-<polyline points="31.90,250.85 33.10,249.65" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<polyline points="187.50,242.25 187.50,251.45" fill="none" stroke="#000" stroke-width="0.12" stroke-linejoin="round" />
-<polyline points="186.90,250.85 188.10,249.65" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<polyline points="200.25,242.25 200.25,251.45" fill="none" stroke="#000" stroke-width="0.12" stroke-linejoin="round" />
-<polyline points="199.65,250.85 200.85,249.65" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<text x="26.12" y="249.35" font-size="2.5" text-anchor="middle" font-weight="normal" fill="#000">638</text>
-<text x="110.00" y="249.35" font-size="2.5" text-anchor="middle" font-weight="normal" fill="#000">7750 clear at the cut</text>
-<text x="193.88" y="249.35" font-size="2.5" text-anchor="middle" font-weight="normal" fill="#000">638</text>
-<polyline points="18.25,263.25 201.75,263.25" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
-<polyline points="19.75,251.05 19.75,264.45" fill="none" stroke="#000" stroke-width="0.12" stroke-linejoin="round" />
-<polyline points="19.15,263.85 20.35,262.65" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<polyline points="200.25,251.05 200.25,264.45" fill="none" stroke="#000" stroke-width="0.12" stroke-linejoin="round" />
-<polyline points="199.65,263.85 200.85,262.65" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
-<text x="110.00" y="262.35" font-size="2.5" text-anchor="middle" font-weight="normal" fill="#000">9025 overall at the cut</text>
-<polyline points="230.25,112.00 188.50,120.00" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
-<circle cx="188.50" cy="120.00" r="0.35" fill="#000"/>
-<circle cx="230.25" cy="112.00" r="2.4" fill="#fff" stroke="#000" stroke-width="0.3"/>
-<text x="230.25" y="112.86" font-size="2.76" text-anchor="middle" fill="#000">1</text>
-<polyline points="230.25,126.00 193.00,156.00" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
-<circle cx="193.00" cy="156.00" r="0.35" fill="#000"/>
-<circle cx="230.25" cy="126.00" r="2.4" fill="#fff" stroke="#000" stroke-width="0.3"/>
-<text x="230.25" y="126.86" font-size="2.76" text-anchor="middle" fill="#000">2</text>
-<polyline points="230.25,140.00 192.25,179.75" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
-<circle cx="192.25" cy="179.75" r="0.35" fill="#000"/>
-<circle cx="230.25" cy="140.00" r="2.4" fill="#fff" stroke="#000" stroke-width="0.3"/>
-<text x="230.25" y="140.86" font-size="2.76" text-anchor="middle" fill="#000">3</text>
-<polyline points="230.25,154.00 192.25,232.25" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
-<circle cx="192.25" cy="232.25" r="0.35" fill="#000"/>
-<circle cx="230.25" cy="154.00" r="2.4" fill="#fff" stroke="#000" stroke-width="0.3"/>
-<text x="230.25" y="154.86" font-size="2.76" text-anchor="middle" fill="#000">4</text>
-<polyline points="230.25,168.00 196.00,180.00" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
-<circle cx="196.00" cy="180.00" r="0.35" fill="#000"/>
-<circle cx="230.25" cy="168.00" r="2.4" fill="#fff" stroke="#000" stroke-width="0.3"/>
-<text x="230.25" y="168.86" font-size="2.76" text-anchor="middle" fill="#000">5</text>
-<polyline points="230.25,182.00 198.25,194.00" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
-<circle cx="198.25" cy="194.00" r="0.35" fill="#000"/>
-<circle cx="230.25" cy="182.00" r="2.4" fill="#fff" stroke="#000" stroke-width="0.3"/>
-<text x="230.25" y="182.86" font-size="2.76" text-anchor="middle" fill="#000">6</text>
+<path d="M48.88,211.12 L171.12,211.12 L171.12,88.88 L48.88,88.88Z M49.63,210.37 L170.37,210.37 L170.37,89.63 L49.63,89.63Z" fill="#555" fill-rule="evenodd"/>
+<path d="M49.63,210.37 L170.37,210.37 L170.37,89.63 L49.63,89.63Z M52.13,207.87 L167.87,207.87 L167.87,92.13 L52.13,92.13Z" fill="#fff" fill-rule="evenodd"/>
+<path d="M49.63,210.37 L170.37,210.37 L170.37,89.63 L49.63,89.63Z M52.13,207.87 L167.87,207.87 L167.87,92.13 L52.13,92.13Z" fill="url(#dots)" fill-rule="evenodd"/>
+<path d="M52.13,207.87 L167.87,207.87 L167.87,92.13 L52.13,92.13Z M54.13,205.87 L165.87,205.87 L165.87,94.13 L54.13,94.13Z" fill="#fff" fill-rule="evenodd"/>
+<path d="M52.13,207.87 L167.87,207.87 L167.87,92.13 L52.13,92.13Z M54.13,205.87 L165.87,205.87 L165.87,94.13 L54.13,94.13Z" fill="url(#conc)" fill-rule="evenodd"/>
+<path d="M54.13,205.87 L165.87,205.87 L165.87,94.13 L54.13,94.13Z M58.13,201.87 L161.87,201.87 L161.87,98.13 L58.13,98.13Z" fill="#fff" fill-rule="evenodd"/>
+<path d="M54.13,205.87 L165.87,205.87 L165.87,94.13 L54.13,94.13Z M58.13,201.87 L161.87,201.87 L161.87,98.13 L58.13,98.13Z" fill="url(#dots)" fill-rule="evenodd"/>
+<path d="M58.13,201.87 L161.87,201.87 L161.87,98.13 L58.13,98.13Z M59.00,201.00 L161.00,201.00 L161.00,99.00 L59.00,99.00Z" fill="#fff" fill-rule="evenodd"/>
+<path d="M58.13,201.87 L161.87,201.87 L161.87,98.13 L58.13,98.13Z M59.00,201.00 L161.00,201.00 L161.00,99.00 L59.00,99.00Z" fill="url(#conc)" fill-rule="evenodd"/>
+<path d="M59.00,201.00 L161.00,201.00 L161.00,99.00 L59.00,99.00Z M61.00,199.00 L159.00,199.00 L159.00,101.00 L61.00,101.00Z" fill="#fff" fill-rule="evenodd"/>
+<path d="M59.00,201.00 L161.00,201.00 L161.00,99.00 L59.00,99.00Z M61.00,199.00 L159.00,199.00 L159.00,101.00 L61.00,101.00Z" fill="url(#conc)" fill-rule="evenodd"/>
+<polygon points="48.88,211.12 171.12,211.12 171.12,88.88 48.88,88.88" fill="none" stroke="#000" stroke-width="0.3" stroke-linejoin="round" />
+<polygon points="49.63,210.37 170.37,210.37 170.37,89.63 49.63,89.63" fill="none" stroke="#000" stroke-width="0.07" stroke-linejoin="round" />
+<polygon points="52.13,207.87 167.87,207.87 167.87,92.13 52.13,92.13" fill="none" stroke="#000" stroke-width="0.4" stroke-linejoin="round" />
+<polygon points="54.13,205.87 165.87,205.87 165.87,94.13 54.13,94.13" fill="none" stroke="#000" stroke-width="0.3" stroke-linejoin="round" />
+<polygon points="58.13,201.87 161.87,201.87 161.87,98.13 58.13,98.13" fill="none" stroke="#000" stroke-width="0.25" stroke-linejoin="round" />
+<polygon points="59.00,201.00 161.00,201.00 161.00,99.00 59.00,99.00" fill="none" stroke="#000" stroke-width="0.25" stroke-linejoin="round" />
+<polygon points="61.00,199.00 159.00,199.00 159.00,101.00 61.00,101.00" fill="none" stroke="#000" stroke-width="0.6" stroke-linejoin="round" />
+<polygon points="81.83,201.00 80.07,205.87 83.80,205.87 85.57,201.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="81.83,201.00 80.07,205.87 83.80,205.87 85.57,201.00" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="81.83,201.00 80.07,205.87 83.80,205.87 85.57,201.00" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="82.60" cy="202.50" r="0.35" fill="#000"/>
+<circle cx="83.72" cy="202.50" r="0.35" fill="#000"/>
+<circle cx="81.51" cy="205.50" r="0.35" fill="#000"/>
+<circle cx="82.63" cy="205.50" r="0.35" fill="#000"/>
+<polygon points="134.43,201.00 136.20,205.87 139.93,205.87 138.17,201.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="134.43,201.00 136.20,205.87 139.93,205.87 138.17,201.00" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="134.43,201.00 136.20,205.87 139.93,205.87 138.17,201.00" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="136.28" cy="202.50" r="0.35" fill="#000"/>
+<circle cx="137.40" cy="202.50" r="0.35" fill="#000"/>
+<circle cx="137.37" cy="205.50" r="0.35" fill="#000"/>
+<circle cx="138.49" cy="205.50" r="0.35" fill="#000"/>
+<polygon points="108.08,201.00 106.32,205.87 110.05,205.87 111.82,201.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="108.08,201.00 106.32,205.87 110.05,205.87 111.82,201.00" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="108.08,201.00 106.32,205.87 110.05,205.87 111.82,201.00" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="108.85" cy="202.50" r="0.35" fill="#000"/>
+<circle cx="109.97" cy="202.50" r="0.35" fill="#000"/>
+<circle cx="107.76" cy="205.50" r="0.35" fill="#000"/>
+<circle cx="108.88" cy="205.50" r="0.35" fill="#000"/>
+<polygon points="108.18,201.00 109.95,205.87 113.68,205.87 111.92,201.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="108.18,201.00 109.95,205.87 113.68,205.87 111.92,201.00" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="108.18,201.00 109.95,205.87 113.68,205.87 111.92,201.00" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="110.03" cy="202.50" r="0.35" fill="#000"/>
+<circle cx="111.15" cy="202.50" r="0.35" fill="#000"/>
+<circle cx="111.12" cy="205.50" r="0.35" fill="#000"/>
+<circle cx="112.24" cy="205.50" r="0.35" fill="#000"/>
+<polygon points="134.33,201.00 132.57,205.87 136.30,205.87 138.07,201.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="134.33,201.00 132.57,205.87 136.30,205.87 138.07,201.00" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="134.33,201.00 132.57,205.87 136.30,205.87 138.07,201.00" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="135.10" cy="202.50" r="0.35" fill="#000"/>
+<circle cx="136.22" cy="202.50" r="0.35" fill="#000"/>
+<circle cx="134.01" cy="205.50" r="0.35" fill="#000"/>
+<circle cx="135.13" cy="205.50" r="0.35" fill="#000"/>
+<polygon points="81.93,201.00 83.70,205.87 87.43,205.87 85.67,201.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="81.93,201.00 83.70,205.87 87.43,205.87 85.67,201.00" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="81.93,201.00 83.70,205.87 87.43,205.87 85.67,201.00" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="83.78" cy="202.50" r="0.35" fill="#000"/>
+<circle cx="84.90" cy="202.50" r="0.35" fill="#000"/>
+<circle cx="84.87" cy="205.50" r="0.35" fill="#000"/>
+<circle cx="85.99" cy="205.50" r="0.35" fill="#000"/>
+<polygon points="160.58,201.00 158.82,205.87 162.55,205.87 164.32,201.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="160.58,201.00 158.82,205.87 162.55,205.87 164.32,201.00" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="160.58,201.00 158.82,205.87 162.55,205.87 164.32,201.00" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="161.35" cy="202.50" r="0.35" fill="#000"/>
+<circle cx="162.47" cy="202.50" r="0.35" fill="#000"/>
+<circle cx="160.26" cy="205.50" r="0.35" fill="#000"/>
+<circle cx="161.38" cy="205.50" r="0.35" fill="#000"/>
+<polygon points="55.68,201.00 57.45,205.87 61.18,205.87 59.42,201.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="55.68,201.00 57.45,205.87 61.18,205.87 59.42,201.00" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="55.68,201.00 57.45,205.87 61.18,205.87 59.42,201.00" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="57.53" cy="202.50" r="0.35" fill="#000"/>
+<circle cx="58.65" cy="202.50" r="0.35" fill="#000"/>
+<circle cx="58.62" cy="205.50" r="0.35" fill="#000"/>
+<circle cx="59.74" cy="205.50" r="0.35" fill="#000"/>
+<polygon points="161.00,178.17 165.87,179.93 165.87,176.20 161.00,174.43" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="161.00,178.17 165.87,179.93 165.87,176.20 161.00,174.43" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="161.00,178.17 165.87,179.93 165.87,176.20 161.00,174.43" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="162.50" cy="177.40" r="0.35" fill="#000"/>
+<circle cx="162.50" cy="176.28" r="0.35" fill="#000"/>
+<circle cx="165.50" cy="178.49" r="0.35" fill="#000"/>
+<circle cx="165.50" cy="177.37" r="0.35" fill="#000"/>
+<polygon points="161.00,125.57 165.87,123.80 165.87,120.07 161.00,121.83" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="161.00,125.57 165.87,123.80 165.87,120.07 161.00,121.83" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="161.00,125.57 165.87,123.80 165.87,120.07 161.00,121.83" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="162.50" cy="123.72" r="0.35" fill="#000"/>
+<circle cx="162.50" cy="122.60" r="0.35" fill="#000"/>
+<circle cx="165.50" cy="122.63" r="0.35" fill="#000"/>
+<circle cx="165.50" cy="121.51" r="0.35" fill="#000"/>
+<polygon points="161.00,151.92 165.87,153.68 165.87,149.95 161.00,148.18" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="161.00,151.92 165.87,153.68 165.87,149.95 161.00,148.18" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="161.00,151.92 165.87,153.68 165.87,149.95 161.00,148.18" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="162.50" cy="151.15" r="0.35" fill="#000"/>
+<circle cx="162.50" cy="150.03" r="0.35" fill="#000"/>
+<circle cx="165.50" cy="152.24" r="0.35" fill="#000"/>
+<circle cx="165.50" cy="151.12" r="0.35" fill="#000"/>
+<polygon points="161.00,151.82 165.87,150.05 165.87,146.32 161.00,148.08" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="161.00,151.82 165.87,150.05 165.87,146.32 161.00,148.08" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="161.00,151.82 165.87,150.05 165.87,146.32 161.00,148.08" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="162.50" cy="149.97" r="0.35" fill="#000"/>
+<circle cx="162.50" cy="148.85" r="0.35" fill="#000"/>
+<circle cx="165.50" cy="148.88" r="0.35" fill="#000"/>
+<circle cx="165.50" cy="147.76" r="0.35" fill="#000"/>
+<polygon points="161.00,125.67 165.87,127.43 165.87,123.70 161.00,121.93" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="161.00,125.67 165.87,127.43 165.87,123.70 161.00,121.93" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="161.00,125.67 165.87,127.43 165.87,123.70 161.00,121.93" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="162.50" cy="124.90" r="0.35" fill="#000"/>
+<circle cx="162.50" cy="123.78" r="0.35" fill="#000"/>
+<circle cx="165.50" cy="125.99" r="0.35" fill="#000"/>
+<circle cx="165.50" cy="124.87" r="0.35" fill="#000"/>
+<polygon points="161.00,178.07 165.87,176.30 165.87,172.57 161.00,174.33" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="161.00,178.07 165.87,176.30 165.87,172.57 161.00,174.33" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="161.00,178.07 165.87,176.30 165.87,172.57 161.00,174.33" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="162.50" cy="176.22" r="0.35" fill="#000"/>
+<circle cx="162.50" cy="175.10" r="0.35" fill="#000"/>
+<circle cx="165.50" cy="175.13" r="0.35" fill="#000"/>
+<circle cx="165.50" cy="174.01" r="0.35" fill="#000"/>
+<polygon points="161.00,99.42 165.87,101.18 165.87,97.45 161.00,95.68" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="161.00,99.42 165.87,101.18 165.87,97.45 161.00,95.68" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="161.00,99.42 165.87,101.18 165.87,97.45 161.00,95.68" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="162.50" cy="98.65" r="0.35" fill="#000"/>
+<circle cx="162.50" cy="97.53" r="0.35" fill="#000"/>
+<circle cx="165.50" cy="99.74" r="0.35" fill="#000"/>
+<circle cx="165.50" cy="98.62" r="0.35" fill="#000"/>
+<polygon points="161.00,204.32 165.87,202.55 165.87,198.82 161.00,200.58" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="161.00,204.32 165.87,202.55 165.87,198.82 161.00,200.58" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="161.00,204.32 165.87,202.55 165.87,198.82 161.00,200.58" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="162.50" cy="202.47" r="0.35" fill="#000"/>
+<circle cx="162.50" cy="201.35" r="0.35" fill="#000"/>
+<circle cx="165.50" cy="201.38" r="0.35" fill="#000"/>
+<circle cx="165.50" cy="200.26" r="0.35" fill="#000"/>
+<polygon points="138.17,99.00 139.93,94.13 136.20,94.13 134.43,99.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="138.17,99.00 139.93,94.13 136.20,94.13 134.43,99.00" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="138.17,99.00 139.93,94.13 136.20,94.13 134.43,99.00" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="137.40" cy="97.50" r="0.35" fill="#000"/>
+<circle cx="136.28" cy="97.50" r="0.35" fill="#000"/>
+<circle cx="138.49" cy="94.50" r="0.35" fill="#000"/>
+<circle cx="137.37" cy="94.50" r="0.35" fill="#000"/>
+<polygon points="85.57,99.00 83.80,94.13 80.07,94.13 81.83,99.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="85.57,99.00 83.80,94.13 80.07,94.13 81.83,99.00" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="85.57,99.00 83.80,94.13 80.07,94.13 81.83,99.00" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="83.72" cy="97.50" r="0.35" fill="#000"/>
+<circle cx="82.60" cy="97.50" r="0.35" fill="#000"/>
+<circle cx="82.63" cy="94.50" r="0.35" fill="#000"/>
+<circle cx="81.51" cy="94.50" r="0.35" fill="#000"/>
+<polygon points="111.92,99.00 113.68,94.13 109.95,94.13 108.18,99.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="111.92,99.00 113.68,94.13 109.95,94.13 108.18,99.00" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="111.92,99.00 113.68,94.13 109.95,94.13 108.18,99.00" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="111.15" cy="97.50" r="0.35" fill="#000"/>
+<circle cx="110.03" cy="97.50" r="0.35" fill="#000"/>
+<circle cx="112.24" cy="94.50" r="0.35" fill="#000"/>
+<circle cx="111.12" cy="94.50" r="0.35" fill="#000"/>
+<polygon points="111.82,99.00 110.05,94.13 106.32,94.13 108.08,99.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="111.82,99.00 110.05,94.13 106.32,94.13 108.08,99.00" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="111.82,99.00 110.05,94.13 106.32,94.13 108.08,99.00" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="109.97" cy="97.50" r="0.35" fill="#000"/>
+<circle cx="108.85" cy="97.50" r="0.35" fill="#000"/>
+<circle cx="108.88" cy="94.50" r="0.35" fill="#000"/>
+<circle cx="107.76" cy="94.50" r="0.35" fill="#000"/>
+<polygon points="85.67,99.00 87.43,94.13 83.70,94.13 81.93,99.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="85.67,99.00 87.43,94.13 83.70,94.13 81.93,99.00" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="85.67,99.00 87.43,94.13 83.70,94.13 81.93,99.00" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="84.90" cy="97.50" r="0.35" fill="#000"/>
+<circle cx="83.78" cy="97.50" r="0.35" fill="#000"/>
+<circle cx="85.99" cy="94.50" r="0.35" fill="#000"/>
+<circle cx="84.87" cy="94.50" r="0.35" fill="#000"/>
+<polygon points="138.07,99.00 136.30,94.13 132.57,94.13 134.33,99.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="138.07,99.00 136.30,94.13 132.57,94.13 134.33,99.00" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="138.07,99.00 136.30,94.13 132.57,94.13 134.33,99.00" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="136.22" cy="97.50" r="0.35" fill="#000"/>
+<circle cx="135.10" cy="97.50" r="0.35" fill="#000"/>
+<circle cx="135.13" cy="94.50" r="0.35" fill="#000"/>
+<circle cx="134.01" cy="94.50" r="0.35" fill="#000"/>
+<polygon points="59.42,99.00 61.18,94.13 57.45,94.13 55.68,99.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="59.42,99.00 61.18,94.13 57.45,94.13 55.68,99.00" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="59.42,99.00 61.18,94.13 57.45,94.13 55.68,99.00" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="58.65" cy="97.50" r="0.35" fill="#000"/>
+<circle cx="57.53" cy="97.50" r="0.35" fill="#000"/>
+<circle cx="59.74" cy="94.50" r="0.35" fill="#000"/>
+<circle cx="58.62" cy="94.50" r="0.35" fill="#000"/>
+<polygon points="164.32,99.00 162.55,94.13 158.82,94.13 160.58,99.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="164.32,99.00 162.55,94.13 158.82,94.13 160.58,99.00" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="164.32,99.00 162.55,94.13 158.82,94.13 160.58,99.00" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="162.47" cy="97.50" r="0.35" fill="#000"/>
+<circle cx="161.35" cy="97.50" r="0.35" fill="#000"/>
+<circle cx="161.38" cy="94.50" r="0.35" fill="#000"/>
+<circle cx="160.26" cy="94.50" r="0.35" fill="#000"/>
+<polygon points="59.00,121.83 54.13,120.07 54.13,123.80 59.00,125.57" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="59.00,121.83 54.13,120.07 54.13,123.80 59.00,125.57" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="59.00,121.83 54.13,120.07 54.13,123.80 59.00,125.57" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="57.50" cy="122.60" r="0.35" fill="#000"/>
+<circle cx="57.50" cy="123.72" r="0.35" fill="#000"/>
+<circle cx="54.50" cy="121.51" r="0.35" fill="#000"/>
+<circle cx="54.50" cy="122.63" r="0.35" fill="#000"/>
+<polygon points="59.00,174.43 54.13,176.20 54.13,179.93 59.00,178.17" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="59.00,174.43 54.13,176.20 54.13,179.93 59.00,178.17" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="59.00,174.43 54.13,176.20 54.13,179.93 59.00,178.17" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="57.50" cy="176.28" r="0.35" fill="#000"/>
+<circle cx="57.50" cy="177.40" r="0.35" fill="#000"/>
+<circle cx="54.50" cy="177.37" r="0.35" fill="#000"/>
+<circle cx="54.50" cy="178.49" r="0.35" fill="#000"/>
+<polygon points="59.00,148.08 54.13,146.32 54.13,150.05 59.00,151.82" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="59.00,148.08 54.13,146.32 54.13,150.05 59.00,151.82" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="59.00,148.08 54.13,146.32 54.13,150.05 59.00,151.82" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="57.50" cy="148.85" r="0.35" fill="#000"/>
+<circle cx="57.50" cy="149.97" r="0.35" fill="#000"/>
+<circle cx="54.50" cy="147.76" r="0.35" fill="#000"/>
+<circle cx="54.50" cy="148.88" r="0.35" fill="#000"/>
+<polygon points="59.00,148.18 54.13,149.95 54.13,153.68 59.00,151.92" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="59.00,148.18 54.13,149.95 54.13,153.68 59.00,151.92" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="59.00,148.18 54.13,149.95 54.13,153.68 59.00,151.92" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="57.50" cy="150.03" r="0.35" fill="#000"/>
+<circle cx="57.50" cy="151.15" r="0.35" fill="#000"/>
+<circle cx="54.50" cy="151.12" r="0.35" fill="#000"/>
+<circle cx="54.50" cy="152.24" r="0.35" fill="#000"/>
+<polygon points="59.00,174.33 54.13,172.57 54.13,176.30 59.00,178.07" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="59.00,174.33 54.13,172.57 54.13,176.30 59.00,178.07" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="59.00,174.33 54.13,172.57 54.13,176.30 59.00,178.07" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="57.50" cy="175.10" r="0.35" fill="#000"/>
+<circle cx="57.50" cy="176.22" r="0.35" fill="#000"/>
+<circle cx="54.50" cy="174.01" r="0.35" fill="#000"/>
+<circle cx="54.50" cy="175.13" r="0.35" fill="#000"/>
+<polygon points="59.00,121.93 54.13,123.70 54.13,127.43 59.00,125.67" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="59.00,121.93 54.13,123.70 54.13,127.43 59.00,125.67" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="59.00,121.93 54.13,123.70 54.13,127.43 59.00,125.67" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="57.50" cy="123.78" r="0.35" fill="#000"/>
+<circle cx="57.50" cy="124.90" r="0.35" fill="#000"/>
+<circle cx="54.50" cy="124.87" r="0.35" fill="#000"/>
+<circle cx="54.50" cy="125.99" r="0.35" fill="#000"/>
+<polygon points="59.00,200.58 54.13,198.82 54.13,202.55 59.00,204.32" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="59.00,200.58 54.13,198.82 54.13,202.55 59.00,204.32" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="59.00,200.58 54.13,198.82 54.13,202.55 59.00,204.32" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="57.50" cy="201.35" r="0.35" fill="#000"/>
+<circle cx="57.50" cy="202.47" r="0.35" fill="#000"/>
+<circle cx="54.50" cy="200.26" r="0.35" fill="#000"/>
+<circle cx="54.50" cy="201.38" r="0.35" fill="#000"/>
+<polygon points="59.00,95.68 54.13,97.45 54.13,101.18 59.00,99.42" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="59.00,95.68 54.13,97.45 54.13,101.18 59.00,99.42" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="59.00,95.68 54.13,97.45 54.13,101.18 59.00,99.42" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<circle cx="57.50" cy="97.53" r="0.35" fill="#000"/>
+<circle cx="57.50" cy="98.65" r="0.35" fill="#000"/>
+<circle cx="54.50" cy="98.62" r="0.35" fill="#000"/>
+<circle cx="54.50" cy="99.74" r="0.35" fill="#000"/>
+<polygon points="59.00,201.00 54.13,201.00 54.13,205.87 59.00,205.87" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="59.00,201.00 54.13,201.00 54.13,205.87 59.00,205.87" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="59.00,201.00 54.13,201.00 54.13,205.87 59.00,205.87" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<polygon points="59.00,99.00 54.13,99.00 54.13,94.13 59.00,94.13" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="59.00,99.00 54.13,99.00 54.13,94.13 59.00,94.13" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="59.00,99.00 54.13,99.00 54.13,94.13 59.00,94.13" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<polygon points="161.00,201.00 165.87,201.00 165.87,205.87 161.00,205.87" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="161.00,201.00 165.87,201.00 165.87,205.87 161.00,205.87" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="161.00,201.00 165.87,201.00 165.87,205.87 161.00,205.87" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<polygon points="161.00,99.00 165.87,99.00 165.87,94.13 161.00,94.13" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="161.00,99.00 165.87,99.00 165.87,94.13 161.00,94.13" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="161.00,99.00 165.87,99.00 165.87,94.13 161.00,94.13" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<text x="110.00" y="79.88" font-size="3.0" text-anchor="middle" font-weight="bold" fill="#000">cut at +5.90 (1:50)</text>
+<polyline points="47.38,221.12 172.62,221.12" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
+<polyline points="48.88,213.12 48.88,222.32" fill="none" stroke="#000" stroke-width="0.12" stroke-linejoin="round" />
+<polyline points="48.28,221.72 49.48,220.52" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<polyline points="61.00,213.12 61.00,222.32" fill="none" stroke="#000" stroke-width="0.12" stroke-linejoin="round" />
+<polyline points="60.40,221.72 61.60,220.52" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<polyline points="159.00,213.12 159.00,222.32" fill="none" stroke="#000" stroke-width="0.12" stroke-linejoin="round" />
+<polyline points="158.40,221.72 159.60,220.52" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<polyline points="171.12,213.12 171.12,222.32" fill="none" stroke="#000" stroke-width="0.12" stroke-linejoin="round" />
+<polyline points="170.52,221.72 171.72,220.52" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<text x="54.94" y="220.22" font-size="2.5" text-anchor="middle" font-weight="normal" fill="#000">606</text>
+<text x="110.00" y="220.22" font-size="2.5" text-anchor="middle" font-weight="normal" fill="#000">4900 clear at the cut</text>
+<text x="165.06" y="220.22" font-size="2.5" text-anchor="middle" font-weight="normal" fill="#000">606</text>
+<polyline points="47.38,234.12 172.62,234.12" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
+<polyline points="48.88,221.92 48.88,235.32" fill="none" stroke="#000" stroke-width="0.12" stroke-linejoin="round" />
+<polyline points="48.28,234.72 49.48,233.52" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<polyline points="171.12,221.92 171.12,235.32" fill="none" stroke="#000" stroke-width="0.12" stroke-linejoin="round" />
+<polyline points="170.52,234.72 171.72,233.52" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<text x="110.00" y="233.22" font-size="2.5" text-anchor="middle" font-weight="normal" fill="#000">6112 overall at the cut</text>
+<polyline points="201.12,112.00 160.00,120.00" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
+<circle cx="160.00" cy="120.00" r="0.35" fill="#000"/>
+<circle cx="201.12" cy="112.00" r="2.4" fill="#fff" stroke="#000" stroke-width="0.3"/>
+<text x="201.12" y="112.86" font-size="2.76" text-anchor="middle" fill="#000">1</text>
+<polyline points="201.12,126.00 163.87,156.00" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
+<circle cx="163.87" cy="156.00" r="0.35" fill="#000"/>
+<circle cx="201.12" cy="126.00" r="2.4" fill="#fff" stroke="#000" stroke-width="0.3"/>
+<text x="201.12" y="126.86" font-size="2.76" text-anchor="middle" fill="#000">2</text>
+<polyline points="201.12,140.00 163.43,177.18" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
+<circle cx="163.43" cy="177.18" r="0.35" fill="#000"/>
+<circle cx="201.12" cy="140.00" r="2.4" fill="#fff" stroke="#000" stroke-width="0.3"/>
+<text x="201.12" y="140.86" font-size="2.76" text-anchor="middle" fill="#000">3</text>
+<polyline points="201.12,154.00 163.43,203.43" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
+<circle cx="163.43" cy="203.43" r="0.35" fill="#000"/>
+<circle cx="201.12" cy="154.00" r="2.4" fill="#fff" stroke="#000" stroke-width="0.3"/>
+<text x="201.12" y="154.86" font-size="2.76" text-anchor="middle" fill="#000">4</text>
+<polyline points="201.12,168.00 166.87,180.00" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
+<circle cx="166.87" cy="180.00" r="0.35" fill="#000"/>
+<circle cx="201.12" cy="168.00" r="2.4" fill="#fff" stroke="#000" stroke-width="0.3"/>
+<text x="201.12" y="168.86" font-size="2.76" text-anchor="middle" fill="#000">5</text>
+<polyline points="201.12,182.00 169.12,194.00" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
+<circle cx="169.12" cy="194.00" r="0.35" fill="#000"/>
+<circle cx="201.12" cy="182.00" r="2.4" fill="#fff" stroke="#000" stroke-width="0.3"/>
+<text x="201.12" y="182.86" font-size="2.76" text-anchor="middle" fill="#000">6</text>
 <path d="M227.88,100.12 L272.12,100.12 L272.12,55.88 L227.88,55.88Z M228.25,99.75 L271.75,99.75 L271.75,56.25 L228.25,56.25Z" fill="#555" fill-rule="evenodd"/>
 <path d="M228.25,99.75 L271.75,99.75 L271.75,56.25 L228.25,56.25Z M229.50,98.50 L270.50,98.50 L270.50,57.50 L229.50,57.50Z" fill="#fff" fill-rule="evenodd"/>
 <path d="M228.25,99.75 L271.75,99.75 L271.75,56.25 L228.25,56.25Z M229.50,98.50 L270.50,98.50 L270.50,57.50 L229.50,57.50Z" fill="url(#dots)" fill-rule="evenodd"/>
@@ -579,14 +467,15 @@
 <circle cx="314.3" cy="96.5" r="2" fill="#000"/><text x="319" y="97.5" font-size="2.7">from your sketches</text>
 <circle cx="314.3" cy="101.5" r="2" fill="#fff" stroke="#000" stroke-width="0.3"/><text x="319" y="102.5" font-size="2.7">assumed by me, to confirm</text>
 <text x="312" y="110.5" font-size="3.1" font-weight="bold">Notes</text>
-<text x="312" y="115.0" font-size="2.8">Large slice at +4.00 (1500 above the eave), 1:50; small</text>
-<text x="314" y="118.5" font-size="2.8">slices at +7.00 and +8.00, 1:100.</text>
-<text x="312" y="123.0" font-size="2.8">Option B: the same two diagonal families at every height;</text>
-<text x="314" y="126.5" font-size="2.8">the cut ribs move towards the corners as the roof narrows,</text>
-<text x="314" y="130.0" font-size="2.8">the diamonds are clipped by the hips.</text>
-<text x="312" y="134.5" font-size="2.8">Layer 2 thins towards the crown (the leaf is 160 at the</text>
-<text x="314" y="138.0" font-size="2.8">base, 80 at the crown). Ribs use the same geometry as the</text>
-<text x="314" y="141.5" font-size="2.8">roof-grid sheets; bars and stirrups are assumed.</text>
+<text x="312" y="115.0" font-size="2.8">Large slice at +5.90 (3400 above the eave, just below the</text>
+<text x="314" y="118.5" font-size="2.8">middle horizontal rib of option A), 1:50; small slices at</text>
+<text x="314" y="122.0" font-size="2.8">+7.00 and +8.00, 1:100.</text>
+<text x="312" y="126.5" font-size="2.8">Option B: the same two diagonal families at every height;</text>
+<text x="314" y="130.0" font-size="2.8">the cut ribs move towards the corners as the roof narrows,</text>
+<text x="314" y="133.5" font-size="2.8">the diamonds are clipped by the hips.</text>
+<text x="312" y="138.0" font-size="2.8">Layer 2 thins towards the crown (the leaf is 160 at the</text>
+<text x="314" y="141.5" font-size="2.8">base, 80 at the crown). Ribs use the same geometry as the</text>
+<text x="314" y="145.0" font-size="2.8">roof-grid sheets; bars and stirrups are assumed.</text>
 <rect x="312.00" y="277" width="20.00" height="1.6" fill="#000" stroke="#000" stroke-width="0.2"/>
 <text x="312.00" y="276" font-size="2.5" text-anchor="middle">0</text>
 <rect x="332.00" y="277" width="20.00" height="1.6" fill="#fff" stroke="#000" stroke-width="0.2"/>
