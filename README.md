@@ -12,7 +12,8 @@ hollow, lapped pieces for **3D concrete printing**, sliced to printer programs w
 | `scripts/concrete_slicer.py` | General slicer: turns any closed geometry into printed-bead geometry (visual only) |
 | `grasshopper/Pyramide 10_1_2026.gh` | The Grasshopper definition (scripts pasted into Py3 components + SaladSlicer chain) |
 | `rhino/10_1_2026.3dm` | The Rhino model (stored with Git LFS) |
-| `scripts/karamba_model.py` | Karamba3D model: roof/wall/buttress shells, solid roof-base ring, supports, wind and cladding loads |
+| `scripts/karamba_model.py` | Parametric Karamba3D model, roof grid A, B or none: roof/wall/buttress shells, rib beams, solid roof-base ring, crown ring, supports, wind and cladding loads (see "Karamba model" below) |
+| `preview/karamba-preview.html` | Interactive 3D view of the Karamba model (plain shell, grid A, grid B), open in a browser. Rebuild it with `python preview/build_preview.py` after changing the script |
 | `details/set/pyramid-roof-drawing-set.pdf` | **The drawing set**, 10 A3 sheets: 01 floor plan, 02/03 floor plan with roof grid A/B, 04/05 section A-A grid A/B, 06/07 roof plan cut at +6.00 grid A/B, 08/09 roof-grid elevations A/B, 10 eave detail D1. One PDF per sheet next to it. |
 | `details/set/cad/*.dxf` | The same 10 sheets as editable CAD: model space 1:1 in mm, a paper-space layout **A3 sheet** with a viewport at the sheet scale (plot at 1:1), title block and legend in paper space, real DIMENSION entities (style `PYR`), hatches, named layers. |
 | `details/make_set.py` | Builds the whole set (PDFs + DXFs): `pip install cairosvg ezdxf shapely`, then `python details/make_set.py` |

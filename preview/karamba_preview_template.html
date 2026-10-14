@@ -1,0 +1,381 @@
+<title>Pyramid Roof Karamba Model</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@400;500;600&display=swap">
+<style>
+/* Layout: full-height model viewport on the left, a narrow drafting-sheet panel on the right (stacks under the viewport on phones). */
+:root {
+  --bg: #eef0f2;
+  --panel: #f8f9fa;
+  --fg: #1d2329;
+  --muted: #5d6873;
+  --rule: #cfd5db;
+  --accent: #b5561c;      /* ring beam / active control */
+  --roof: #a3abb2;
+  --wall: #c3c9ce;
+  --but: #4f6f8a;
+  --crown: #7a4fa0;
+  --rib: #1f5f4a;
+  --hring: #c08a12;
+  --hip: #8a2f3c;
+  --press: #2a6fb5;
+  --suct: #c2364a;
+  --font-ui: "IBM Plex Sans Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --font-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #15191d; --panel: #1c2126; --fg: #e3e7ea; --muted: #94a0aa; --rule: #323a42;
+  --accent: #e07a3a; --roof: #6f7982; --wall: #5b646c; --but: #6f97b8; --crown: #a67fcc;
+  --rib: #4fc39a; --hring: #e8b84a; --hip: #e0707f;
+  --press: #5aa0e6; --suct: #e86478; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #15191d; --panel: #1c2126; --fg: #e3e7ea; --muted: #94a0aa; --rule: #323a42;
+  --accent: #e07a3a; --roof: #6f7982; --wall: #5b646c; --but: #6f97b8; --crown: #a67fcc;
+  --rib: #4fc39a; --hring: #e8b84a; --hip: #e0707f;
+  --press: #5aa0e6; --suct: #e86478; color-scheme: dark }
+
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-ui); font-size: 14px; }
+.app { display: grid; grid-template-columns: minmax(0, 1fr) 340px; height: 100%; }
+.view { position: relative; min-width: 0; min-height: 0; }
+#c { display: block; width: 100%; height: 100%; touch-action: none; }
+.overlay { position: absolute; top: calc(12px + env(safe-area-inset-top, 0px)); left: max(12px, env(safe-area-inset-left, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; pointer-events: none; }
+.overlay > * { pointer-events: auto; }
+.hint { position: absolute; bottom: 10px; left: max(12px, env(safe-area-inset-left, 0px)); font-size: 12px; color: var(--muted); }
+.seg { display: flex; }
+.seg button { font: 500 12px var(--font-ui); letter-spacing: .04em; text-transform: uppercase; color: var(--fg); background: var(--panel); border: 1px solid var(--rule); padding: 7px 11px; cursor: pointer; }
+.seg button + button { border-left: 0; }
+.seg button:hover { border-color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--fg); color: var(--panel); border-color: var(--fg); }
+.seg.big button { font-size: 13px; padding: 9px 14px; }
+.seg.fill button { flex: 1; font-family: var(--font-data); text-transform: none; letter-spacing: 0; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+aside { background: var(--panel); border-left: 1px solid var(--rule); overflow-y: auto; padding-block: 18px 24px; padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: max(18px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+h1 { font-size: 20px; font-weight: 600; margin: 0; text-wrap: balance; line-height: 1.2; }
+.sub { color: var(--muted); margin: 4px 0 0; line-height: 1.45; }
+h2 { font: 600 11px var(--font-ui); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; padding-bottom: 6px; border-bottom: 1px solid var(--rule); }
+.variant p { margin: 0; line-height: 1.45; }
+.layers { display: grid; gap: 2px; }
+.layer { display: grid; grid-template-columns: 18px 22px 1fr auto; align-items: center; gap: 8px; padding: 4px 0; cursor: pointer; }
+.layer[hidden] { display: none !important; }
+.layer input { margin: 0; accent-color: var(--accent); }
+.sw { width: 22px; height: 10px; border-radius: 1px; display: inline-block; }
+.sw.line { height: 3px; }
+.layer .out { font: 11px var(--font-data); color: var(--muted); }
+.windkey { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 8px; font-size: 12px; color: var(--muted); }
+.windkey span { display: inline-flex; align-items: center; gap: 6px; }
+table.cmp { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+table.cmp th, table.cmp td { padding: 5px 0; border-bottom: 1px solid var(--rule); text-align: right; font-variant-numeric: tabular-nums; }
+table.cmp th { font: 600 11px var(--font-ui); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+table.cmp th:first-child, table.cmp td:first-child { text-align: left; color: var(--muted); font-family: var(--font-ui); }
+table.cmp td { font-family: var(--font-data); }
+table.cmp .on { color: var(--fg); font-weight: 500; }
+.wire { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.wire td { padding: 5px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.wire td:first-child { font-family: var(--font-data); font-size: 11.5px; padding-right: 10px; white-space: nowrap; }
+.foot { font-size: 12px; color: var(--muted); line-height: 1.45; margin: 0; }
+code { font-family: var(--font-data); font-size: 0.92em; }
+
+@media (max-width: 760px) {
+  .app { grid-template-columns: minmax(0, 1fr); grid-template-rows: 64vh auto; height: auto; }
+  html, body { height: auto; }
+  aside { border-left: 0; border-top: 1px solid var(--rule); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .seg.big button { padding: 8px 11px; }
+}
+</style>
+
+<div class="app">
+  <div class="view">
+    <canvas id="c" aria-label="3D view of the Karamba model"></canvas>
+    <div class="overlay">
+      <div class="seg big" role="group" aria-label="Roof variant" id="variants"></div>
+      <div class="seg" role="group" aria-label="Camera">
+        <button id="v-iso" type="button">3D</button>
+        <button id="v-front" type="button">South</button>
+        <button id="v-top" type="button">Top</button>
+      </div>
+    </div>
+    <div class="hint">Drag to orbit · pinch or scroll to zoom · two-finger or right-drag to pan</div>
+  </div>
+
+  <aside>
+    <header>
+      <h1>Pyramid roof · Karamba model</h1>
+      <p class="sub">What <code>scripts/karamba_model.py</code> sends to Karamba. Mid-surfaces and centrelines, 500 mm mesh, 1 m ground grid.</p>
+    </header>
+
+    <section class="variant">
+      <h2 id="v-title">Variant</h2>
+      <p id="v-text"></p>
+    </section>
+
+    <section>
+      <h2>Layers</h2>
+      <div class="layers" id="layers"></div>
+    </section>
+
+    <section>
+      <h2>Compare</h2>
+      <table class="cmp" id="cmp"></table>
+    </section>
+
+    <section>
+      <h2>Wind load case</h2>
+      <div class="seg fill" role="group" aria-label="Wind direction" id="wind"></div>
+      <div class="windkey"><span><i class="sw line" style="background:var(--press)"></i>pressure</span><span><i class="sw line" style="background:var(--suct)"></i>suction</span><span>qp 0.9 kN/m²</span></div>
+    </section>
+
+    <section>
+      <h2>Parameters (sliders in Grasshopper)</h2>
+      <table class="wire">
+        <tr><td>clear · wall</td><td>plan 10000 clear, wall 400</td></tr>
+        <tr><td>wall_h · base_h</td><td>eave 2500, solid roof base 300</td></tr>
+        <tr><td>rise or slope</td><td>6000, or an angle in degrees (53.1°)</td></tr>
+        <tr><td>opening</td><td>crown opening 1000</td></tr>
+        <tr><td>leaf_base · leaf_crown</td><td>structural leaf 160 → 80</td></tr>
+        <tr><td>lattice · skin · fill</td><td>160 zone, 80 skin, 35 % solid</td></tr>
+        <tr><td>rib_w · rib_d</td><td>ribs 160 × 240</td></tr>
+        <tr><td>n_cols · min_pitch</td><td>grid A: 10 bays, stop at 500 spacing</td></tr>
+        <tr><td>n_diamonds</td><td>grid B: 8 diamonds</td></tr>
+        <tr><td>crown_b · crown_h</td><td>crown ring 200 × 200</td></tr>
+        <tr><td>but_spacing · but_total · but_w</td><td>buttresses 1500, 1000 deep, 400 wide</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>Wiring in Grasshopper</h2>
+      <table class="wire">
+        <tr><td>grid</td><td>"A", "B" or "none" (panel or value list)</td></tr>
+        <tr><td>roof_meshes</td><td>Mesh to Shell, t_roof_elems (400 → 320) or t_roof</td></tr>
+        <tr><td>wall_meshes</td><td>Mesh to Shell, 400</td></tr>
+        <tr><td>but_meshes</td><td>Mesh to Shell, 400 (32 buttresses)</td></tr>
+        <tr><td>ring_lines</td><td>Line to Beam, ring_b × ring_h (the solid roof base)</td></tr>
+        <tr><td>crown_lines</td><td>Line to Beam, crown_b × crown_h</td></tr>
+        <tr><td>rib_lines + rib_ids</td><td>Line to Beam, rib_w × rib_d, Id from rib_ids</td></tr>
+        <tr><td>concrete · weight</td><td>totals in m³ and kN, for optimising</td></tr>
+        <tr><td>supports</td><td>Support, fixed or pinned</td></tr>
+        <tr><td>wind_vecs / wind_walls</td><td>Mesh Load, one per face</td></tr>
+        <tr><td>cladding</td><td>Mesh Load on the roof, 0.3 kN/m²</td></tr>
+      </table>
+    </section>
+
+    <p class="foot">Not modelled: the footing (supports sit at ground level) and the printed layer build-up, which is replaced by a uniform shell with a reduced density. Ribs start on the ring beam at +2.65; on the drawings they rise out of the solid base.</p>
+  </aside>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+const M = __MODEL__;
+const S = 0.001; // mm -> m
+
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 500);
+camera.up.set(0, 0, 1);
+const controls = new THREE.OrbitControls(camera, canvas);
+controls.enableDamping = true;
+
+scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8f94, 0.85));
+const sun = new THREE.DirectionalLight(0xffffff, 0.55); sun.position.set(-8, -12, 18); scene.add(sun);
+
+const mats = [];
+function mat(token, opts) { const m = new THREE.MeshLambertMaterial(Object.assign({ side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 }, opts)); m.userData.token = token; mats.push(m); return m; }
+function lmat(token, opts) { const m = new THREE.LineBasicMaterial(opts || {}); m.userData.token = token; mats.push(m); return m; }
+const V3 = p => new THREE.Vector3(p[0]*S, p[1]*S, p[2]*S);
+function clear(g) { while (g.children.length) { const c = g.children.pop(); c.traverse(o => o.geometry && o.geometry.dispose()); } }
+
+// ---- layer groups; "edges" holds the element edges of every shell
+const groups = {};
+['roof', 'wall', 'but', 'ring', 'crown', 'col', 'hring', 'hip', 'supports', 'edges', 'wind', 'ground'].forEach(k => { groups[k] = new THREE.Group(); scene.add(groups[k]); });
+const edgeStatic = new THREE.Group(), edgeRoof = new THREE.Group();
+groups.edges.add(edgeStatic, edgeRoof);
+
+const M_ROOF = mat('--roof', { transparent: true, opacity: 0.78 }), M_WALL = mat('--wall', {}), M_BUT = mat('--but', {});
+const M_EDGE = lmat('--edge', { transparent: true, opacity: 0.3 });
+function shells(list, g, m, eg) {
+  list.forEach(({ v, f }) => {
+    const pos = new Float32Array(v.length * 3);
+    v.forEach((p, i) => { pos[3*i] = p[0]*S; pos[3*i+1] = p[1]*S; pos[3*i+2] = p[2]*S; });
+    const idx = [], e = [];
+    f.forEach(q => { for (let k = 1; k < q.length - 1; k++) idx.push(q[0], q[k], q[k+1]); q.forEach((a, k) => e.push(a, q[(k+1) % q.length])); });
+    const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(pos, 3)); geo.setIndex(idx); geo.computeVertexNormals();
+    const mesh = new THREE.Mesh(geo, m); if (m.transparent) mesh.renderOrder = 2; g.add(mesh);
+    const lg = new THREE.BufferGeometry(); lg.setAttribute('position', new THREE.BufferAttribute(pos, 3)); lg.setIndex(e);
+    eg.add(new THREE.LineSegments(lg, M_EDGE));
+  });
+}
+const CYL = new THREE.CylinderGeometry(1, 1, 1, 8);
+function beams(lines, g, m, r) {
+  lines.forEach(([a, b]) => {
+    const A = V3(a), B = V3(b), c = new THREE.Mesh(CYL, m);
+    c.scale.set(r, A.distanceTo(B), r); c.position.copy(A).add(B).multiplyScalar(0.5);
+    c.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), B.clone().sub(A).normalize()); g.add(c);
+  });
+}
+
+// ---- static parts: walls, buttresses, supports, ground
+shells(M.wall, groups.wall, M_WALL, edgeStatic);
+shells(M.but, groups.but, M_BUT, edgeStatic);
+(() => {
+  const m = mat('--fg', {}); const geo = new THREE.ConeGeometry(0.09, 0.16, 4); geo.rotateX(Math.PI / 2); geo.translate(0, 0, -0.08);
+  M.supports.forEach(p => { const c = new THREE.Mesh(geo, m); c.position.copy(V3(p)); c.rotation.z = Math.PI / 4; groups.supports.add(c); });
+  const pts = []; for (let i = -9; i <= 9; i++) pts.push(i, -9, 0, i, 9, 0, -9, i, 0, 9, i, 0);
+  const gg = new THREE.BufferGeometry(); gg.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
+  groups.ground.add(new THREE.LineSegments(gg, lmat('--rule', {})));
+})();
+
+// ---- variant parts: roof, ring, crown, ribs
+const M_RING = mat('--accent', {}), M_CROWN = mat('--crown', {});
+const M_RIB = { col: mat('--rib', {}), diag: mat('--rib', {}), hring: mat('--hring', {}), hip: mat('--hip', {}) };
+const INFO = {
+  none: ['Plain shell', 'The baseline: no ribs. Same shell, walls and buttresses as A and B, on the grid B mesh.'],
+  A: ['Grid A · ruled-surface columns', 'Columns run from the eave towards the crown and stop in two stages: every other one on the rib at +6.13, the rest on the rib at +7.77. Only the hips reach the crown ring. Horizontal ribs at +4.31, +6.13 and +7.77.'],
+  B: ['Grid B · diamond lattice', 'Two families of diagonals parallel to the hips, 8 diamonds along the eave. Every diagonal ends on a hip, and the hips run to the crown ring. No horizontal ribs between the ring beam and the crown.'],
+};
+let current = 'A';
+function setVariant(g) {
+  current = g; const v = M.variants[g];
+  ['roof', 'ring', 'crown', 'col', 'hring', 'hip'].forEach(k => clear(groups[k])); clear(edgeRoof);
+  shells(v.roof, groups.roof, M_ROOF, edgeRoof);
+  beams(v.ring, groups.ring, M_RING, 0.07);
+  beams(v.crown, groups.crown, M_CROWN, 0.05);
+  const by = { col: [], hring: [], hip: [] };
+  v.ribs.forEach(([a, b, id]) => by[id === 'diag' ? 'col' : id].push([a, b]));
+  beams(by.col, groups.col, M_RIB.col, 0.06); beams(by.hring, groups.hring, M_RIB.hring, 0.06); beams(by.hip, groups.hip, M_RIB.hip, 0.07);
+  document.getElementById('v-title').textContent = INFO[g][0];
+  document.getElementById('v-text').textContent = INFO[g][1];
+  document.querySelectorAll('#variants button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === g));
+  document.querySelector('#row-col .lbl').textContent = g === 'B' ? 'Diagonal ribs' : 'Column ribs';
+  document.querySelector('#row-col .out').textContent = g === 'B' ? 'diag' : 'col';
+  document.getElementById('row-col').hidden = g === 'none';
+  document.getElementById('row-hring').hidden = g !== 'A';
+  document.getElementById('row-hip').hidden = g === 'none';
+  document.querySelectorAll('#cmp [data-v]').forEach(c => c.classList.toggle('on', c.dataset.v === g));
+  drawWind(windDeg);
+  applyTheme();
+}
+
+// ---- wind: same coefficients and face logic as loads() in the script
+const CPE_ROOF = [0.7, -0.6, -0.7], CPE_WALL = [0.8, -0.5, -0.7], QP = 0.9;
+const M_PRESS = mat('--press', {}), M_SUCT = mat('--suct', {}), M_DIR = mat('--fg', {});
+const SHAFT = new THREE.CylinderGeometry(1, 1, 1, 6), HEAD = new THREE.ConeGeometry(1, 1, 10);
+function arrow(from, dir, len, m) {
+  const g = new THREE.Group(); const shaft = Math.max(len - 0.18, 0.05);
+  const s = new THREE.Mesh(SHAFT, m); s.scale.set(0.025, shaft, 0.025); s.position.y = shaft / 2; g.add(s);
+  const h = new THREE.Mesh(HEAD, m); h.scale.set(0.08, 0.18, 0.08); h.position.y = shaft + 0.09; g.add(h);
+  g.position.copy(from); g.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.clone().normalize()); return g;
+}
+function faceFrame(v) {
+  // outward horizontal direction, and points spread over the (planar, trapezoidal) face
+  const P = v.map(V3); const c = P.reduce((a, b) => a.add(b), new THREE.Vector3()).multiplyScalar(1 / P.length);
+  const h = new THREE.Vector3(c.x, c.y, 0).normalize(); const t = new THREE.Vector3(-h.y, h.x, 0);
+  const zs = P.map(p => p.z), z0 = Math.min(...zs), z1 = Math.max(...zs);
+  const row = z => P.filter(p => Math.abs(p.z - z) < 1e-3).map(p => p.dot(t));
+  const b = row(z0), u = row(z1); const w0 = Math.max(...b), w1 = Math.max(...u);
+  // centre line of the face at the bottom (A) and top (B) row; the face normal is square to it and to t
+  const A = h.clone().multiplyScalar(P.filter(p => Math.abs(p.z - z0) < 1e-3)[0].dot(h)).setZ(z0);
+  const B = h.clone().multiplyScalar(P.filter(p => Math.abs(p.z - z1) < 1e-3)[0].dot(h)).setZ(z1);
+  const nrm = B.clone().sub(A).cross(t).normalize(); if (nrm.dot(h) < 0) nrm.negate();
+  const pts = [];
+  for (const fv of [0.25, 0.65]) for (const fu of [-0.6, 0, 0.6]) {
+    const base = A.clone().lerp(B, fv), half = w0 + fv * (w1 - w0);
+    pts.push(base.clone().add(t.clone().multiplyScalar(fu * half)));
+  }
+  return { n: nrm, h, pts };
+}
+let windDeg = 0;
+function drawWind(deg) {
+  windDeg = deg; clear(groups.wind);
+  const a = deg * Math.PI / 180, wd = new THREE.Vector3(Math.cos(a), Math.sin(a), 0);
+  [[M.variants[current].roof, CPE_ROOF], [M.wall, CPE_WALL]].forEach(([faces, cpe]) => faces.forEach(face => {
+    const { n, h, pts } = faceFrame(face.v);
+    const c = h.dot(wd); const cp = cpe[c < -0.7 ? 0 : c > 0.7 ? 1 : 2];
+    const dir = n.clone().multiplyScalar(-Math.sign(cp)); const len = 0.5 + 1.3 * Math.abs(cp);
+    pts.forEach(p => { const tail = cp > 0 ? p.clone().sub(dir.clone().multiplyScalar(len + 0.05)) : p.clone().add(dir.clone().multiplyScalar(0.05)); groups.wind.add(arrow(tail, dir, len, cp > 0 ? M_PRESS : M_SUCT)); });
+  }));
+  groups.wind.add(arrow(wd.clone().multiplyScalar(-11.5), wd, 3, M_DIR));
+}
+
+// ---- controls
+const LAYERS = [
+  ['roof', 'Roof shells', 'roof_meshes', '--roof', true, false],
+  ['col', 'Column ribs', 'col', '--rib', true, true],
+  ['hring', 'Horizontal ribs', 'hring', '--hring', true, true],
+  ['hip', 'Hip ribs', 'hip', '--hip', true, true],
+  ['ring', 'Ring beam (solid base)', 'ring_lines', '--accent', true, true],
+  ['crown', 'Crown ring', 'crown_lines', '--crown', true, true],
+  ['wall', 'Walls', 'wall_meshes', '--wall', true, false],
+  ['but', 'Buttresses (32)', 'but_meshes', '--but', true, false],
+  ['supports', 'Supports', 'supports', '--fg', true, false],
+  ['edges', 'Element edges', '', '--muted', true, true],
+  ['wind', 'Wind loads', 'wind_vecs', '--press', false, true],
+];
+const host = document.getElementById('layers');
+LAYERS.forEach(([key, label, out, token, on, line]) => {
+  const row = document.createElement('label'); row.className = 'layer'; row.id = 'row-' + key;
+  row.innerHTML = `<input type="checkbox" id="l-${key}" ${on ? 'checked' : ''}><i class="sw${line ? ' line' : ''}" style="background:var(${token})"></i><span class="lbl">${label}</span><span class="out">${out}</span>`;
+  host.appendChild(row); groups[key].visible = on;
+  row.querySelector('input').addEventListener('change', e => { groups[key].visible = e.target.checked; });
+});
+
+const vHost = document.getElementById('variants');
+[['none', 'Plain'], ['A', 'Grid A'], ['B', 'Grid B']].forEach(([g, label]) => {
+  const b = document.createElement('button'); b.type = 'button'; b.textContent = label; b.dataset.v = g;
+  b.addEventListener('click', () => setVariant(g)); vHost.appendChild(b);
+});
+const wHost = document.getElementById('wind');
+[0, 90, 180, 270].forEach(d => {
+  const b = document.createElement('button'); b.type = 'button'; b.textContent = d + '°'; b.setAttribute('aria-pressed', d === 0);
+  b.addEventListener('click', () => {
+    wHost.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
+    drawWind(d); applyTheme(); groups.wind.visible = true; document.getElementById('l-wind').checked = true;
+  });
+  wHost.appendChild(b);
+});
+
+// ---- comparison table, straight from the script's numbers
+(() => {
+  const V = M.variants, cols = ['none', 'A', 'B'], head = { none: 'Plain', A: 'A', B: 'B' };
+  const rows = [
+    ['Roof elements', g => V[g].stats.elements],
+    ['Rib beams', g => V[g].stats.rib_beams || '–'],
+    ['Rib length, m', g => V[g].stats.rib_m || '–'],
+    ['Rib concrete, m³', g => V[g].stats.rib_m3 || '–'],
+    ['Rib weight, kN', g => V[g].stats.rib_m3 ? Math.round(V[g].stats.rib_m3 * 24) : '–'],
+    ['Total concrete, m³', g => V[g].stats.total_m3],
+  ];
+  let html = '<tr><th></th>' + cols.map(g => `<th data-v="${g}">${head[g]}</th>`).join('') + '</tr>';
+  html += rows.map(([k, f]) => `<tr><td>${k}</td>` + cols.map(g => `<td data-v="${g}">${f(g)}</td>`).join('') + '</tr>').join('');
+    document.getElementById('cmp').innerHTML = html;
+})();
+
+// ---- camera presets
+function view(pos) { camera.position.set(...pos); controls.target.set(0, 0, 4); controls.update(); }
+const ISO = [-15, -19, 12];
+document.getElementById('v-iso').onclick = () => view(ISO);
+document.getElementById('v-front').onclick = () => view([0, -30, 4.5]);
+document.getElementById('v-top').onclick = () => view([0, -0.01, 32]);
+
+// ---- theme: colours come from the CSS tokens
+function applyTheme() {
+  document.documentElement.style.setProperty('--edge', css('--fg'));
+  mats.forEach(m => { const v = css(m.userData.token); if (v) m.color.set(v); });
+}
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
+new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+function resize() {
+  const r = canvas.parentElement.getBoundingClientRect();
+  renderer.setSize(r.width, r.height, false); camera.aspect = r.width / Math.max(r.height, 1); camera.updateProjectionMatrix();
+  if (r.width < 500) { camera.fov = 45; camera.updateProjectionMatrix(); }
+}
+new ResizeObserver(resize).observe(canvas.parentElement); resize();
+view(ISO);
+setVariant('A');
+(function loop() { controls.update(); renderer.render(scene, camera); requestAnimationFrame(loop); })();
+</script>
