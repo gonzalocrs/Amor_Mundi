@@ -8,8 +8,8 @@ import pyramid_drawings as g
 import roof_grid as rg
 from pyramid_drawings import Sheet
 
-MAIN_H = 3500.0                  # large slice, above the eave (+6.00): just below the middle horizontal rib of grid A (at +6.13)
-SMALL = [(4500.0, 250.0, 78.0), (5500.0, 250.0, 205.0)]    # (height above the eave, paper x, paper y of the centre) of the two small slices (+7.00, +8.00)
+MAIN_H = 5999.0                  # large slice, above the eave: +8.50 from the ground floor, at the crown, through the top ring
+SMALL = [(1500.0, 250.0, 78.0), (4500.0, 250.0, 205.0)]    # (height above the eave, paper x, paper y of the centre) of the two small slices (+4.00, +7.00)
 SH = g.SH
 ALPHA = math.radians(g.SLOPE)
 
@@ -80,7 +80,7 @@ def draw_slice(sh, opt, h, f, cx, cz, full):
                 for dd in (60, 180):                                # the 4 bars Ø16 (2 x 2 in plan)
                     for du in (-28, 28):
                         px, py = T(to_plan(face, uc(core_t0 + dd * SH) + du, core_t0 + dd * SH, hin))
-                        sh.dot(px, py, 8)
+                        sh.dot(px, py, 8 * f)
     if ring_cut:
         ring(r_air, r_l2, "#fff", "url(#cast)")
     if hips:
@@ -90,7 +90,7 @@ def draw_slice(sh, opt, h, f, cx, cz, full):
                 pp = TS([(sx * a0, sy * a0), (sx * a1, sy * a0), (sx * a1, sy * a1), (sx * a0, sy * a1)])
                 sh.poly(pp, "#fff", 0.0); sh.poly(pp, "url(#cast)", 0.0); sh.poly(pp, "none", 0.45 if full else 0.3)
     lab = "+{:.2f}".format((g.WALL_H + h) / 1000)
-    sh.text(*T((0, r_clad + 450)), "cut at {} ({})".format(lab, "1:50" if f == 1 else "1:{:g}".format(50 / f)), 3.0 if full else 2.6, weight="bold")
+    sh.text(*T((0, r_clad + 300 / f * 1.0)), "cut at {} (1:{:g})".format(lab, 50 / f), 3.0 if full else 2.6, weight="bold")
     return dict(hin=hin, o=o, ribs=ribs, hips=hips, r=r, core=(core_t0, core_t1), tm=tm, r_clad=r_clad, r_skin=r_skin, r_air=r_air, r_l2=r_l2, r_l1=r_l1, r_ins=r_ins, T=T)
 
 def sheet(opt):
@@ -102,39 +102,36 @@ def sheet(opt):
     o = offsets(h)
     legend = [(1, False, "Inner layer 1, 80 printed, room side, then layer 2 (printed, thinner towards the crown)."),
               (2, False, "Air zone, open between the ribs, for insulation (dotted)."),
-              (3, True, "Cast ribs cut by the plane (crossed hatch): {}; each 160 wide across the rib and 240 deep. The cut is longer than 160 and sheared where the rib is inclined in the face; 4 Ø16 and stirrups as in the rib section.".format("columns of grid A" if opt == "A" else "the two diagonal families of grid B")),
+              (3, True, "Cast concrete cut by the plane (crossed hatch): the ribs, {}, each 160 wide across the rib and 240 deep (the cut is longer than 160 and sheared where the rib is inclined in the face; 4 Ø16 and stirrups as in the rib section), and, at the crown, the whole top ring.".format("columns of grid A" if opt == "A" else "the two diagonal families of grid B")),
               (4, True, "Corner blocks: the four hip ribs, cut across the corners (cast)."),
               (5, False, "Outer layer 80, printed."),
               (6, False, "Insulation 100 (very thin line), then the outer layer 30 (dark).")]
-    notes = ["Large slice at +{:.2f} ({} above the eave, just below the middle horizontal rib of option A), 1:50; small slices at +7.00 and +8.00, 1:100.".format((g.WALL_H + h) / 1000, int(h)),
-             ("Option A: all columns at +{:.2f}, every other column after they pass 500 spacing (+7.00), then only the hip columns (+8.00). Option B: the diamond lattice keeps the same two diagonal families at every height, clipped by the hips.".format((g.WALL_H + h) / 1000)) if opt == "A" else
-             "Option B: the same two diagonal families at every height; the cut ribs move towards the corners as the roof narrows, the diamonds are clipped by the hips.",
+    notes = ["Heights are levels from the ground floor. Large slice at +{:.2f} (at the crown, {} above the eave), drawn at 1:20 so the top ring is readable, through the top ring; small slices at +4.00 and +7.00, 1:100 (the scale bar is for 1:50).".format((g.WALL_H + h) / 1000, int(h)),
+             ("Option A: all columns at +4.00; at +7.00 every other column has stopped (they stop once the spacing is 500); at the crown only the four hip ribs and the top ring are left. The middle horizontal ribs are at +4.31, +6.13 and +7.77." if opt == "A" else
+              "Option B: the same two diagonal families at every height, clipped by the hips; at the crown only the hips and the top ring are cut (the diagonals end on the ring)."),
              "Layer 2 thins towards the crown (the leaf is 160 at the base, 80 at the crown). Ribs use the same geometry as the roof-grid sheets; bars and stirrups are assumed."]
     sh = Sheet(50, 150, 148.5, title, sub, legend, notes)
     sh.plain_legend = False
     s = sh.s
-    cx0, cz0 = (110.0 - 150.0) / s, (148.5 - 150.0) / s
-    m = draw_slice(sh, opt, h, 1.0, cx0, cz0, True)
+    F_MAIN = 2.5                                                       # the large slice is drawn at 1:20 so the crown ring is readable
+    cx0, cz0 = (105.0 - 150.0) / s, (148.5 - 150.0) / s
+    m = draw_slice(sh, opt, h, F_MAIN, cx0, cz0, True)
     T = m["T"]; hin = m["hin"]; r = m["r"]
-    # dimensions of the main slice
-    zb = -m["r_clad"] - 500
-    sh.dim_h([T((-m["r_clad"], 0))[0], T((-hin, 0))[0], T((hin, 0))[0], T((m["r_clad"], 0))[0]], T((0, zb))[1], ext=T((0, -m["r_clad"] - 60))[1],
+    zb = -m["r_clad"] - 250
+    sh.dim_h([T((-m["r_clad"], 0))[0], T((-hin, 0))[0], T((hin, 0))[0], T((m["r_clad"], 0))[0]], T((0, zb))[1], ext=T((0, -m["r_clad"] - 40))[1],
              labels=["{:.0f}".format(m["o"]["clad"]), "{:.0f} clear at the cut".format(2 * hin), "{:.0f}".format(m["o"]["clad"])])
-    sh.dim_h([T((-m["r_clad"], 0))[0], T((m["r_clad"], 0))[0]], T((0, zb - 650))[1], ext=T((0, zb))[1], labels=["{:.0f} overall at the cut".format(2 * m["r_clad"])])
-    # callouts on the right of the main slice
-    xcall = T((m["r_clad"] + 1500, 0))[0]
-    def co(n, zpar, tgt):
-        sh.callout(n, xcall, T((0, zpar))[1], tgt[0], tgt[1])
+    sh.dim_h([T((-m["r_clad"], 0))[0], T((m["r_clad"], 0))[0]], T((0, zb - 330))[1], ext=T((0, zb))[1], labels=["{:.0f} overall at the cut".format(2 * m["r_clad"])])
+    xcall = T((m["r_clad"] + 700, 0))[0]
+    def co(n, frac, tgt):
+        sh.callout(n, xcall, T((0, frac * m["r_clad"]))[1], tgt[0], tgt[1])
     ot = m["o"]
-    co(1, 1900, T((hin + ot["l1"] / 2, 1500)))
-    co(2, 1200, T((hin + (m["r_l2"] - hin + m["r_air"] - hin) / 2, -300)))
-    if m["ribs"]:
-        rb = [q for q in m["ribs"] if abs(q["x"]) < hin * 0.6]
-        rb = rb[0] if rb else m["ribs"][0]
-        co(3, 500, T((hin + m["tm"], rb["x"])))
-    co(4, -200, T((hin + (m["core"][0] + m["core"][1]) / 2, -(hin + (m["core"][0] + m["core"][1]) / 2)))) if m["hips"] else None
-    co(5, -900, T((hin + (ot["skin"] + (m["r_air"] - hin)) / 2, -1500)))
-    co(6, -1600, T((hin + (ot["ins"] + ot["skin"]) / 2, -2200)))
+    co(1, 0.95, T((hin + ot["l1"] / 2, 0.55 * hin)))
+    co(2, 0.6, T((hin + (m["r_l2"] - hin + m["r_air"] - hin) / 2, -0.2 * hin)))
+    co(3 if not m["ribs"] else 3, 0.25, T((hin + m["tm"], (m["ribs"][0]["x"] if m["ribs"] else 0.0)))) if False else None
+    co(4, 0.0, T((hin + (m["core"][0] + m["core"][1]) / 2, -(hin + (m["core"][0] + m["core"][1]) / 2)))) if m["hips"] else None
+    co(3, 0.3, T((hin + m["tm"], 0.0)))                         # the cast top ring (or a rib, lower down)
+    co(5, -0.4, T((hin + (ot["skin"] + (m["r_air"] - hin)) / 2, -0.5 * hin)))
+    co(6, -0.75, T((hin + (ot["ins"] + ot["skin"]) / 2, -0.8 * hin)))
     for hh, px, py in SMALL:
         draw_slice(sh, opt, hh, 0.5, (px - 150.0) / s, (148.5 - py) / s, False)
     return sh
