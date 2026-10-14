@@ -101,13 +101,13 @@ def stats(segs):
     Lh = sum(tl(s[0], s[1]) for k, s in segs if k == "ring")
     return Lr, Lh
 
-def section_inset(sh, X0, Z0):
+def section_inset(sh, X0, Z0, F=5.0, callouts=True, W_=700.0):
     """plan cut through one rib at one print layer, square to the slope, 1:10 (model = local * F). outside at the bottom, inside (room) at the top.
     Printed beads (80, black rim, hatched body) form the layers and the channel walls; the channel is filled with poured concrete."""
-    F = 5.0
+    k = F / 5.0                                                                          # layout offsets scale with the drawing scale (F = 5 at 1:10, 2 at 1:5 on the 1:10 sheet)
     M = lambda u, v: (X0 + F * u, Z0 + F * v)
-    W_ = 700.0
-    u0, u1 = 270.0, 270.0 + RIB_W
+    u0 = (W_ - RIB_W) / 2
+    u1 = u0 + RIB_W
     sh.poly([M(0, 0), M(W_, 0), M(W_, 400), M(0, 400)], "#fff", 0.0)
     sh.poly([M(0, 80), M(W_, 80), M(W_, 240), M(0, 240)], "url(#dots)", 0.0)           # open air zone between the ribs = insulation
     for k, (ua, ub) in enumerate(((0.0, u0 - 80), (u1 + 80, W_))):                      # zig-zag bead in the air zone, touching skin and layer 2
@@ -124,7 +124,7 @@ def section_inset(sh, X0, Z0):
         sh.poly(q, "#fff", 0.4); sh.poly(q, "url(#conc)", 0.0)
     q_ins = [M(0, -INS), M(W_, -INS), M(W_, 0), M(0, 0)]                                 # insulation outside the skin
     q_cl = [M(0, -INS - CLAD), M(W_, -INS - CLAD), M(W_, -INS), M(0, -INS)]              # outer layer
-    sh.poly(q_ins, "#fff", 0.0); sh.poly(q_ins, "url(#dots)", 0.0); sh.poly(q_ins, "none", 0.4)
+    sh.poly(q_ins, "#fff", 0.0); sh.poly(q_ins, "url(#dots)", 0.0); sh.poly(q_ins, "none", g.INS_LW)
     sh.poly(q_cl, "#555", 0.3)
     rib = [M(u0, 80), M(u1, 80), M(u1, 320), M(u0, 320)]                                # poured core
     sh.poly(rib, "#fff", 0.0); sh.poly(rib, "url(#cast)", 0.0); sh.poly(rib, "none", 0.5)
@@ -135,15 +135,16 @@ def section_inset(sh, X0, Z0):
         sh.dot(*M(u, v), 8)                                                                                              # 4 Ø16
     sh.layer = None
     sh.text(*M(-20, 40), "outside", 2.4, "end"); sh.text(*M(-20, 360), "inside", 2.4, "end")
-    sh.dim_h([X0 + F * v for v in (0, u0, u1, W_)], Z0 - F * (INS + CLAD) - 150, ext=Z0 - F * (INS + CLAD), labels=["{:g}".format(u0), "{:g}".format(RIB_W), "{:g}".format(W_ - u1)])
-    sh.dim_v([Z0 + F * v for v in (-INS - CLAD, -INS, 0, 80, 240, 320, 400)], X0 + F * W_ + 150, ext=X0 + F * W_, labels=["30", "100", "80", "160", "80", "80"])
-    sh.text(X0, Z0 + F * 400 + 160, "Plan cut through a rib at one layer, 1:10", 3.2, "start", weight="bold")
-    sh.callout(3, X0 + F * W_ + 650, Z0 + F * 160, *M(u1 - 60, 200))
-    sh.callout(4, X0 + F * W_ + 650, Z0 + F * 360, *M(550, 360))
-    sh.callout(5, X0 + F * W_ + 650, Z0 + F * 40, *M(550, 40))
-    sh.callout(6, X0 + F * W_ + 650, Z0 + F * 260, *M(550, 160))
-    sh.callout(10, X0 + F * W_ + 1450, Z0 + F * 160, *M(u1 + 40, 160))
-    sh.callout(12, X0 + F * W_ + 650, Z0 - F * 70, *M(550, -70))
+    sh.dim_h([X0 + F * v for v in (0, u0, u1, W_)], Z0 - F * (INS + CLAD) - 150 * k, ext=Z0 - F * (INS + CLAD), labels=["{:g}".format(u0), "{:g}".format(RIB_W), "{:g}".format(W_ - u1)])
+    sh.dim_v([Z0 + F * v for v in (-INS - CLAD, -INS, 0, 80, 240, 320, 400)], X0 + F * W_ + 150 * k, ext=X0 + F * W_, labels=["30", "100", "80", "160", "80", "80"])
+    sh.text(X0, Z0 + F * 400 + 160 * k, "Plan cut through a rib at one layer, 1:{:g}".format(sh.scale / F), 3.2, "start", weight="bold")
+    if callouts:
+        sh.callout(3, X0 + F * W_ + 650, Z0 + F * 160, *M(u1 - 60, 200))
+        sh.callout(4, X0 + F * W_ + 650, Z0 + F * 360, *M(550, 360))
+        sh.callout(5, X0 + F * W_ + 650, Z0 + F * 40, *M(550, 40))
+        sh.callout(6, X0 + F * W_ + 650, Z0 + F * 260, *M(550, 160))
+        sh.callout(10, X0 + F * W_ + 1450, Z0 + F * 160, *M(u1 + 40, 160))
+        sh.callout(12, X0 + F * W_ + 650, Z0 - F * 70, *M(550, -70))
 
 def section_long(sh, X0, Z0, F=2.5, H=800.0):
     """section along the centre of a rib at the eave, 1:20, in the true roof geometry: layers 1 and the outer skin are printed (joints every 10, drawn every 20),
@@ -184,7 +185,7 @@ def section_long(sh, X0, Z0, F=2.5, H=800.0):
     for h in range(100, int(H), 200):
         sh.line([M(e1(h) + 30, h), M(e3(h) - 30, h)], 8 * F / sh.scale, g.BLUE, tw=8)
     sh.layer = None
-    sh.poly(ins_b, "#fff", 0.0); sh.poly(ins_b, "url(#dots)", 0.0); sh.poly(ins_b, "none", 0.4)
+    sh.poly(ins_b, "#fff", 0.0); sh.poly(ins_b, "url(#dots)", 0.0); sh.poly(ins_b, "none", g.INS_LW)
     sh.poly(cl_b, "#555", 0.3)
     sh.line([M(e0(0) - 120, 0), M(e4(0) + 260, 0)], 0.3)
     sh.text(X0 - 20 * F * 6, Z0 + F * H + 160, "Section along a rib at the eave, 1:20", 3.2, "start", weight="bold")
@@ -240,7 +241,7 @@ def building(sh):
         for t0, t1, kind in ((0.0, INS, "ins"), (INS, INS + CLAD, "clad")):
             q = [(sgn * (xo(0) + t0 * g.SH), 0), (sgn * (xo(RISE) + t0 * g.SH), RISE), (sgn * (xo(RISE) + t1 * g.SH), RISE), (sgn * (xo(0) + t1 * g.SH), 0)]
             if kind == "ins":
-                sh.poly(q, "#fff", 0.0); sh.poly(q, "url(#dots)", 0.0); sh.poly(q, "none", 0.3)
+                sh.poly(q, "#fff", 0.0); sh.poly(q, "url(#dots)", 0.0); sh.poly(q, "none", g.INS_LW)
             else:
                 sh.poly(q, "#555", 0.2)
     # division between printed pieces, dashed: running bond, about 1500 wide, rows 750 high on the roof (assumed)

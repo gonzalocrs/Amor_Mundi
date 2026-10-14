@@ -228,6 +228,8 @@ if __name__ == "__main__":
     out = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(os.path.abspath(__file__)), "cad")
     os.makedirs(out, exist_ok=True)
     export_dxf(pd.plan(), os.path.join(out, "pyramid-plan"))
+    export_dxf(pd.plan("A"), os.path.join(out, "pyramid-plan-gridA"))
+    export_dxf(pd.plan("B"), os.path.join(out, "pyramid-plan-gridB"))
     export_dxf(pd.section(), os.path.join(out, "pyramid-section"))
     export_dxf(pd.section("A"), os.path.join(out, "pyramid-section-gridA"))
     export_dxf(pd.section("B"), os.path.join(out, "pyramid-section-gridB"))

@@ -64,11 +64,11 @@
 <polygon points="47.00,140.00 267.00,140.00 175.00,20.00 139.00,20.00" fill="#fff" stroke="#000" stroke-width="0.35" stroke-linejoin="round" />
 <polygon points="47.00,140.00 139.00,20.00 136.50,20.00 44.50,140.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
 <polygon points="47.00,140.00 139.00,20.00 136.50,20.00 44.50,140.00" fill="url(#dots)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="47.00,140.00 139.00,20.00 136.50,20.00 44.50,140.00" fill="none" stroke="#000" stroke-width="0.3" stroke-linejoin="round" />
+<polygon points="47.00,140.00 139.00,20.00 136.50,20.00 44.50,140.00" fill="none" stroke="#000" stroke-width="0.07" stroke-linejoin="round" />
 <polygon points="44.50,140.00 136.50,20.00 135.75,20.00 43.75,140.00" fill="#555" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
 <polygon points="267.00,140.00 175.00,20.00 177.50,20.00 269.50,140.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
 <polygon points="267.00,140.00 175.00,20.00 177.50,20.00 269.50,140.00" fill="url(#dots)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="267.00,140.00 175.00,20.00 177.50,20.00 269.50,140.00" fill="none" stroke="#000" stroke-width="0.3" stroke-linejoin="round" />
+<polygon points="267.00,140.00 175.00,20.00 177.50,20.00 269.50,140.00" fill="none" stroke="#000" stroke-width="0.07" stroke-linejoin="round" />
 <polygon points="269.50,140.00 177.50,20.00 178.25,20.00 270.25,140.00" fill="#555" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
 <polyline points="78.43,140.00 86.64,125.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
 <polyline points="109.86,140.00 114.79,125.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
@@ -252,7 +252,7 @@
 <polygon points="121.00,238.00 102.00,238.00 102.00,254.00 94.00,254.00 94.00,230.00 121.00,230.00" fill="url(#conc)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
 <polygon points="51.00,272.00 121.00,272.00 121.00,262.00 51.00,262.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
 <polygon points="51.00,272.00 121.00,272.00 121.00,262.00 51.00,262.00" fill="url(#dots)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="51.00,272.00 121.00,272.00 121.00,262.00 51.00,262.00" fill="none" stroke="#000" stroke-width="0.4" stroke-linejoin="round" />
+<polygon points="51.00,272.00 121.00,272.00 121.00,262.00 51.00,262.00" fill="none" stroke="#000" stroke-width="0.07" stroke-linejoin="round" />
 <polygon points="51.00,275.00 121.00,275.00 121.00,272.00 51.00,272.00" fill="#555" stroke="#000" stroke-width="0.3" stroke-linejoin="round" />
 <polygon points="78.00,254.00 94.00,254.00 94.00,230.00 78.00,230.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
 <polygon points="78.00,254.00 94.00,254.00 94.00,230.00 78.00,230.00" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
@@ -356,7 +356,7 @@
 <polyline points="197.25,227.00 208.67,227.00" fill="none" stroke="#000" stroke-width="0.4" stroke-linejoin="round" />
 <polygon points="242.00,262.00 211.33,222.00 217.58,222.00 248.25,262.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
 <polygon points="242.00,262.00 211.33,222.00 217.58,222.00 248.25,262.00" fill="url(#dots)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="242.00,262.00 211.33,222.00 217.58,222.00 248.25,262.00" fill="none" stroke="#000" stroke-width="0.4" stroke-linejoin="round" />
+<polygon points="242.00,262.00 211.33,222.00 217.58,222.00 248.25,262.00" fill="none" stroke="#000" stroke-width="0.07" stroke-linejoin="round" />
 <polygon points="248.25,262.00 217.58,222.00 219.46,222.00 250.12,262.00" fill="#555" stroke="#000" stroke-width="0.3" stroke-linejoin="round" />
 <polyline points="211.00,262.00 255.00,262.00" fill="none" stroke="#000" stroke-width="0.3" stroke-linejoin="round" />
 <text x="211.00" y="218.80" font-size="3.2" text-anchor="start" font-weight="bold" fill="#000">Section along a rib at the eave, 1:20</text>
