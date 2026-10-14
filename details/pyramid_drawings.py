@@ -407,7 +407,10 @@ def back_face(sh, grid):
     if grid:
         segs, _ = rg.segments(grid)
         for kind, pts in segs:
-            if kind == "solid": continue
+            if kind == "solid":                                           # bottom ring = the 300 solid base, across the whole face
+                q = [(-wd(0), dz), (wd(0), dz), (wd(SOLID_H), dz + SOLID_H), (-wd(SOLID_H), dz + SOLID_H)]
+                sh.line(q + [q[0]], 0.2, "#555", dash="2 1")
+                continue
             if kind == "ring":
                 y = pts[0][1]; q = rect(pts[0][0], y - rg.TOP_RING / 2, pts[1][0], y + rg.TOP_RING / 2)
             else:
