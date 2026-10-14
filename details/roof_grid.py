@@ -315,7 +315,7 @@ def sheet(opt):
     sh.dim_v([0, SOLID], -w(0) - 700, ext=-w(0), labels=["300"])
     sh.dim_v([-g.WALL_H, 0], xr, ext=6100, labels=["{:g}".format(g.WALL_H)])
     sh.dim_v([0, RISE], xr, ext=w(0) + 500, labels=["{:g}".format(RISE)])
-    sh.dim_h([-w(RISE), w(RISE)], RISE + 380, ext=RISE, labels=["{:g}".format(round(2 * TOPB))])
+    sh.dim_h([-g.OPEN / 2, g.OPEN / 2], RISE + 380, ext=RISE, labels=["{:g} clear".format(g.OPEN)])      # crown opening, inside face (same as section and plan)
     zg = -g.WALL_H
     sh.level(-6700, zg, "±0.00", -1); sh.level(-6700, 0, "+2.50", -1); sh.level(-6700, RISE, "+8.50", -1); sh.level(-6700, zg + g.FOOT_Z, "-1.00", -1)
     sh.callout(7, -6900, zg + 1900, -4200, zg + 1900)

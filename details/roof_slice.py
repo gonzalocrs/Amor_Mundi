@@ -93,23 +93,35 @@ def draw_slice(sh, opt, h, f, cx, cz, full, label=True):
     if label: sh.text(*T((0, r_clad + 300 / f * 1.0)), "cut at {} (1:{:g})".format(lab, 50 / f), 3.0 if full else 2.6, weight="bold")
     return dict(hin=hin, o=o, ribs=ribs, hips=hips, r=r, core=(core_t0, core_t1), tm=tm, r_clad=r_clad, r_skin=r_skin, r_air=r_air, r_l2=r_l2, r_l1=r_l1, r_ins=r_ins, T=T)
 
-def sheet(opt):
-    """roof plan cut at the crown (+8.50), looking down: the top ring is cut, and below it the whole roof is seen with its ribs running
-    from the base ring at the eave up to the top ring (drawn as if the outer layer, insulation and cladding were transparent)"""
-    h_cut = g.RISE - 1.0
-    title = "Roof plan, cut at +8.50 · grid {}".format(opt)
-    sub = "horizontal cut through the top ring, looking down on the ribs"
+CUT_H = 3500.0       # cut plane above the eave: +6.00 from the ground floor, just below the middle horizontal rib of grid A (+6.13)
+
+def clip_seg(p, q, hmax):
+    """part of the elevation segment p-q (x, h) that lies at or below h = hmax, or None"""
+    if p[1] > q[1]: p, q = q, p
+    if p[1] >= hmax: return None
+    if q[1] <= hmax: return p, q
+    t = (hmax - p[1]) / (q[1] - p[1])
+    return p, (p[0] + t * (q[0] - p[0]), hmax)
+
+def sheet(opt, h_cut=CUT_H):
+    """roof plan cut at +6.00, looking down: the shell is cut as a ring (ribs cut in it), and below the cut the roof is seen with its ribs
+    running from the base ring at the eave up to the cut (drawn as if the outer layer, insulation and cladding were transparent).
+    The roof above the cut is removed and shown dashed (hips and the 1000 crown opening)."""
+    lv = (g.WALL_H + h_cut) / 1000
+    title = "Roof plan, cut at +{:.2f} · grid {}".format(lv, opt)
+    sub = "horizontal cut through the roof, looking down on the ribs"
     hr = ", ".join("+{:.2f}".format((g.WALL_H + y) / 1000) for y in rg.RING_H)
-    legend = [(1, False, "Cut at +8.50 (crown, 6.00 above the roof base) through the top ring: printed layers, cast ring (crossed hatch), insulation and outer layer; crown opening 1000."),
-              (2, True, ("Ribs of grid A, seen from above: columns from the base ring at the eave to where they stop (every other one at +{:.2f}, the rest at +{:.2f}); the four hip ribs go on to the top ring.".format((g.WALL_H + rg.H1) / 1000, (g.WALL_H + rg.H2) / 1000)) if opt == "A" else
-                         "Ribs of grid B, seen from above: two families of diagonals from the base ring at the eave to the hips and the top ring."),
+    legend = [(1, False, "Cut at +{:.2f} ({:.0f} above the eave, just below the horizontal rib at +6.13): printed layers, air zone, cast ribs cut (crossed hatch), outer layer, insulation 100 and outer layer 30.".format(lv, h_cut)),
+              (2, True, ("Ribs of grid A seen below the cut: all 11 columns per face run from the base ring at the eave up to the cut (every other one stops at +6.13, just above it)." if opt == "A" else
+                         "Ribs of grid B seen below the cut: the two families of diagonals from the base ring at the eave up to the cut and the hips.")),
               (3, False, "Base ring: the 300 solid base at the eave (+2.50 to +2.80)."),
-              (4, True, ("Horizontal ribs of grid A at {}.".format(hr)) if opt == "A" else "No horizontal ribs between the base ring and the top ring in grid B."),
-              (5, False, "Hips: four ribs from the corners of the eave to the corners of the top ring."),
+              (4, True, ("Horizontal rib of grid A at +4.31 (the next ones, at +6.13 and +7.77, are above the cut)." if opt == "A" else "No horizontal ribs in grid B between the base ring and the top ring.")),
+              (5, False, "Hips: ribs from the corners of the eave up to the cut; dashed above it, up to the crown opening."),
               (6, False, "Roof edge at the eave (outside of the 30 outer layer). Very faint squares = printed layer joints (real layers 10, drawn every 200 in height)."),
-              (7, False, "Buttresses below the roof: their ends show beyond the roof edge; the wall under the roof is dashed.")]
-    notes = ["The ribs lie inside the shell, between the printed inner layers and the outer layer; here they are drawn as if the outer layer, insulation and cladding were transparent, so their whole run from the eave to the crown can be seen.",
-             "Ribs are drawn on the mid-surface of the shell, 160 wide, with the same geometry as the roof-grid sheets and sections."]
+              (7, False, "Above the cut (removed, dashed): hips and the crown opening at +8.50, {:.0f} clear inside ({:.0f} at the middle of the shell, {:.0f} outside the outer layer).".format(g.OPEN, 2 * rg.TOPB, 2 * (g.HALF + g.rx(g.RISE)[3] + (g.INS + g.CLAD) * SH))),
+              (8, False, "Buttresses below the roof: their ends show beyond the roof edge; the wall under the roof is dashed.")]
+    notes = ["Matches the roof-grid elevations: same rib geometry, same levels ({} for the horizontal ribs of grid A).".format(hr),
+             "The ribs lie inside the shell, between the printed inner layers and the outer layer; here they are drawn as if the outer layer, insulation and cladding were transparent."]
     sh = Sheet(50, 150, 148.5, title, sub, legend, notes)
     sh.plain_legend = False
     s = sh.s
@@ -118,8 +130,8 @@ def sheet(opt):
     TS = lambda ps: [T(p) for p in ps]
     HALF, WALL, BUT_L, BUT_W = g.HALF, g.WALL, g.BUT_L, g.BUT_W
     b = HALF + WALL
-    edge = HALF + g.rx(0)[3] + (g.INS + g.CLAD) * SH                     # outside of the cladding at the eave
-    # buttresses (visible beyond the roof edge) and the wall under the roof (dashed)
+    out = lambda hh: g.HALF + g.rx(hh)[3] + (g.INS + g.CLAD) * SH       # outside of the cladding at height hh
+    edge = out(0.0)
     for q in (sq(HALF), sq(b)):
         sh.line(TS(q + [q[0]]), 0.15, "#777", dash="3 1.5")
     for v in g.but_pos():
@@ -127,51 +139,58 @@ def sheet(opt):
                                    ((-b - BUT_L, v - BUT_W / 2), (-b, v + BUT_W / 2)), ((b, v - BUT_W / 2), (b + BUT_L, v + BUT_W / 2))):
             q = [(xa, ya), (xb, ya), (xb, yb), (xa, yb)]
             sh.poly(TS(q), "#fff", 0.0); sh.poly(TS(q), "url(#conc)", 0.0); sh.poly(TS(q), "none", 0.35)
-    # roof seen from above: white, very faint layer joints (contours every 100 in height)
     sh.poly(TS(sq(edge)), "#fff", 0.45)
     hh = 200.0
-    while hh < g.RISE:
-        rr = rg.w(hh) + (edge - rg.w(0))
-        sh.poly(TS(sq(rr)), "none", 0.025, "#d8d8d8")
+    while hh < h_cut:
+        sh.poly(TS(sq(out(hh))), "none", 0.025, "#d8d8d8")
         hh += 200.0
     face = {"S": lambda x, wv: (x, -wv), "N": lambda x, wv: (-x, wv), "E": lambda x, wv: (wv, x), "W": lambda x, wv: (-wv, -x)}
     segs, _ = rg.segments(opt)
-    # base ring (solid 300) and horizontal / top rings as square bands
     def band(h0, h1):
         d = "M" + " L".join("{:.2f},{:.2f}".format(*sh.P(*q)) for q in TS(sq(rg.w(h0)))) + "Z M" + " L".join("{:.2f},{:.2f}".format(*sh.P(*q)) for q in TS(sq(rg.w(h1)))) + "Z"
         sh.o.append('<path d="{0}" fill="#fff" fill-rule="evenodd"/><path d="{0}" fill="url(#cast)" fill-rule="evenodd"/>'.format(d))
         sh.poly(TS(sq(rg.w(h0))), "none", 0.3); sh.poly(TS(sq(rg.w(h1))), "none", 0.3)
     band(0.0, g.SOLID_H)
     for kind, pts in segs:
-        if kind == "ring":
+        if kind == "ring" and pts[0][1] + rg.TOP_RING / 2 < h_cut:
             y = pts[0][1]
-            band(y - rg.TOP_RING / 2, min(y + rg.TOP_RING / 2, g.RISE))
-    # ribs: 160 wide strips on the mid-surface, projected to plan
+            band(y - rg.TOP_RING / 2, y + rg.TOP_RING / 2)
     for kind, pts in segs:
         if kind not in ("col", "diag"): continue
-        q = rg.quad(pts[0], pts[1], rg.RIB_W, kind)
+        c = clip_seg(pts[0], pts[1], h_cut)
+        if c is None: continue
+        q = rg.quad(c[0], c[1], rg.RIB_W, kind)
         for f in face.values():
-            pp = TS([f(x, rg.w(min(max(hv, 0.0), g.RISE))) for x, hv in q])
+            pp = TS([f(x, rg.w(min(max(hv, 0.0), h_cut))) for x, hv in q])
             sh.poly(pp, "#fff", 0.0); sh.poly(pp, "url(#cast)", 0.0); sh.poly(pp, "none", 0.3)
-    # hips (visible edges of the roof)
     for sx in (-1, 1):
         for sy in (-1, 1):
-            sh.line(TS([(sx * edge, sy * edge), (sx * rg.w(g.RISE), sy * rg.w(g.RISE))]), 0.35)
-    # the cut at +8.50: the top ring, drawn over everything
-    m = draw_slice(sh, opt, h_cut, 1.0, cx, cz, False, label=False)
-    # dimensions and callouts
+            sh.line(TS([(sx * edge, sy * edge), (sx * out(h_cut), sy * out(h_cut))]), 0.35)
+    m = draw_slice(sh, opt, h_cut, 1.0, cx, cz, True, label=False)
+    r_in_c, r_out_c = g.OPEN / 2, out(g.RISE)
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            sh.line(TS([(sx * m["hin"], sy * m["hin"]), (sx * r_in_c, sy * r_in_c)]), 0.2, "#555", dash="3 1.5")
+    sh.line(TS(sq(r_in_c) + [sq(r_in_c)[0]]), 0.25, "#555", dash="3 1.5")
+    sh.line(TS(sq(r_out_c) + [sq(r_out_c)[0]]), 0.15, "#555", dash="3 1.5")
+    sh.text(*T((0, 120)), "crown opening above", 2.4, italic=True, color="#555"); sh.text(*T((0, -330)), "{:.0f} x {:.0f} clear, +8.50".format(g.OPEN, g.OPEN), 2.4, italic=True, color="#555")
     sh.dim_h([T((-edge, 0))[0], T((edge, 0))[0]], T((0, -6450))[1], ext=T((0, -edge - 60))[1], labels=["{:.0f} roof at the eave".format(2 * edge)])
+    sh.dim_h([T((-m["hin"], 0))[0], T((m["hin"], 0))[0]], T((0, m["r_clad"] + 350))[1], ext=T((0, m["hin"] + 40))[1], labels=["{:.0f} clear at the cut".format(2 * m["hin"])])
+    sh.dim_h([T((-r_in_c, 0))[0], T((r_in_c, 0))[0]], T((0, -1300))[1], ext=T((0, -r_in_c - 40))[1], labels=["{:.0f}".format(g.OPEN)])
     xcall = T((7000, 0))[0]
     def co(n, zc, tgt): sh.callout(n, xcall, T((0, zc))[1], *T(tgt))
-    co(1, 2600, (m["r_l2"] + 20, 0.0))
-    rib_pt = [p for k, p in segs if k in ("col", "diag")][len([1 for k, p in segs if k in ("col", "diag")]) // 3]
-    mid = ((rib_pt[0][0] + rib_pt[1][0]) / 2, (rib_pt[0][1] + rib_pt[1][1]) / 2)
-    co(2, 1500, face["E"](mid[0], rg.w(mid[1])))
-    co(3, -800, (rg.w(g.SOLID_H / 2), -2000.0))
-    if opt == "A": co(4, 400, (rg.w(rg.RING_H[0]), 1200.0))
-    co(5, 4300, (0.5 * (edge + rg.w(g.RISE)), 0.5 * (edge + rg.w(g.RISE))))
-    co(6, -2000, (edge - 40, -3000.0))
-    co(7, -4300, (b + BUT_L - 100, g.but_pos()[1]))
+    ot = m["o"]
+    co(1, 3300, (m["hin"] + ot["l1"] / 2, 0.6 * m["hin"]))
+    rib_pt = [p for k, p in segs if k in ("col", "diag")][2]
+    c = clip_seg(rib_pt[0], rib_pt[1], h_cut)
+    mid = ((c[0][0] + c[1][0]) / 2, (c[0][1] + c[1][1]) / 2)
+    co(2, 1900, face["E"](mid[0], rg.w(mid[1])))
+    co(3, -700, (rg.w(g.SOLID_H / 2), -2500.0))
+    if opt == "A": co(4, 500, (rg.w(rg.RING_H[0]), 900.0))
+    co(5, 4600, (0.5 * (edge + out(h_cut)), 0.5 * (edge + out(h_cut))))
+    co(6, -2000, (edge - 40, -3200.0))
+    co(7, -3300, (r_in_c, -0.3 * r_in_c))
+    co(8, -4600, (b + BUT_L - 100, g.but_pos()[1]))
     return sh
 
 if __name__ == "__main__":
