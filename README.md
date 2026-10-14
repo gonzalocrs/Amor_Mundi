@@ -15,6 +15,7 @@ hollow, lapped pieces for **3D concrete printing**, sliced to printer programs w
 | `details/cad/*.dxf` + `details/cad_export.py` | The same three drawings as CAD files (DXF, mm, 1:1, named layers, real hatches, rebar at true diameter). Regenerate: `pip install ezdxf shapely`, then `python details/cad_export.py` |
 | `scripts/karamba_model.py` | Karamba3D model: roof/wall/buttress shells, solid roof-base ring, supports, wind and cladding loads |
 | `details/structural_check.py` | Hand-calculation screening check (thrust, ring beam, buttress, wind, footing) |
+| `details/roof_grid.py` | Two options for a cast column grid inside the roof shell: `roof-grid-A` (ruled-surface columns + horizontal ribs) and `roof-grid-B` (diamond lattice, top and bottom ring only), SVG + PDF, A3 |
 | `details/pyramid_drawings.py` | Buttressed 10 x 10 m pyramid roof: floor plan, total section A-A and eave detail D1 (`pyramid-plan`, `pyramid-section`, `pyramid-detail`, SVG + PDF, A3) |
 
 The input/output list for each script is at the top of each `.py` file.
