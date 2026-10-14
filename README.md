@@ -13,7 +13,7 @@ hollow, lapped pieces for **3D concrete printing**, sliced to printer programs w
 | `grasshopper/Pyramide 10_1_2026.gh` | The Grasshopper definition (scripts pasted into Py3 components + SaladSlicer chain) |
 | `rhino/10_1_2026.3dm` | The Rhino model (stored with Git LFS) |
 | `details/cad/*.dxf` + `details/cad_export.py` | The same three drawings as CAD files (DXF, mm, 1:1, named layers, real hatches, rebar at true diameter). Regenerate: `pip install ezdxf shapely`, then `python details/cad_export.py` |
-| `scripts/karamba_model.py` | Karamba3D model: roof/wall/buttress shells, ring beams, supports, wind and cladding loads |
+| `scripts/karamba_model.py` | Karamba3D model: roof/wall/buttress shells, solid roof-base ring, supports, wind and cladding loads |
 | `details/structural_check.py` | Hand-calculation screening check (thrust, ring beam, buttress, wind, footing) |
 | `details/pyramid_drawings.py` | Buttressed 10 x 10 m pyramid roof: floor plan, total section A-A and eave detail D1 (`pyramid-plan`, `pyramid-section`, `pyramid-detail`, SVG + PDF, A3) |
 

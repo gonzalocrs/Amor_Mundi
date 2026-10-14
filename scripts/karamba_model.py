@@ -5,11 +5,11 @@ component (Rhino 8) or GhPython (Rhino 7). The geometry core (`build_model`) is 
 (`python scripts/karamba_model.py` prints a summary). Units: millimetres (Karamba converts from the Rhino document units).
 
 Idealisation (state it in your report):
-  - Everything is modelled on mid-surfaces / centrelines. The roof base ring sits at the CENTROID of the ring beam
-    (z = WALL_H - BEAM_H/2), so the roof shell, wall shell and ring beam share nodes.
+  - Everything is modelled on mid-surfaces / centrelines. The roof base ring sits at the CENTROID of the solid roof base
+    (z = WALL_H + 300/2), so the roof shell, wall shell and ring beam share nodes.
   - Roof = four planar shells from the ring beam to the crown ring. Wall = four vertical shells from the ground to the ring beam.
-  - Buttress = one vertical shell per side at mid-span, 700 from the inner wall face, attached along the wall mid-plane,
-    top at the ring beam centroid (the real buttress wraps the beam in a notch).
+  - Buttress = one vertical shell per side at mid-span, 1000 from the inner wall face, attached along the wall mid-plane,
+    top at the centroid of the solid roof base.
   - Footing not modelled: supports are fixed (or pinned) at z = 0. Add the soil/footing as springs if you need it.
   - Printed hollow layers are replaced by uniform thickness + an equivalent density (`gamma_*` outputs) so the weight is right.
 
@@ -28,7 +28,7 @@ OUTPUTS - wire as in the README ("Karamba model" section)
     roof_meshes    list Mesh    4 roof faces      -> Mesh to Shell (roof section)
     wall_meshes    list Mesh    4 wall faces      -> Mesh to Shell (wall section)
     but_meshes     list Mesh    4 buttresses      -> Mesh to Shell (buttress section)
-    ring_lines     list Line    ring beam         -> Line to Beam (rectangular 400 x 500)
+    ring_lines     list Line    ring beam         -> Line to Beam (rectangular 400 x 300, the solid roof base)
     crown_lines    list Line    crown ring        -> Line to Beam (rectangular, e.g. 200 x 200, assumed)
     supports       list Point   base nodes        -> Support
     cladding       item Vector  kN/m2 on roof_meshes (Mesh Load, Z down)
@@ -42,11 +42,11 @@ OUTPUTS - wire as in the README ("Karamba model" section)
 import math
 
 
-def build_model(mesh_size=500.0, clear=10000.0, wall=400.0, beam_h=500.0, wall_h=2500.0, rise=8000.0, open_=1000.0,
-                but_total=700.0, t_roof_base=400.0, t_roof_crown=320.0, crown_ring=True):
+def build_model(mesh_size=500.0, clear=10000.0, wall=400.0, beam_h=300.0, wall_h=2500.0, rise=8000.0, open_=1000.0,
+                but_total=1000.0, t_roof_base=400.0, t_roof_crown=320.0, crown_ring=True):
     half = clear / 2
     d_b = half + wall / 2                              # centreline half side of the wall / ring beam
-    z_b = wall_h - beam_h / 2                          # ring beam centroid = base of the roof shell
+    z_b = wall_h + beam_h / 2                          # centroid of the 300 solid roof base (no separate ring beam) = base of the roof shell
     d_c = open_ / 2 + 0.25 * (t_roof_crown)            # crown ring centreline half side (assumed)
     z_c = wall_h + rise
     slant = math.hypot(d_b - d_c, z_c - z_b)

@@ -21,7 +21,7 @@ QP = 0.9                # kPa peak wind pressure (site dependent)
 CF = 1.1                # overall force coefficient (assumed)
 MU_FRICTION = 0.4       # footing/soil friction (assumed)
 SOIL_ALLOW = 150.0      # kPa allowable bearing (assumed, needs a soil report)
-RING_BARS = 8           # Ø16, as in the detail
+RING_BARS = 8           # Ø16 in the solid base of the roof (ASSUMED: the drawings no longer show ring bars, to be placed)
 BUT_SPACING = None      # None = one buttress at mid-span of each side (as in the drawing)
 
 # ================= geometry =================
@@ -32,8 +32,8 @@ L, Lc = side / 1000, crown / 1000
 slant = math.hypot(g.RISE / 1000, (L - Lc) / 2)
 area_roof = 4 * 0.5 * (L + Lc) * slant        # m2 of roof surface
 perim = 4 * L
-beam_kn = g.WALL * g.BEAM_H * 1e-6 * GAMMA * perim
-wall_kn = g.WALL_H / 1000 - g.BEAM_H / 1000
+beam_kn = g.WALL * g.SOLID_H * 1e-6 * GAMMA * perim     # the solid base of the roof (400 x 300) now takes the place of the ring beam
+wall_kn = g.WALL_H / 1000
 wall_kn = SOLID_WALL * wall_kn * perim * GAMMA
 roof_g = area_roof * (SOLID_ROOF * GAMMA + CLAD_KPA)
 mu_s = max(0.0, 0.8 * (60 - g.SLOPE) / 30)
@@ -46,7 +46,7 @@ def row(name, demand, cap, unit):
     print("  {:<46s} demand {:>9.1f} {:<4s} capacity {:>9.1f}   UR {:>5.2f}  {}".format(name, demand, unit, cap, ur, "OK" if ur <= 1 else "FAIL"))
     return ur
 
-print("GEOMETRY  side {:.2f} m, slope {:.1f} deg, roof area {:.0f} m2, ring beam {:g}x{:g}".format(L, g.SLOPE, area_roof, g.WALL, g.BEAM_H))
+print("GEOMETRY  side {:.2f} m, slope {:.1f} deg, roof area {:.0f} m2, solid ring base {:g}x{:g}".format(L, g.SLOPE, area_roof, g.WALL, g.SOLID_H))
 print("WEIGHTS   roof {:.0f} kN, ring beam {:.0f} kN, wall {:.0f} kN, snow (plan) {:.0f} kN".format(roof_g, beam_kn, wall_kn, roof_q))
 
 # ---------- load combinations (ULS) ----------
@@ -67,7 +67,7 @@ span = L / 2                                    # corner to mid-span buttress
 M_beam = H * span ** 2 / 10                     # continuous, uniform outward load, kNm
 R_but = 1.25 * H * L                            # mid reaction of a 2-span continuous beam, kN
 d = g.WALL - 60.0                               # outward bending: beam width acts as depth
-b = g.BEAM_H
+b = g.SOLID_H
 Ast = 3 * math.pi * 16 ** 2 / 4                 # 3 Ø16 on the tension face (horizontal bending)
 z = 0.9 * d
 Mrd = Ast * fyd * z / 1e6
@@ -77,7 +77,7 @@ print("   buttress reaction (upper bound) {:.0f} kN".format(R_but))
 
 # ---------- 3. wall: vertical compression + slenderness ----------
 N_wall = V + beam_kn / perim * 1.35 + 1.35 * wall_kn / perim            # kN/m at wall base
-h_eff = g.WALL_H / 1000 - g.BEAM_H / 1000
+h_eff = g.WALL_H / 1000
 slender = h_eff / (g.WALL / 1000)
 Nrd = fcd * SOLID_WALL * 1000                                           # kN/m, solid concrete only
 print("\n3. WALL (printed, solid fraction {:.0f} %)".format(100 * SOLID_WALL / (g.WALL / 1000)))
@@ -85,7 +85,7 @@ u3 = row("axial load at base vs fcd * solid area", N_wall, Nrd * (1 - slender / 
 print("   slenderness h/t = {:.1f} (reduction factor 1 - h/(30t) applied)".format(slender))
 
 # ---------- 4. buttress overturning / sliding under the upper-bound reaction ----------
-lever = (g.WALL_H - g.BEAM_H / 2) / 1000                               # height of the thrust above the footing top
+lever = (g.WALL_H + g.SOLID_H / 2) / 1000                               # height of the thrust above the footing top
 trib = L / 2 + 0.0                                                      # m of wall/roof carried per buttress
 W_trib = trib * (V / 1.35 + wall_kn / perim + beam_kn / perim)        # kN, characteristic
 arm = (g.BUT_TOTAL / 1000) - 0.15                                      # from the thrust line (inner side) to the outer toe

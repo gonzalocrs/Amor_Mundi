@@ -7,10 +7,10 @@ import math, os, sys
 
 # ================= PARAMETERS =================
 CLEAR = 10000.0            # clear inside dimension, square plan
-WALL = 400.0               # wall thickness = ring beam width = roof base width
-BEAM_H = 500.0             # ring beam depth
-WALL_H = 2500.0            # ground to top of ring beam (= eave, roof base)
-BUT_TOTAL, BUT_W = 700.0, 400.0   # buttress: 700 long measured from the inner wall face (flush with wall and beam), 400 wide (= the wall thickness, constant along its length)
+WALL = 400.0               # wall thickness = roof base width
+SOLID_H = 300.0            # the first 300 (vertical) of the roof is completely solid concrete, no air zone; there is no separate ring beam
+WALL_H = 2500.0            # ground to top of wall (= eave, roof base)
+BUT_TOTAL, BUT_W = 1000.0, 400.0  # buttress: 1000 long measured from the inner wall face (flush with the wall), 400 wide (= the wall thickness, constant along its length)
 BUT_L = BUT_TOTAL - WALL          # so it projects only this far beyond the outer wall face
 OPEN = 1000.0              # square opening at the crown (inner face)
 RISE = 8000.0              # roof height
@@ -247,7 +247,7 @@ def conc(sh, ps): sh.poly(ps, "#fff", 0.0); sh.poly(ps, "url(#conc)", 0.0)
 def plan():
     sh = Sheet(50, 150, 148.5, "Floor plan",
                "10 x 10 m clear · 8 buttresses · printed walls",
-               [(1, True, "Printed wall 400 (= ring beam width = roof base width). Buttresses solid black: 400 wide (same as the wall), 700 deep from the inner face (flush with the wall inside), so they project 300 outside."),
+               [(1, True, "Printed wall 400 (= roof base width). Buttresses solid black: 400 wide (same as the wall), 1000 deep from the inner face (flush with the wall inside), so they project 600 outside."),
                 (2, True, "Openings, one per bay between the buttresses: doors 1000 (south-west and north-east bays), windows 1800 in the other six. Positions and sizes are placeholders."),
                 (3, False, "Pyramid roof above (dashed): 1000 square crown, hips to the corners, roof base 400 thick square to the slope, so its outer edge lands about 59 outside the wall face."),
                 (4, True, "Buttresses at the 4 corners and the 4 mid-spans, axes 5200 apart (centre to centre of wall).")],
@@ -260,7 +260,7 @@ def plan():
     fins = []
     fin = lambda x0, y0, x1, y1: [(x0, y0), (x1, y0), (x1, y1), (x0, y1)]
     for v in xs:                         # east / west fins and north / south fins
-        # each buttress runs 700 from the inner wall face, through the wall, to 300 beyond the outer face
+        # each buttress runs 1000 from the inner wall face, through the wall, to 600 beyond the outer face
         fins.append(fin(a, v - BUT_W / 2, b + BUT_L, v + BUT_W / 2))
         fins.append(fin(-b - BUT_L, v - BUT_W / 2, -a, v + BUT_W / 2))
         fins.append(fin(v - BUT_W / 2, a, v + BUT_W / 2, b + BUT_L))
@@ -381,8 +381,8 @@ def section():
                "through the east and west mid-span buttresses, looking north",
                [(1, True, "Footing {:g} x {:g}, underside at {:g} (frost depth and bearing are guesses).".format(FOOT_W, FOOT_T, FOOT_Z)),
                 (2, True, "Printed wall 400, same pattern as the roof: two 80 inner layers, a 160 air zone, an 80 outer layer."),
-                (3, False, "Ring beam 400 wide x 500 deep, embedded in the buttress notch; top at +2.50, flush with the buttress top."),
-                (4, False, "Buttress 400 wide, 700 from the inner face (300 beyond the wall), L-shaped around the ring beam: it rises to +2.50, flush with the roof base."),
+                (3, False, "Solid base of the roof: the first 300 (vertical) above the eave is completely solid concrete, 400 wide, no air zone; there is no ring beam."),
+                (4, False, "Buttress 400 wide, 1000 from the inner face (600 beyond the wall); it rises to +2.50, flush with the roof base."),
                 (5, False, "Roof shell: 400 thick square to the slope at the base (two 80 inner layers, a 160 air zone, an 80 outer layer), 320 at the crown; about 459 / 367 horizontally."),
                 (6, False, "Crown opening 1000 clear; roof rises 8000 over {:g}, slope {:.1f}°.".format(RUN, SLOPE))],
                ["Layer pattern from your drawing; at the crown the second inner layer ends, so the leaf is 80 there (assumed).",
@@ -411,19 +411,17 @@ def section():
         foot = [(X(HALF + WALL / 2 + BUT_L / 2 - FOOT_W / 2 + 0), FOOT_Z), (X(HALF + WALL / 2 + BUT_L / 2 + FOOT_W / 2), FOOT_Z),
                 (X(HALF + WALL / 2 + BUT_L / 2 + FOOT_W / 2), FOOT_Z + FOOT_T), (X(HALF + WALL / 2 + BUT_L / 2 - FOOT_W / 2), FOOT_Z + FOOT_T)]
         stem = [(X(HALF), FOOT_Z + FOOT_T), (X(HALF + WALL + BUT_L), FOOT_Z + FOOT_T), (X(HALF + WALL + BUT_L), 0), (X(HALF), 0)]
-        wall = [(X(HALF), 0), (X(HALF + WALL), 0), (X(HALF + WALL), WALL_H - BEAM_H), (X(HALF), WALL_H - BEAM_H)]
+        wall = [(X(HALF), 0), (X(HALF + WALL), 0), (X(HALF + WALL), WALL_H), (X(HALF), WALL_H)]
         but = [(X(HALF + WALL), 0), (X(HALF + WALL + BUT_L), 0), (X(HALF + WALL + BUT_L), WALL_H), (X(HALF + WALL), WALL_H)]
-        beam = [(X(HALF), WALL_H - BEAM_H), (X(HALF + WALL), WALL_H - BEAM_H), (X(HALF + WALL), WALL_H), (X(HALF), WALL_H)]
-        for p in (foot, stem, wall, but, beam):
+        for p in (foot, stem, wall, but):
             sh.poly(p, "#000", 0.3 if p in (foot, stem) else 0.7)     # below ground: finer line
-        for p in (foot, stem, wall, but, beam):
-            sh.poly(p, "#fff", 0.0); sh.poly(p, "url(#cast)" if p is beam else "url(#conc)", 0.0)    # beam is cut in the section plane: crossed hatch
+        for p in (foot, stem, wall, but):
+            sh.poly(p, "#fff", 0.0); sh.poly(p, "url(#conc)", 0.0)
         li, ll, _ = WALL_LAYERS
-        zt = WALL_H - BEAM_H
+        zt = WALL_H
         sh.poly([(X(HALF + li), 0), (X(HALF + li + ll), 0), (X(HALF + li + ll), zt), (X(HALF + li), zt)], PINK, 0.0)
         loops(sh, "lp{}".format(sgn), X(HALF + li), X(HALF + li + ll), 0, zt, 0.15)      # wall: loop symbol from the reference
         sh.line([(X(HALF + li), 0), (X(HALF + li), zt)], 0.25); sh.line([(X(HALF + li + ll), 0), (X(HALF + li + ll), zt)], 0.25)
-        sh.poly(beam, "none", 0.3)
         sh.line([(X(HALF), 0), (X(HALF), WALL_H)], 0.6)
         # roof bands
         def band(i, j, h0=0.0, h1=RISE):
@@ -439,8 +437,12 @@ def section():
         sh.poly(latp, PINK, 0.25)
         sh.poly(skinp, "#fff", 0.0); sh.poly(skinp, "url(#conc)", 0.0); sh.poly(skinp, "none", 0.45)
         sh.poly(leafp, "none", 0.45)
-    # north wall beyond the cut, seen from inside: printed pieces, ring beam band, door (NE bay) and window (NW bay)
-    zt = WALL_H - BEAM_H
+        # solid base: the first SOLID_H of the roof is one block of concrete over the full 400 (crossed hatch = cast solid)
+        solid = [(X(HALF + rx(0)[0]), WALL_H), (X(HALF + rx(SOLID_H)[0]), WALL_H + SOLID_H), (X(HALF + rx(SOLID_H)[3]), WALL_H + SOLID_H), (X(HALF + rx(0)[3]), WALL_H)]
+        sh.poly(solid, "#fff", 0.0); sh.poly(solid, "url(#cast)", 0.0); sh.poly(solid, "none", 0.6)
+        sh.line([(X(HALF + rx(0)[0]), WALL_H), (X(HALF + rx(0)[3]), WALL_H)], 0.25)
+    # north wall beyond the cut, seen from inside: printed pieces, door (NE bay) and window (NW bay)
+    zt = WALL_H
     nrow_w = 5
     nw = int(round(CLEAR / PIECE_W))
     for r in range(nrow_w):
@@ -451,9 +453,6 @@ def section():
             if -HALF < x < HALF:
                 sh.line([(x, z0), (x, z1)], 0.13, "#a8a8a8")
         sh.line([(-HALF, z1), (HALF, z1)], 0.13, "#a8a8a8")
-    sh.poly(rect(-HALF, zt, HALF, WALL_H), "#e8e8e8", 0.0)
-    sh.line([(-HALF, zt), (HALF, zt)], 0.25, "#888")
-    sh.text(-HALF + 150, zt + 110, "ring beam", 2.2, "start", italic=True, color="#666")
     cx = (HALF + WALL / 2) / 2
     for x0, x1, z0, z1, lab in ((cx - 500, cx + 500, 0, 2000, "door"), (-cx - 900, -cx + 900, 900, 2000, "window")):
         sh.poly(rect(x0, z0, x1, z1), "#fff", 0.3, "#444")
@@ -482,7 +481,7 @@ def section():
     sh.text(HALF - RUN * 0.5 - 1000, WALL_H + RISE * 0.5, "{:.1f}°".format(SLOPE), 2.8, rot=0, italic=True)
     sh.callout(1, xr + 2400, FOOT_Z + 200, xr - 200, FOOT_Z + 200)
     sh.callout(2, HALF + WALL / 2 + 2600, 1800, HALF + WALL / 2, 1200)
-    sh.callout(3, HALF + WALL / 2 + 3300, 3200, HALF + WALL / 2, WALL_H - BEAM_H / 2)
+    sh.callout(3, HALF + WALL / 2 + 3300, 3200, HALF + WALL / 2 - 80, WALL_H + SOLID_H / 2)
     sh.callout(4, xr + 2400, 900, HALF + WALL + BUT_L - 150, 700)
     sh.callout(5, 3600, 7500, HALF - K * 5200 + 200, WALL_H + 5200)
     sh.callout(6, 1800, WALL_H + RISE + 1100, 300, WALL_H + RISE)
@@ -613,30 +612,29 @@ def detail():
                 (3, False, "Layer 2, 80: printed bead that curves to leave a pocket for the bar."),
                 (4, False, "Inner layer 1, 80, room side. Layers 1 and 2 together are the structural leaf: 160 at the base, 80 at the crown (layer 2 ends)."),
                 (5, True, "Rebar pocket Ø55 in the leaf, grouted after placing. Roof bars R Ø12 every @ 600 along the path."),
-                (6, True, "Knee bars B Ø12 every @ 600, one continuous bar over the eave: 1100 down the wall pocket (laps wall bars A), through the beam, 650 up the roof."),
-                (7, True, "Ring bars Ø12 in the pocket zone every 300."),
-                (8, True, "Ring beam 400 x 500, cast in place: 8 Ø16, closed stirrups Ø10 / 150; wall bars A hook into it. Embedded in the buttress notch."),
-                (9, False, "Buttress 400 wide, 1000 from the inner face (600 beyond the wall), L-shaped around the ring beam; top flush with the roof base at +2.50."),
-                (10, True, "Wall 400 printed, same pattern as the roof; wall bars A Ø16 run from the footing up into the beam and end in a 160 hook (assumed).")],
+                (6, True, "Knee bars B Ø12 every @ 600, one continuous bar over the eave: 1100 down the wall pocket (laps wall bars A), through the solid base, 650 up the roof."),
+                (7, True, "Ring bars Ø12 in the pocket zone every 300, above the solid base."),
+                (8, False, "Solid base of the roof: the first 300 (vertical) above the eave is completely solid concrete over the full 400, no air zone; wall bars A hook into it. Replaces the ring beam."),
+                (9, False, "Buttress 400 wide, 1000 from the inner face (600 beyond the wall); top flush with the roof base at +2.50."),
+                (10, True, "Wall 400 printed, same pattern as the roof; wall bars A Ø16 run from the footing up into the solid base and end in a 160 hook (assumed).")],
                [])
     sh.plain_legend = True
     ZH = WALL_H
-    # --- wall + buttress + beam
-    wall = rect(0, ZB, WALL, WALL_H - BEAM_H)
-    beam = rect(0, WALL_H - BEAM_H, WALL, WALL_H)
+    # --- wall + buttress
+    wall = rect(0, ZB, WALL, WALL_H)
     but = [(WALL, ZB), (WALL + BUT_L, ZB), (WALL + BUT_L, WALL_H), (WALL, WALL_H)]
-    for p in (wall, beam, but):
+    for p in (wall, but):
         sh.poly(p, "#000", 0.7)
-    for p in (wall, beam, but):
+    for p in (wall, but):
         sh.poly(p, "#fff", 0.0)
         if p is not wall:
-            sh.poly(p, "url(#cast)" if p is beam else "url(#conc)", 0.0)    # beam is cut in the section plane: crossed hatch
+            sh.poly(p, "url(#conc)", 0.0)
     layers(sh, wall, ZB)                                                      # wall: printed layers, 10 each
     li, ll, ls_ = WALL_LAYERS
-    sh.poly(rect(li, ZB, li + ll, WALL_H - BEAM_H), PINK, 0.0)
-    sh.line([(li, ZB), (li, WALL_H - BEAM_H)], 0.3); sh.line([(li + ll, ZB), (li + ll, WALL_H - BEAM_H)], 0.3)
-    sh.line([(80, ZB), (80, WALL_H - BEAM_H)], 0.2)   # joint between the two inner layers
-    sh.poly(wall, "none", 0.45); sh.poly(beam, "none", 0.55); sh.poly(but, "none", 0.45)
+    sh.poly(rect(li, ZB, li + ll, WALL_H), PINK, 0.0)
+    sh.line([(li, ZB), (li, WALL_H)], 0.3); sh.line([(li + ll, ZB), (li + ll, WALL_H)], 0.3)
+    sh.line([(80, ZB), (80, WALL_H)], 0.2)   # joint between the two inner layers
+    sh.poly(wall, "none", 0.45); sh.poly(but, "none", 0.45)
     # --- roof bands over z in [ZH, ZT]
     h1 = ZT - ZH
     # the roof is cut square to the slope at the top of the detail (dash-dot line)
@@ -656,7 +654,10 @@ def detail():
     sh.poly(latp, PINK, 0.0)
     for p in (layer1, layer2, latp, skinp):
         sh.poly(p, "none", 0.45)
-    loops(sh, "lpd", li, li + ll, ZB, WALL_H - BEAM_H, 0.2)      # wall: loop symbol from the reference
+    # solid base: the first SOLID_H of the roof is one block of concrete over the full thickness, covering the layers drawn above
+    solid = [(rx(0)[0], ZH), (rx(SOLID_H)[0], ZH + SOLID_H), (rx(SOLID_H)[3], ZH + SOLID_H), (rx(0)[3], ZH)]
+    sh.poly(solid, "#fff", 0.0); sh.poly(solid, "url(#cast)", 0.0); sh.poly(solid, "none", 0.55)
+    loops(sh, "lpd", li, li + ll, ZB, WALL_H, 0.2)      # wall: loop symbol from the reference
     # cladding on the outside face: a row of short dashes just outside the outer layer
     off = 8.0
     sh.line([(rx(0)[3] + nrm[0] * off, ZH + nrm[1] * off), (rx(h1)[3] + nrm[0] * off, ZH + h1 + nrm[1] * off)], 0.7, "#000", dash="1.3 0.9")
@@ -667,13 +668,13 @@ def detail():
     bar = lambda pts, d: sh.line(pts, d / sh.scale, BLUE, tw=d)
     sh.layer = "REBAR-POCKET"
     for sgn in (-1, 1):
-        sh.line([(xb(0) + sgn * 27.5 * SH, ZH), (xb(h1) + sgn * 27.5 * SH, ZH + h1)], 0.15, "#555", dash="2 0.8")     # pocket Ø55
-        sh.line([(80 + sgn * 27.5, ZB), (80 + sgn * 27.5, WALL_H - BEAM_H)], 0.15, "#555", dash="2 0.8")
+        sh.line([(xb(SOLID_H) + sgn * 27.5 * SH, ZH + SOLID_H), (xb(h1) + sgn * 27.5 * SH, ZH + h1)], 0.15, "#555", dash="2 0.8")     # pocket Ø55 (none in the solid base)
+        sh.line([(80 + sgn * 27.5, ZB), (80 + sgn * 27.5, WALL_H)], 0.15, "#555", dash="2 0.8")
     sh.layer = "REBAR"
-    # A  wall bar Ø16: footing to the top of the ring beam, 90 deg hook (10d) into the beam core
-    A_X, HOOK_Z = 95.0, WALL_H - 110
+    # A  wall bar Ø16: footing up into the solid base, 90 deg hook (10d) in the base core
+    A_X, HOOK_Z = 95.0, WALL_H + SOLID_H - 110
     bar([(A_X, ZB), (A_X, HOOK_Z), (A_X + 160, HOOK_Z)], 16)
-    # B  knee bar Ø12, continuous over the eave (no splice at the critical section): down the wall pocket, through the beam,
+    # B  knee bar Ø12, continuous over the eave (no splice at the critical section): down the wall pocket, through the solid base,
     #    up the roof pocket; 1100 below the eave (laps A over about 90d) and 650 along the roof lapped with R
     B_X = xb(0) - 26
     bar([(B_X, WALL_H - 1100), (B_X, ZH), (xb(566) - 26, ZH + 566)], 12)
@@ -681,16 +682,9 @@ def detail():
     bar([(xb(0) + 14, ZH), (xb(h1) + 14, ZH + h1)], 12)
     for h in range(300, int(h1), 300):
         sh.dot(xb(h), ZH + h, 6)                                                                         # ring bars Ø12 in the pocket zone
-    # ring beam: 8 Ø16 (3 top, 3 bottom, 1 each side at mid depth), closed stirrups Ø10 / 150
-    sh.poly(rect(30, WALL_H - BEAM_H + 30, WALL - 30, WALL_H - 30), "none", 10 / sh.scale, BLUE, tw=10)
-    for x in (60, WALL / 2, WALL - 60):
-        for z in (WALL_H - BEAM_H + 60, WALL_H - 60):
-            sh.dot(x, z, 8)
-    for x in (60, WALL - 60):
-        sh.dot(x, WALL_H - BEAM_H / 2, 8)
     sh.layer = None
     # ---- dimensions
-    sh.dim_v([WALL_H - BEAM_H, WALL_H], -260, ext=-30, labels=["{:g}".format(BEAM_H)])
+    sh.dim_v([WALL_H, WALL_H + SOLID_H], -300, ext=-30, labels=["{:g}".format(SOLID_H)])
     sh.dim_h([0, li, li + ll, WALL], ZB - 130, ext=ZB, labels=["{:g}".format(li), "{:g}".format(ll), "{:g}".format(WALL - li - ll)])
     sh.dim_h([WALL, WALL + BUT_L], ZB - 130, ext=ZB, labels=["{:g}".format(BUT_L)])
     sh.dim_h([0, BUT_TOTAL], ZB - 330, ext=ZB - 130, labels=["{:g} from the inner face".format(BUT_TOTAL)])
@@ -718,8 +712,8 @@ def detail():
     sh.callout(5, -620, ZH + 760, xb(760), ZH + 760)
     sh.callout(6, -470, WALL_H - 140, xb(0) - 14, WALL_H - 140)
     sh.callout(7, -620, ZH + 160, xb(300), ZH + 300)
-    sh.callout(8, 760, WALL_H - 120, WALL - 60, WALL_H - 150)
-    sh.callout(9, 800, WALL_H - 800, WALL + 150, WALL_H - 840)
+    sh.callout(8, 760, ZH + 150, 220, ZH + 150)
+    sh.callout(9, -620, ZB + 100, WALL + 250, ZB + 250)
     sh.callout(10, -620, ZB + 400, li + ll / 2, ZB + 600)
     piece_plan(sh, 1000, 2690)
     piece_plan_b(sh, 1000, 1340)
