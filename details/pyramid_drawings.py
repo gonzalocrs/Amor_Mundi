@@ -440,21 +440,27 @@ def back_face(sh, grid):
             sh.line(q + [q[0]], 0.2, "#555", dash="2 1")
 
 def back_wall(sh):
-    """north wall seen from inside: printed pieces in running bond (shaded rows), openings at the bays: window, door (middle), window"""
+    """north wall seen from inside, laid out like the floor plan: buttress strips (400 wide) every ~1.5 m, shown through the wall, every other bay printed wall
+    (shaded rows, running bond), the bays in between openings: window, door (middle), window"""
     xs = but_pos()
-    PIECE_W = 1500.0
     zt = WALL_H
+    sh.poly(rect(-HALF, 0, HALF, zt), "#fff", 0.3)
     nrow_w = 5
-    nw = int(round(CLEAR / PIECE_W))
-    for r in range(nrow_w):
-        z0, z1 = r * zt / nrow_w, (r + 1) * zt / nrow_w
-        sh.poly(rect(-HALF, z0, HALF, z1), "#f3f3f3" if r % 2 else "#fafafa", 0.0)
-        for i_ in range(1, nw):
-            x = -HALF + CLEAR * ((i_ if r % 2 == 0 else i_ - 0.5) / nw)
-            if -HALF < x < HALF:
-                sh.line([(x, z0), (x, z1)], 0.13, "#a8a8a8")
-        sh.line([(-HALF, z1), (HALF, z1)], 0.13, "#a8a8a8")
-    for j in (1, 3, 5):
+    for j in range(0, len(xs) - 1, 2):                                        # printed wall in the even bays
+        xa, xb = max(xs[j] + BUT_W / 2, -HALF), min(xs[j + 1] - BUT_W / 2, HALF)
+        if xb <= xa: continue
+        for r in range(nrow_w):
+            z0, z1 = r * zt / nrow_w, (r + 1) * zt / nrow_w
+            sh.poly(rect(xa, z0, xb, z1), "#f3f3f3" if r % 2 else "#fafafa", 0.0)
+            sh.line([(xa, z1), (xb, z1)], 0.13, "#a8a8a8")
+            if r % 2 == 0 and xb - xa > 800:
+                sh.line([((xa + xb) / 2, z0), ((xa + xb) / 2, z1)], 0.13, "#a8a8a8")
+    for x in xs:                                                              # buttresses (outside the wall), shown through it
+        xa, xb = max(x - BUT_W / 2, -HALF), min(x + BUT_W / 2, HALF)
+        if xb > xa:
+            sh.poly(rect(xa, 0, xb, zt), "#fff", 0.35, "#555")
+            sh.poly(rect(xa, 0, xb, zt), "url(#conc)", 0.0)
+    for j in (1, 3, 5):                                                       # openings
         cxm = (xs[j] + xs[j + 1]) / 2
         z0_, z1_ = (0, 2000) if j == 3 else (900, 2000)
         x0_, x1_ = cxm - 500, cxm + 500
@@ -479,7 +485,7 @@ def section(grid=None):
                 (8, True, "Outside the printed shell: insulation {:g} (dotted), then the outer layer (cladding {:g}, dark).".format(INS, CLAD)),
                 (9, True, "Cast ribs of the roof grid, seen on the back face as dashed outlines ({}). The cut lies in the air zone between ribs; rib sections are on the roof-grid sheets.".format(gname))],
                ["Layer pattern from your drawing; at the crown the second inner layer ends, so the leaf is 80 there (assumed).",
-                "The cut runs through the 4th buttress from the south (y = {:.0f}); the north wall with its door and windows is seen beyond.".format(y0),
+                "The cut runs through the 4th buttress from the south (y = {:.0f}), as on the floor plan. Beyond it the north wall is seen as on the plan: buttress every 1.5 m (hatched strips, outside the wall), every other bay printed wall, the bays in between openings (door in the middle, windows either side).".format(y0),
                 "Faint grid on the back roof face and the north wall = printed pieces in running bond, about 1500 wide (assumed sizes). Dashed outlines on the back roof face = cast ribs."])
     s = sh.s
     ground = [(-6800, 0), (6800, 0)]
