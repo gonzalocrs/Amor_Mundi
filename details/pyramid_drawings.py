@@ -224,7 +224,7 @@ def loops(sh, cid, xa, xb, z0, z1, sw=0.2):
 R = lambda x, z: (x, z)
 def rect(x0, z0, x1, z1): return [(x0, z0), (x1, z0), (x1, z1), (x0, z1)]
 LAYER_H = 10.0             # 3D-printed concrete layer height (wall and roof)
-def layers(sh, ps, z0, sw=0.12, step=None):
+def layers(sh, ps, z0, sw=0.12, step=None, color="#000"):
     """Horizontal joints between printed layers every LAYER_H, from z0 up, clipped to the convex polygon ps."""
     zs = [p[1] for p in ps]
     segs = []
@@ -238,7 +238,7 @@ def layers(sh, ps, z0, sw=0.12, step=None):
                 xs.append(a[0] + (b[0] - a[0]) * (z - a[1]) / (b[1] - a[1]))
         if len(xs) >= 2:
             segs.append([(min(xs), z), (max(xs), z)])
-    sh.paths(segs, sw, layer="PRINT-LAYERS")
+    sh.paths(segs, sw, color=color, layer="PRINT-LAYERS")
 
 def conc(sh, ps): sh.poly(ps, "#fff", 0.0); sh.poly(ps, "url(#conc)", 0.0)
 

@@ -84,6 +84,8 @@ def draw_face(sh, segs):
     for p in strips:
         sh.poly(p, "#fff", 0.0); sh.poly(p, "url(#cast)", 0.0)
     # centre lines of the bars (one Ø16 pair per rib, drawn as a single dash-dot centreline)
+    xo = lambda h: g.HALF + g.rx(h)[3]
+    layers(sh, [(-xo(0), 0), (xo(0), 0), (xo(RISE), RISE), (-xo(RISE), RISE)], 0, 0.05, step=100, color="#8a8a8a")      # printed layer joints on the whole shell (every 100 drawn; real layers are 10)
     sh.layer = "REBAR"
     for kind, pts in segs:
         if kind in ("col", "diag"):
@@ -98,27 +100,28 @@ def stats(segs):
     return Lr, Lh
 
 def section_inset(sh, X0, Z0):
-    """horizontal cut through one rib, square to the slope, 1:10 (model = local * F). outside at the bottom, inside (room) at the top."""
+    """plan cut through one rib at one print layer, square to the slope, 1:10 (model = local * F). outside at the bottom, inside (room) at the top.
+    Printed beads (80, black rim, hatched body) form the layers and the channel walls; the channel is filled with poured concrete."""
     F = 5.0
     M = lambda u, v: (X0 + F * u, Z0 + F * v)
     W_ = 700.0
     u0, u1 = 270.0, 270.0 + RIB_W
-    # concrete outline first, then fills
-    sh.poly([M(0, 0), M(W_, 0), M(W_, 400), M(0, 400)], "#000", 0.5)
     sh.poly([M(0, 0), M(W_, 0), M(W_, 400), M(0, 400)], "#fff", 0.0)
-    sh.poly([M(0, 0), M(W_, 0), M(W_, 80), M(0, 80)], "url(#conc)", 0.0)            # outer skin 80
-    sh.poly([M(0, 320), M(W_, 320), M(W_, 400), M(0, 400)], "url(#conc)", 0.0)      # inner layer 1, 80
-    sh.poly([M(0, 240), M(u0, 240), M(u0, 320), M(0, 320)], "url(#conc)", 0.0)      # layer 2, 80, interrupted by the rib
-    sh.poly([M(u1, 240), M(W_, 240), M(W_, 320), M(u1, 320)], "url(#conc)", 0.0)
-    sh.poly([M(0, 80), M(u0, 80), M(u0, 240), M(0, 240)], "url(#dots)", 0.0)        # open air zone = insulation
-    sh.poly([M(u1, 80), M(W_, 80), M(W_, 240), M(u1, 240)], "url(#dots)", 0.0)
-    for a_, b_ in ((u0 - 80, u0), (u1, u1 + 80)):                                   # printed channel walls (permanent formwork), 80 each side of the rib
-        q = [M(a_, 80), M(b_, 80), M(b_, 240), M(a_, 240)]
-        sh.poly(q, "#fff", 0.0); sh.poly(q, "url(#conc)", 0.0); sh.poly(q, "none", 0.4)
-    rib = [M(u0, 80), M(u1, 80), M(u1, 320), M(u0, 320)]
-    sh.poly(rib, "#fff", 0.0); sh.poly(rib, "url(#cast)", 0.0); sh.poly(rib, "none", 0.45)
-    for v in (80, 240, 320):
-        sh.line([M(0, v), M(W_, v)], 0.25)
+    sh.poly([M(0, 80), M(W_, 80), M(W_, 240), M(0, 240)], "url(#dots)", 0.0)           # open air zone between the ribs = insulation
+    for k, (ua, ub) in enumerate(((0.0, u0 - 80), (u1 + 80, W_))):                      # zig-zag bead in the air zone, touching skin and layer 2
+        g.clip_begin(sh, "zz{}".format(k), *M(ua, 80), *M(ub, 240))
+        mid = (ua + ub) / 2
+        g.printed(sh, [M(ua - 40, 120), M(mid, 200), M(ub + 40, 120)], 80, F)
+        g.clip_end(sh)
+    beads = [rect(0, 0, W_, 80),                                                        # outer skin
+             rect(0, 320, W_, 400),                                                     # inner layer 1
+             [(0, 240), (u0 - 80, 240), (u0 - 80, 80), (u0, 80), (u0, 320), (0, 320)],  # layer 2 turns into the left channel wall
+             [(W_, 240), (u1 + 80, 240), (u1 + 80, 80), (u1, 80), (u1, 320), (W_, 320)]]
+    for q in beads:
+        q = [M(*pt) for pt in q]
+        sh.poly(q, "#fff", 0.4); sh.poly(q, "url(#conc)", 0.0)
+    rib = [M(u0, 80), M(u1, 80), M(u1, 320), M(u0, 320)]                                # poured core
+    sh.poly(rib, "#fff", 0.0); sh.poly(rib, "url(#cast)", 0.0); sh.poly(rib, "none", 0.5)
     sh.poly([M(0, 0), M(W_, 0), M(W_, 400), M(0, 400)], "none", 0.5)
     sh.layer = "REBAR"
     sh.poly([M(u0 + 30, 110), M(u1 - 30, 110), M(u1 - 30, 290), M(u0 + 30, 290)], "none", 8 / sh.scale, g.BLUE, tw=8)    # stirrup Ø8
@@ -128,19 +131,65 @@ def section_inset(sh, X0, Z0):
     sh.text(*M(-20, 40), "outside", 2.4, "end"); sh.text(*M(-20, 360), "inside", 2.4, "end")
     sh.dim_h([X0 + F * v for v in (0, u0, u1, W_)], Z0 - 150, ext=Z0, labels=["{:g}".format(u0), "{:g}".format(RIB_W), "{:g}".format(W_ - u1)])
     sh.dim_v([Z0 + F * v for v in (0, 80, 240, 320, 400)], X0 + F * W_ + 150, ext=X0 + F * W_, labels=["80", "160", "80", "80"])
-    sh.text(X0, Z0 + F * 400 + 160, "Section through one rib, square to the slope, 1:10", 3.2, "start", weight="bold")
+    sh.text(X0, Z0 + F * 400 + 160, "Plan cut through a rib at one layer, 1:10", 3.2, "start", weight="bold")
     sh.callout(3, X0 + F * W_ + 650, Z0 + F * 160, *M(u1 - 60, 200))
     sh.callout(4, X0 + F * W_ + 650, Z0 + F * 360, *M(550, 360))
     sh.callout(5, X0 + F * W_ + 650, Z0 + F * 40, *M(550, 40))
     sh.callout(6, X0 + F * W_ + 650, Z0 + F * 260, *M(550, 160))
-    sh.callout(10, X0 + F * W_ + 1450, Z0 + F * 160, *M(u0 - 40, 160))
+    sh.callout(10, X0 + F * W_ + 1450, Z0 + F * 160, *M(u1 + 40, 160))
+
+def section_long(sh, X0, Z0, F=2.5, H=800.0):
+    """section along the centre of a rib at the eave, 1:20, in the true roof geometry: layers 1 and the outer skin are printed (joints every 10, drawn every 20),
+    the core is poured: the first lift is the solid base, then the rib in lifts."""
+    SH, rx, SOL = g.SH, g.rx, SOLID
+    M = lambda x, h: (X0 + F * x, Z0 + F * h)
+    off1 = 80 * SH
+    def band(f0, f1, h0, h1):        # f0, f1 return the x offsets of the two edges at height h
+        return [M(f0(h0), h0), M(f0(h1), h1), M(f1(h1), h1), M(f1(h0), h0)]
+    e0 = lambda h: rx(h)[0]; e1 = lambda h: rx(h)[0] + off1; e2 = lambda h: rx(h)[1]; e3 = lambda h: rx(h)[2]; e4 = lambda h: rx(h)[3]
+    layer1 = band(e0, e1, 0, H)
+    skin = band(e3, e4, 0, H)
+    base_l2 = band(e1, e2, 0, SOL)               # layer 2 stays printed in the base
+    base_cast = band(e2, e3, 0, SOL)             # the 160 zone is cast
+    rib_cast = band(e1, e3, SOL, H)              # above the base the channel cuts through layer 2: core = layer 2 + 160 zone
+    z0 = Z0
+    for p in (layer1, skin, base_l2):
+        sh.poly(p, "#000", 0.5)
+    for p in (base_cast, rib_cast):
+        sh.poly(p, "#000", 0.5)
+    for p in (layer1, skin, base_l2):
+        sh.poly(p, "#fff", 0.0); sh.poly(p, "url(#conc)", 0.0); layers(sh, p, z0, 0.06, step=20 * F)
+    for p in (base_cast, rib_cast):
+        sh.poly(p, "#fff", 0.0); sh.poly(p, "url(#cast)", 0.0)
+    for p in (layer1, skin, base_l2, base_cast, rib_cast):
+        sh.poly(p, "none", 0.4)
+    # pour lifts across the core
+    for h in (SOL, 2 * SOL + 0.0):
+        if h < H:
+            sh.line([M(e1(h), h), M(e3(h), h)], 0.3, "#000", dash="2 1")
+    # rebar: 2 of the 4 Ø16 are in the cut plane, stirrups Ø8 every 200
+    sh.layer = "REBAR"
+    for dx in (-40, 40):
+        xc0 = (e1(0) + e3(0)) / 2 + dx; xc1 = (e1(H) + e3(H)) / 2 + dx
+        sh.line([M(xc0, 0), M(xc1, H)], 16 * F / sh.scale, g.BLUE, tw=16)
+    for h in range(100, int(H), 200):
+        sh.line([M(e1(h) + 30, h), M(e3(h) - 30, h)], 8 * F / sh.scale, g.BLUE, tw=8)
+    sh.layer = None
+    sh.line([M(e0(0) - 120, 0), M(e4(0) + 160, 0)], 0.3)
+    sh.text(X0 - 20 * F * 6, Z0 + F * H + 160, "Section along a rib at the eave, 1:20", 3.2, "start", weight="bold")
+    xr_ = e4(H * 0.5) + 520
+    sh.callout(3, X0 + F * xr_, Z0 + F * 560, *M((e1(560) + e3(560)) / 2, 560))
+    sh.callout(5, X0 + F * xr_, Z0 + F * 250, *M((e3(250) + e4(250)) / 2 + 20, 250))
+    sh.callout(11, X0 + F * xr_, Z0 + F * 700, *M((e1(300) + e3(300)) / 2, 300))
+    sh.callout(4, X0 + F * (e0(600) - 380), Z0 + F * 600, *M((e0(600) + e1(600)) / 2, 600))
 
 def common_legend(opt):
-    L = [(3, True, "Rib (column): a channel {:g} wide x {:g} deep printed in the 160 air zone + layer 2 stays in place as formwork and is filled with cast concrete, 4 Ø16 + Ø8 stirrups every 200 (assumed). Fibre concrete could replace the bars (see notes).".format(RIB_W, RIB_D)),
+    L = [(3, True, "Rib (column): a channel {:g} wide x {:g} deep, printed in the 160 air zone + layer 2 stays in place as formwork and is filled with cast concrete, 4 Ø16 + Ø8 stirrups every 200 (assumed). Fibre concrete could replace the bars (see notes).".format(RIB_W, RIB_D)),
          (4, False, "Inner layer 1, 80: continuous, covers the grid on the room side."),
          (5, False, "Outer skin 80: continuous, covers the grid on the outside (cladding on it)."),
          (6, True, "Between the ribs the air zone stays open for thermal insulation (dotted)."),
-         (10, False, "Printed channel walls, 80 each side of the rib: permanent formwork, printed in the same pass as the shell.")]
+         (10, False, "Printed channel walls, 80 each side of the rib: permanent formwork, printed in the same pass as the shell (layer 2 turns into them)."),
+         (11, True, "Poured core: the first lift is the solid base (300), then the rib is poured in lifts of about 600 (assumed), without a joint between base and rib; dashed lines = lift joints. Printed layer joints are every 10 (drawn every 20 here).")]
     return L
 
 def building(sh):
@@ -150,7 +199,7 @@ def building(sh):
     c = HALF + WALL / 2
     sh.poly(rect(-7300, zg - 1100, 7300, zg), "url(#earth)", 0.0)
     sh.poly(rect(-(HALF + WALL), zg, HALF + WALL, 0), "#f2f2f2", 0.5)                  # printed wall, outer face
-    pr = lambda q: layers(sh, q, zg, 0.05, step=100)                                     # printed layer joints (every 100 drawn; real layers are 10)
+    pr = lambda q: layers(sh, q, zg, 0.05, step=100, color="#8a8a8a")                                     # printed layer joints (every 100 drawn; real layers are 10)
     pr(rect(-(HALF + WALL), zg, HALF + WALL, 0))
     for x0, x1 in ((HALF + WALL, HALF + WALL + BUT_L), (-HALF - WALL - BUT_L, -HALF - WALL)):
         q = rect(x0, zg, x1, 0)                                                          # east / west corner buttresses, edge on: printed shell, cast core
@@ -223,6 +272,7 @@ def sheet(opt):
         sh.callout(2, 6300, 5600, 0, RISE - TOP_RING / 2)
     sh.text(-HALFB - 800, RISE - 200, "Option " + opt, 4.2, "start", weight="bold")
     section_inset(sh, -5300, -6100)
+    section_long(sh, 3000, -6100)
     return sh
 
 if __name__ == "__main__":
