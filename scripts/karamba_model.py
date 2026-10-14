@@ -42,7 +42,7 @@ OUTPUTS - wire as in the README ("Karamba model" section)
 import math
 
 
-def build_model(mesh_size=500.0, clear=10000.0, wall=400.0, beam_h=300.0, wall_h=2500.0, rise=8000.0, open_=1000.0,
+def build_model(mesh_size=500.0, clear=10000.0, wall=400.0, beam_h=300.0, wall_h=2500.0, rise=6000.0, open_=1000.0,
                 but_total=1000.0, t_roof_base=400.0, t_roof_crown=320.0, crown_ring=True):
     half = clear / 2
     d_b = half + wall / 2                              # centreline half side of the wall / ring beam

@@ -13,7 +13,7 @@ WALL_H = 2500.0            # ground to top of wall (= eave, roof base)
 BUT_TOTAL, BUT_W = 1000.0, 400.0  # buttress: 1000 long measured from the inner wall face (flush with the wall), 400 wide (= the wall thickness, constant along its length)
 BUT_L = BUT_TOTAL - WALL          # so it projects only this far beyond the outer wall face
 OPEN = 1000.0              # square opening at the crown (inner face)
-RISE = 8000.0              # roof height
+RISE = 6000.0              # roof height
 T_LEAF0, T_LEAF1 = 160.0, 80.0   # inner structural leaf, horizontal width at base / crown
 T_LAT, T_SKIN = 160.0, 80.0      # lattice zone and outer skin (constant)
 CLAD = 30.0                # outer cladding on the roof (assumed)
@@ -383,8 +383,8 @@ def section():
                 (2, True, "Printed wall 400, same pattern as the roof: two 80 inner layers, a 160 air zone, an 80 outer layer."),
                 (3, False, "Solid base of the roof: the first 300 (vertical) above the eave is completely solid concrete, 400 wide, no air zone; there is no ring beam."),
                 (4, False, "Buttress 400 wide, 1000 from the inner face (600 beyond the wall); it rises to +2.50, flush with the roof base."),
-                (5, False, "Roof shell: 400 thick square to the slope at the base (two 80 inner layers, a 160 air zone, an 80 outer layer), 320 at the crown; about 459 / 367 horizontally."),
-                (6, False, "Crown opening 1000 clear; roof rises 8000 over {:g}, slope {:.1f}°.".format(RUN, SLOPE))],
+                (5, False, "Roof shell: 400 thick square to the slope at the base (two 80 inner layers, a 160 air zone, an 80 outer layer), 320 at the crown; about {:.0f} / {:.0f} horizontally.".format(400 * SH, 320 * SH)),
+                (6, False, "Crown opening 1000 clear; roof rises {:g} over {:g}, slope {:.1f}° ({:.1f}° from the vertical).".format(RISE, RUN, SLOPE, 90 - SLOPE))],
                ["Layer pattern from your drawing; at the crown the second inner layer ends, so the leaf is 80 there (assumed).",
                 "The cut runs through the mid-span buttresses; the north wall with its door and window is seen beyond.", "Faint grid on the back roof face and the north wall = printed pieces in running bond, about 1500 wide, 800 high on the roof and 440 on the wall (assumed sizes)."])
     s = sh.s
@@ -460,7 +460,6 @@ def section():
         if lab == "window":
             sh.line([((x0 + x1) / 2, z0), ((x0 + x1) / 2, z1)], 0.2, "#444")
             sh.poly(rect(x0 - 40, z0 - 60, x1 + 40, z0), "none", 0.2, "#444")
-        sh.text((x0 + x1) / 2, (z0 + z1) / 2, lab + " (N wall)", 2.2, italic=True, color="#555")
     sh.line(ground, 0.5)       # ground line drawn last so it runs unbroken through the walls and buttresses
     # floor, openings
     sh.line([(-HALF, 0), (HALF, 0)], 0.6)
@@ -468,16 +467,15 @@ def section():
     sh.text(0, -420, "floor slab on gravel (not detailed)", 2.4, italic=True)
     # dims
     xr = HALF + WALL + BUT_L
-    sh.dim_v([0, WALL_H, WALL_H + RISE], xr + 900 + 600 * 0, ext=xr + 150, labels=["2500", "8000"])
-    sh.dim_v([0, WALL_H + RISE], xr + 1500, ext=xr + 150, labels=["10500 total"])
+    sh.dim_v([0, WALL_H, WALL_H + RISE], xr + 900 + 600 * 0, ext=xr + 150, labels=["{:g}".format(WALL_H), "{:g}".format(RISE)])
+    sh.dim_v([0, WALL_H + RISE], xr + 1500, ext=xr + 150, labels=["{:g} total".format(WALL_H + RISE)])
     sh.dim_v([FOOT_Z, 0], xr + 900, ext=xr + 150, labels=["1000"])
     sh.dim_h([-HALF - WALL, -HALF, HALF, HALF + WALL], FOOT_Z - 650, ext=FOOT_Z, labels=["{:g}".format(WALL), "10000 clear", "{:g}".format(WALL)])
     sh.dim_h([-HALF - WALL - BUT_L, HALF + WALL + BUT_L], FOOT_Z - 1150, ext=FOOT_Z - 700, labels=["{:g} overall incl. buttresses".format(CLEAR + 2 * (WALL + BUT_L))])
     sh.dim_h([-OPEN / 2, OPEN / 2], WALL_H + RISE + 600, ext=WALL_H + RISE, labels=["1000"])
     sh.line([(HALF, WALL_H), (OPEN / 2, WALL_H + RISE)], 0.0)
-    sh.level(-xr - 600, 0, "±0.00", -1); sh.level(-xr - 600, WALL_H, "+2.50 eave", -1); sh.level(-xr - 600, WALL_H + RISE, "+10.50 crown", -1)
+    sh.level(-xr - 600, 0, "±0.00", -1); sh.level(-xr - 600, WALL_H, "+2.50 eave", -1); sh.level(-xr - 600, WALL_H + RISE, "+{:.2f} crown".format((WALL_H + RISE) / 1000), -1)
     sh.level(-xr - 600, FOOT_Z, "-1.00", -1)
-    sh.text(0, 3200, "ROOM", 3.2, weight="bold"); sh.text(0, 2700, "10 x 10 m clear", 2.6)
     sh.text(HALF - RUN * 0.5 - 1000, WALL_H + RISE * 0.5, "{:.1f}°".format(SLOPE), 2.8, rot=0, italic=True)
     sh.callout(1, xr + 2400, FOOT_Z + 200, xr - 200, FOOT_Z + 200)
     sh.callout(2, HALF + WALL / 2 + 2600, 1800, HALF + WALL / 2, 1200)
