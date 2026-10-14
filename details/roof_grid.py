@@ -212,12 +212,19 @@ def building(sh):
     sh.poly(rect(-7300, zg - 1100, 7300, zg), "url(#earth)", 0.0)
     sh.poly(rect(-(HALF + WALL), zg, HALF + WALL, 0), "#fff", 0.5)                  # printed wall, outer face
     pr = lambda q: layers(sh, q, zg, 0.03, step=100, color="#c4c4c4")                                     # printed layer joints (every 100 drawn; real layers are 10)
-    for x0, x1 in ((HALF + WALL, HALF + WALL + BUT_L), (-HALF - WALL - BUT_L, -HALF - WALL)):
-        q = rect(x0, zg, x1, 0)                                                          # east / west corner buttresses, edge on: printed shell, cast core
-        sh.poly(q, "#fff", 0.0); pr(q); sh.poly(q, "none", 0.5)
     nb = int(round(2 * c / BUT_SPACING))                                                 # bays between buttresses (about 1.5 m)
-    for k in range(nb + 1):                                                              # south buttresses, face on: one every ~1.5 m, corners included
-        x = -c + 2 * c * k / nb
+    xs = [-c + 2 * c * k / nb for k in range(nb + 1)]
+    dash = dict(color="#8c8c8c", dash="3 1.6")
+    for j in range(0, nb, 2):                                                            # every other bay shows the printed wall: faint layer joints, dashed piece divisions
+        xa, xb = xs[j] + BUT_W / 2, xs[j + 1] - BUT_W / 2
+        pr(rect(xa, zg, xb, 0))
+        wr = 5
+        for r in range(1, wr):
+            z = zg + r * g.WALL_H / wr
+            sh.line([(xa, z), (xb, z)], 0.1, **dash)
+        for r in range(wr):
+            if r % 2: sh.line([((xa + xb) / 2, zg + r * g.WALL_H / wr), ((xa + xb) / 2, zg + (r + 1) * g.WALL_H / wr)], 0.1, **dash)
+    for x in xs:                                                                         # buttresses: one continuous strip each, 400 wide, corners included
         q = rect(x - BUT_W / 2, zg, x + BUT_W / 2, 0)
         sh.poly(q, "#fff", 0.0); pr(q); sh.poly(q, "none", 0.5)
     ft, fb = zg + g.FOOT_Z + g.FOOT_T, zg + g.FOOT_Z
@@ -275,7 +282,7 @@ def sheet(opt):
                  "Diagonals do not stop as the roof narrows: the diamonds just get clipped by the hips."]
     legend = legend + common_legend(opt) + [(7, False, "Printed wall 400 (same layers as the roof), to +2.50."),
                                              (12, True, "Build-up outside the printed shell, seen at the sides of the roof: insulation 100 (type to be chosen), then the outer layer (cladding 30). The 160 air zone inside the shell stays open between the ribs."),
-                                             (8, False, "Buttresses 400 wide, 1000 from the inner face (600 outside), about every 1.5 m ({} bays of {:.0f} on the wall centreline, {} per side, corners included); the wall between them is only outlined here. Roof ribs and wall bars tie into the solid base above them.".format(round(2 * (g.HALF + g.WALL / 2) / BUT_SPACING), 2 * (g.HALF + g.WALL / 2) / round(2 * (g.HALF + g.WALL / 2) / BUT_SPACING), round(2 * (g.HALF + g.WALL / 2) / BUT_SPACING) + 1)),
+                                             (8, False, "Buttresses 400 wide, 1000 from the inner face (600 outside), about every 1.5 m ({} bays of {:.0f} on the wall centreline, {} per side, corners included); every other bay shows the printed wall (layer joints, dashed piece divisions), the rest are only outlined. Each buttress is one continuous strip 400 thick, also at the corners. Roof ribs and wall bars tie into the solid base above them.".format(round(2 * (g.HALF + g.WALL / 2) / BUT_SPACING), 2 * (g.HALF + g.WALL / 2) / round(2 * (g.HALF + g.WALL / 2) / BUT_SPACING), round(2 * (g.HALF + g.WALL / 2) / BUT_SPACING) + 1)),
                                              (9, True, "Strip footing 1800 x 250, underside at -1.00 (hidden, dashed): printed edge formwork, cast core.")]
     notes += ["Dashed lines = divisions between printed pieces on the roof, in running bond (assumed about 1500 wide, 750 high). Very faint lines = printed layer joints.",
               "All 3D printed (after the Obayashi 3dpod paper, 2023): mortar beads are printed as permanent formwork, in 10 mm layers (joints drawn every 100 on the elevation), and the structural concrete is cast into them in lifts limited by formwork pressure; the shell, wall and buttress faces are the printed skin.",
