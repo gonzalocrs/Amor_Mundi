@@ -19,3 +19,6 @@ __pycache__/
 desktop.ini
 Thumbs.db
 .DS_Store
+
+# Software licenses (personal, never commit)
+*.lic

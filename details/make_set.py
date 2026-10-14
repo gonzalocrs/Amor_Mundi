@@ -1,7 +1,8 @@
 """Builds the complete drawing set: one A3 PDF per sheet, the whole set as one PDF, and an editable DXF per sheet
 (model space 1:1 in mm, paper-space layout "A3 sheet" at the sheet scale, real DIMENSION entities).
 
-Run:  python details/make_set.py      ->  details/set/NN-name.pdf, details/set/pyramid-roof-drawing-set.pdf, details/set/cad/NN-name.dxf
+Run:  python details/make_set.py      ->  details/set/NN-name.pdf, details/set/pyramid-roof-drawing-set.pdf, details/set/cad/NN-name.dxf,
+                                          details/set/cad/pyramid-roof-drawing-set.dxf (all sheets in one file, one layout each)
 Needs:  pip install cairosvg ezdxf shapely   (and pdfunite from poppler-utils, or pypdf, to merge the set)"""
 import os, sys, subprocess
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -27,7 +28,7 @@ def main(dxf_only=False):
     here = os.path.dirname(os.path.abspath(__file__))
     out = os.path.join(here, "set"); cad = os.path.join(out, "cad")
     os.makedirs(cad, exist_ok=True)
-    pdfs = []
+    pdfs, sheets = [], []
     for no, name, build, note in SHEETS:
         sh = build()
         sh.sheet_no, sh.scale_note = no, note
@@ -38,6 +39,8 @@ def main(dxf_only=False):
             pdfs.append(base + ".pdf")
             print("wrote", base + ".pdf")
         cad_export.export_dxf(sh, os.path.join(cad, "{}-{}".format(no, name)))
+        sheets.append(("{} {}".format(no, name), sh))
+    cad_export.export_set(sheets, os.path.join(cad, "pyramid-roof-drawing-set.dxf"))
     if pdfs:
         merged = os.path.join(out, "pyramid-roof-drawing-set.pdf")
         try:

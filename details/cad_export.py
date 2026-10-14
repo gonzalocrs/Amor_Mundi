@@ -7,12 +7,16 @@ Each file has
     legend, notes and scale bar in paper space, exactly as in the PDF. Open the layout and plot at 1:1.
 All dimensions are real DIMENSION entities (linear and aligned) with the dimension style "PYR" (DIMSCALE = sheet scale),
 so they are associative to their definition points and remeasure when edited. Hatches are HATCH entities, rebar is drawn
-at its true diameter (polyline width), everything is on named layers. Needs:  pip install ezdxf shapely
+at its true diameter (polyline width), everything is on named layers. All text uses the "Standard" style set to Arial
+(arial.ttf), which every CAD program has, so nothing gets swapped for txt.shx or a substitute font.
+export_set() also writes the whole set as ONE DXF: the sheets side by side in model space, one layout per sheet.
+Needs:  pip install ezdxf shapely
 Run the whole set with:  python details/make_set.py"""
 import math, os, sys
 import ezdxf
-from ezdxf import const
+from ezdxf import const, bbox
 from ezdxf.enums import TextEntityAlignment as TA
+from ezdxf.math import UCS
 from shapely.geometry import Polygon, LineString, MultiLineString, MultiPolygon, box
 from shapely.ops import unary_union
 
@@ -31,6 +35,7 @@ LW = [0, 5, 9, 13, 15, 18, 20, 25, 30, 35, 40, 50, 53, 60, 70, 80, 90, 100, 106,
 nearest = lambda v: min(LW, key=lambda x: abs(x - v))
 PATTERN = {"conc": ("ANSI31", "HATCH-PRINTED", 1.6), "cast": ("ANSI37", "HATCH-CAST", 1.6), "earth": ("EARTH", "HATCH-EARTH", 2.4), "dots": ("DOTS", "HATCH-INSULATION", 1.5)}
 SPACING = 3.175       # ANSI31 line spacing at pattern scale 1
+FONT = "arial.ttf"    # standard TrueType font in AutoCAD, Rhino, BricsCAD...: readable everywhere, no SHX substitution
 
 
 def _coords(g):
@@ -66,35 +71,80 @@ def dim_text(label, measured):
     return label
 
 
-def export_dxf(sh, path):
-    doc = ezdxf.new("R2010", setup=True)
+def new_doc():
+    doc = ezdxf.new("R2010", setup=["linetypes"])     # no ezdxf OpenSans styles: CAD would substitute them
     doc.units = ezdxf.units.MM
     doc.header["$INSUNITS"] = 4
     doc.header["$MEASUREMENT"] = 1
-    doc.header["$LTSCALE"] = float(sh.scale)
+    doc.header["$LTSCALE"] = 1.0          # linetype scale is set per entity (= its sheet scale), so sheets can mix scales
     doc.header["$PSLTSCALE"] = 0
     doc.header["$LWDISPLAY"] = 1
-    msp = doc.modelspace()
+    doc.styles.get("Standard").dxf.font = FONT
     for name, (aci, lt, lw) in LAYERS.items():
         doc.layers.add(name, color=aci, linetype=lt, lineweight=lw)
     for name in ("HATCH-INSULATION", "CLADDING"):
         doc.layers.add(name, color=7, lineweight=9)
+    return doc
+
+
+def export_dxf(sh, path):
+    doc = new_doc()
+    print("wrote", path + ".dxf", draw_sheet(doc, sh))
+    doc.layouts.set_active_layout("A3 sheet")
+    doc.saveas(path + ".dxf")
+
+
+def export_set(sheets, path, gap=3000.0):
+    """sheets: [(layout name, sheet)]. One DXF: the sheets side by side in model space (bottoms aligned, `gap` mm
+    apart, a label above each) and one A3 layout per sheet, named like the sheet."""
+    doc = new_doc()
+    doc.layers.add("SHEET-LABELS", color=2, lineweight=25)
+    msp = doc.modelspace()
+    x = 0.0
+    for name, sh in sheets:
+        tmp = new_doc()                    # draw once on its own to measure it, then again in place
+        draw_sheet(tmp, sh)
+        ext = bbox.extents(tmp.modelspace())
+        dx, dy = x - ext.extmin.x, -ext.extmin.y
+        draw_sheet(doc, sh, (dx, dy), name)
+        for vp in doc.layouts.get(name).viewports():
+            vp.frozen_layers = ["SHEET-LABELS"]      # the labels are for finding sheets in model space only
+        S = float(sh.scale)
+        t = msp.add_text("{}  (1:{:g})".format(name, S), height=6 * S, dxfattribs={"layer": "SHEET-LABELS"})
+        t.set_placement((x, ext.size.y + 4 * S), align=TA.BOTTOM_LEFT)
+        x += ext.size.x + gap
+    if "Layout1" in doc.layouts:
+        doc.layouts.delete("Layout1")
+    doc.layouts.set_active_layout(sheets[0][0])
+    doc.saveas(path)
+    print("wrote", path, "({} sheets, one layout each)".format(len(sheets)))
+
+
+def draw_sheet(doc, sh, offset=(0.0, 0.0), layout="A3 sheet"):
+    """draws one sheet into doc: model space shifted by `offset` (mm), paper-space layout `layout`"""
+    msp = doc.modelspace()
+    before = set(e.dxf.handle for e in msp)
+    dx, dy = offset
+    ucs = UCS(origin=(dx, dy, 0))
     S = float(sh.scale)
-    ds = doc.dimstyles.new("PYR")
-    ds.dxf.dimscale = S                 # overall scale: dimension text / ticks are sized in paper mm
-    ds.dxf.dimtxt = 1.8
-    ds.dxf.dimasz = 1.2
-    ds.dxf.dimexo = 0.8
-    ds.dxf.dimexe = 1.2
-    ds.dxf.dimgap = 0.6
-    ds.dxf.dimtad = 1
-    ds.dxf.dimtih = 0
-    ds.dxf.dimtoh = 0
-    ds.dxf.dimdec = 0
-    ds.dxf.dimzin = 8
-    ds.dxf.dimlunit = 2
-    ds.dxf.dimclrd = 3; ds.dxf.dimclre = 3; ds.dxf.dimclrt = 7
-    ds.set_arrows(blk="ARCHTICK")
+    dsname = "PYR-1-{:g}".format(S)        # one dimension style per sheet scale
+    if dsname not in doc.dimstyles:
+        ds = doc.dimstyles.new(dsname)
+        ds.dxf.dimtxsty = "Standard"
+        ds.dxf.dimscale = S                 # overall scale: dimension text / ticks are sized in paper mm
+        ds.dxf.dimtxt = 1.8
+        ds.dxf.dimasz = 1.2
+        ds.dxf.dimexo = 0.8
+        ds.dxf.dimexe = 1.2
+        ds.dxf.dimgap = 0.6
+        ds.dxf.dimtad = 1
+        ds.dxf.dimtih = 0
+        ds.dxf.dimtoh = 0
+        ds.dxf.dimdec = 0
+        ds.dxf.dimzin = 8
+        ds.dxf.dimlunit = 2
+        ds.dxf.dimclrd = 3; ds.dxf.dimclre = 3; ds.dxf.dimclrt = 7
+        ds.set_arrows(blk="ARCHTICK")
     dims = []
     fills, outlines, items = [], {}, []        # fills: [shapely geom, kind, layer]; outlines keyed for de-duplication
     clip = None
@@ -244,23 +294,29 @@ def export_dxf(sh, path):
                 continue
             t = msp.add_text(str(s), height=size * S * 0.72, rotation=-rot, dxfattribs={"layer": layer or "TEXT"})
             t.set_placement((x, z), align={"start": TA.BOTTOM_LEFT, "end": TA.BOTTOM_RIGHT}.get(anchor, TA.BOTTOM_CENTER))
-    # ---- dimensions: real DIMENSION entities
+    # ---- move this sheet's entities to its place; linetype scale = sheet scale (dashes read the same on paper)
+    new = [e for e in msp if e.dxf.handle not in before]
+    for e in new:
+        e.dxf.ltscale = S
+        if dx or dy:
+            e.translate(dx, dy, 0)
+    # ---- dimensions: real DIMENSION entities, placed through the UCS
     nd = 0
     for d in dims:
         if d[0] == "dimh":
             _, xs, z, ext, labels, size, lf = d
             for i, (a_, b_) in enumerate(zip(xs, xs[1:])):
                 ov = {"dimlfac": lf} if abs(lf - 1) > 1e-9 else {}
-                dm = msp.add_linear_dim(base=(a_, z), p1=(a_, ext), p2=(b_, ext), angle=0, dimstyle="PYR",
+                dm = msp.add_linear_dim(base=(a_, z), p1=(a_, ext), p2=(b_, ext), angle=0, dimstyle=dsname,
                                         text=dim_text(labels[i] if labels else None, (b_ - a_) * lf), override=ov, dxfattribs={"layer": "DIMS"})
-                dm.render(); nd += 1
+                dm.render(ucs=ucs); nd += 1
         elif d[0] == "dimv":
             _, zs, x, ext, labels, size, lf = d
             for i, (a_, b_) in enumerate(zip(zs, zs[1:])):
                 ov = {"dimlfac": lf} if abs(lf - 1) > 1e-9 else {}
-                dm = msp.add_linear_dim(base=(x, a_), p1=(ext, a_), p2=(ext, b_), angle=90, dimstyle="PYR",
+                dm = msp.add_linear_dim(base=(x, a_), p1=(ext, a_), p2=(ext, b_), angle=90, dimstyle=dsname,
                                         text=dim_text(labels[i] if labels else None, (b_ - a_) * lf), override=ov, dxfattribs={"layer": "DIMS"})
-                dm.render(); nd += 1
+                dm.render(ucs=ucs); nd += 1
         else:
             _, pts, t_, off, size, lf = d
             for a_, b_ in zip(pts, pts[1:]):
@@ -268,16 +324,16 @@ def export_dxf(sh, path):
                 n = (-u[1] / L, u[0] / L)
                 dist = off * (t_[0] * n[0] + t_[1] * n[1])
                 ov = {"dimlfac": lf} if abs(lf - 1) > 1e-9 else {}
-                dm = msp.add_aligned_dim(p1=a_, p2=b_, distance=dist, dimstyle="PYR", override=ov, dxfattribs={"layer": "DIMS"})
-                dm.render(); nd += 1
+                dm = msp.add_aligned_dim(p1=a_, p2=b_, distance=dist, dimstyle=dsname, override=ov, dxfattribs={"layer": "DIMS"})
+                dm.render(ucs=ucs); nd += 1
     # ---- paper space: A3 sheet, one viewport at the sheet scale, title block / legend / notes / scale bar as in the PDF
-    lay = doc.layouts.new("A3 sheet")
+    lay = doc.layouts.new(layout)
     lay.page_setup(size=(sh.w, sh.h), margins=(0, 0, 0, 0), units="mm")
     tb = sh.w - 112
     px0, px1, py0, py1 = 8.0, float(tb), 8.0, sh.h - 8.0        # drawing area, paper mm, y down
     pcx, pcy = (px0 + px1) / 2, (py0 + py1) / 2
     vp = lay.add_viewport(center=(pcx, sh.h - pcy), size=(px1 - px0, py1 - py0),
-                          view_center_point=((pcx - sh.ox) * S, (sh.oz - pcy) * S), view_height=(py1 - py0) * S)
+                          view_center_point=((pcx - sh.ox) * S + dx, (sh.oz - pcy) * S + dy), view_height=(py1 - py0) * S)
     vp.dxf.layer = "TITLEBLOCK"
     Y = lambda y: sh.h - y
     for i in sh.panel():
@@ -295,9 +351,8 @@ def export_dxf(sh, path):
             _, x, y, size, txt, bold, anchor = i
             t = lay.add_text(str(txt), height=size * 0.72, dxfattribs={"layer": "TITLEBLOCK"})
             t.set_placement((x, Y(y)), align={"start": TA.BOTTOM_LEFT, "end": TA.BOTTOM_RIGHT}.get(anchor, TA.BOTTOM_CENTER))
-    doc.layouts.set_active_layout("A3 sheet")
-    doc.saveas(path + ".dxf")
-    print("wrote", path + ".dxf", "({} polylines, {} hatches, {} dimensions; layout 'A3 sheet' at 1:{})".format(len(outlines), sum(1 for e in msp if e.dxftype() == "HATCH"), nd, sh.scale))
+    return "({} polylines, {} hatches, {} dimensions; layout '{}' at 1:{})".format(
+        len(outlines), sum(1 for e in new if e.dxftype() == "HATCH"), nd, layout, sh.scale)
 
 
 if __name__ == "__main__":
