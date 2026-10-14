@@ -11,17 +11,21 @@ from pyramid_drawings import Sheet, rect
 # ================= PARAMETERS =================
 RIB_W = 160.0              # rib / column width in the face (assumed)
 RIB_D = 240.0              # rib depth: the 160 air zone + layer 2, between the 80 outer skin and the 80 inner layer 1 (assumed)
-COL_PITCH = 1000.0         # A: column spacing at the base edge
 MIN_PITCH = 500.0          # A: smallest column spacing allowed; below this every other column stops
-RING_H = [1667.0, 3333.0, 5000.0]   # A: horizontal ribs (centre heights above the eave); 3333 and 5000 are where columns stop
-DIAG_P = 1250.0            # B: spacing of one diagonal family along the base edge (the diamond is 1250 wide)
 TOP_RING = 128.0           # top ring depth in elevation (= 160 square to the slope)
 BAR_KG_M = {16: 1.578, 12: 0.888}
-HALFB = g.HALF             # 5000
 RISE = g.RISE              # 6000
-KX = (HALFB - g.OPEN / 2) / RISE      # half-width loss per unit height (0.75)
-VST = math.hypot(HALFB - g.OPEN / 2, RISE) / RISE   # true length / elevation height (1.25)
+# the grid lies in the MID-surface of the shell (middle of the 400 thickness), so it lines up with the wall centreline
+HALFB = g.HALF + (g.rx(0)[0] + g.rx(0)[3]) / 2          # half width of the grid at the eave (5250)
+TOPB = g.HALF + (g.rx(RISE)[0] + g.rx(RISE)[3]) / 2     # half width at the crown (700)
+KX = (HALFB - TOPB) / RISE            # half-width loss per unit height
+VST = math.hypot(HALFB - TOPB, RISE) / RISE   # true length / elevation height (about 1.25)
 w = lambda h: HALFB - KX * h
+COL_PITCH = 2 * HALFB / 10            # A: column spacing at the base edge (10 bays)
+DIAG_P = 2 * HALFB / 8                # B: spacing of one diagonal family along the base edge (8 diamonds wide)
+H1 = (1 - MIN_PITCH / COL_PITCH) * HALFB / KX            # A: height where the spacing hits MIN_PITCH: every other column stops
+H2 = (1 - MIN_PITCH / (2 * COL_PITCH)) * HALFB / KX      # A: same again: only the hips go on
+RING_H = [H1 / 2, H1, H2]             # A: horizontal ribs; H1 and H2 are where columns stop
 SOLID = g.SOLID_H
 
 def tl(p, q): return math.hypot(q[0] - p[0], VST * (q[1] - p[1]))      # true length of an elevation segment
@@ -32,8 +36,7 @@ def grid_A():
     n = int(round(2 * HALFB / COL_PITCH))
     xs = [-HALFB + i * COL_PITCH for i in range(n + 1)]
     # heights where the spacing (COL_PITCH * w/HALFB * 2^stage) reaches MIN_PITCH
-    h1 = (HALFB - MIN_PITCH / COL_PITCH * HALFB) / KX
-    h2 = (HALFB - MIN_PITCH / (2 * COL_PITCH) * HALFB) / KX
+    h1, h2 = H1, H2
     for i, x0 in enumerate(xs):
         top = h1 if i % 2 else (h2 if 0 < i < n else RISE - TOP_RING / 2)
         segs.append(("col", [(x0 * w(SOLID) / HALFB, SOLID), (x0 * w(top) / HALFB, top)]))
@@ -67,7 +70,6 @@ def quad(p, q, wd, kind):
     return [f(p, 1), f(q, 1), f(q, -1), f(p, -1)]
 
 def draw_face(sh, segs):
-    sh.poly([(-w(0), 0), (w(0), 0), (w(RISE), RISE), (-w(RISE), RISE)], "#f6f6f6", 0.0)      # roof face, back of the shell
     solid = [(-w(0), 0), (w(0), 0), (w(SOLID), SOLID), (-w(SOLID), SOLID)]
     strips = []
     for kind, pts in segs:
@@ -136,6 +138,28 @@ def common_legend(opt):
          (6, True, "Between the ribs the air zone stays open for thermal insulation (dotted).")]
     return L
 
+def building(sh):
+    """wall, buttresses, ground and footing, seen from outside (south face), under the roof face"""
+    zg = -g.WALL_H
+    HALF, WALL, BUT_L, BUT_W = g.HALF, g.WALL, g.BUT_L, g.BUT_W
+    c = HALF + WALL / 2
+    sh.poly(rect(-7300, zg - 1100, 7300, zg), "url(#earth)", 0.0)
+    sh.poly(rect(-(HALF + WALL), zg, HALF + WALL, 0), "#e6e6e6", 0.5)                  # printed wall, outer face
+    for x0, x1 in ((HALF + WALL, HALF + WALL + BUT_L), (-HALF - WALL - BUT_L, -HALF - WALL)):
+        sh.poly(rect(x0, zg, x1, 0), "#fff", 0.5); sh.poly(rect(x0, zg, x1, 0), "url(#conc)", 0.0)     # east / west corner buttresses, edge on
+        sh.poly(rect(x0, zg, x1, 0), "none", 0.5)
+    for x in (-c, 0, c):                                                                 # south buttresses, face on
+        q = rect(x - BUT_W / 2, zg, x + BUT_W / 2, 0)
+        sh.poly(q, "#fff", 0.5); sh.poly(q, "url(#conc)", 0.0); sh.poly(q, "none", 0.5)
+    ft, fb = zg + g.FOOT_Z + g.FOOT_T, zg + g.FOOT_Z
+    fx = c + BUT_L / 2 + g.FOOT_W / 2
+    sh.line([(-fx, fb), (fx, fb), (fx, ft), (-fx, ft), (-fx, fb)], 0.25, dash="3 1")      # strip footing, hidden
+    sh.line([(-HALF - WALL - BUT_L, ft), (-HALF - WALL - BUT_L, zg)], 0.25, dash="3 1"); sh.line([(HALF + WALL + BUT_L, ft), (HALF + WALL + BUT_L, zg)], 0.25, dash="3 1")
+    sh.line([(-7300, zg), (7300, zg)], 0.5)
+    # shell silhouette (outer face) behind the grid
+    xo = lambda h: g.HALF + g.rx(h)[3]
+    sh.poly([(-xo(0), 0), (xo(0), 0), (xo(RISE), RISE), (-xo(RISE), RISE)], "#f6f6f6", 0.35)
+
 def sheet(opt):
     segs, extra = grid_A() if opt == "A" else grid_B()
     if opt == "A":
@@ -152,26 +176,33 @@ def sheet(opt):
         title, sub = "Roof grid A: ruled-surface columns", "one roof face seen square on"
         legend = [(1, False, "Columns run in straight lines from the base edge (every {:g}) towards the crown edge, so they converge like the ruled surface of the sketch.".format(COL_PITCH)),
                   (2, False, "When the spacing drops to {:g} (about +{:.2f}) every other column stops; at about +{:.2f} only the four hip columns go on to the crown ring.".format(MIN_PITCH, (g.WALL_H + h1) / 1000, (g.WALL_H + h2) / 1000))]
-        notes = ["Columns stop on a horizontal rib (at h = 3333 and 5000 above the eave); bars are lapped / hooked into it.",
-                 "Horizontal ribs at 1667, 3333, 5000, plus the 300 solid base (bottom ring) and the top ring at the crown."]
+        notes = ["Columns stop on a horizontal rib (at {:.0f} and {:.0f} above the eave); bars are lapped / hooked into it.".format(H1, H2),
+                 "Horizontal ribs at {:.0f}, {:.0f}, {:.0f}, plus the 300 solid base (bottom ring) and the top ring at the crown.".format(*RING_H)]
     else:
         title, sub = "Roof grid B: diamond lattice", "one roof face seen square on"
-        legend = [(1, False, "Diagonals parallel to the two hips (same inclination as the roof edges, {:.1f}° in the face), every {:g} along the base: equal diamonds {:g} wide.".format(math.degrees(math.atan2(RISE * VST, HALFB - g.OPEN / 2)), DIAG_P, DIAG_P)),
+        legend = [(1, False, "Diagonals parallel to the two hips (same inclination as the roof edges, {:.1f}° in the face), every {:g} along the base: equal diamonds {:g} wide.".format(math.degrees(math.atan2(RISE * VST, HALFB - TOPB)), DIAG_P, DIAG_P)),
                   (2, False, "Bottom ring = the 300 solid base; top ring at the crown. The hips are two of the diagonals. No other horizontal ribs.")]
         notes = ["Every diagonal ends on a ring or on a hip, so no bar has a free end in the shell.",
                  "Diagonals do not stop as the roof narrows: the diamonds just get clipped by the hips."]
-    legend = legend + common_legend(opt)
+    legend = legend + common_legend(opt) + [(7, False, "Printed wall 400 (same layers as the roof), to +2.50."),
+                                             (8, False, "Buttresses 400 wide, 1000 from the inner face (600 outside), at the corners and mid-span; roof ribs and wall bars tie into the solid base above them."),
+                                             (9, True, "Strip footing 1800 x 250, underside at -1.00 (hidden, dashed).")]
     notes += ["Rough quantities, four faces (hips counted twice, so slightly high): ribs {:.0f} m, {} bars, steel {:.0f} kg, cast concrete {:.1f} m3.".format(Lr4 + Lh4, "4 Ø16 each", steel, conc),
               "Rib size, bar count and the 160 x 240 channel are assumptions for the engineer to check. Elevation shows the face square on; true lengths are 1.25 x the drawn heights."]
-    sh = Sheet(50, 157, 165, title, sub, legend, notes)
+    sh = Sheet(50, 157, 150, title, sub, legend, notes)
     sh.plain_legend = True
+    building(sh)
     draw_face(sh, segs)
-    # dimensions and annotation
-    xr = w(0) + 600
-    sh.dim_v([0, SOLID], -w(0) - 600, ext=-w(0), labels=["300"])
-    sh.dim_v([0, RISE], xr, ext=w(0), labels=["6000"])
-    sh.dim_h([-w(0), w(0)], -450, ext=0, labels=["10000"])
-    sh.dim_h([-w(RISE), w(RISE)], RISE + 450, ext=RISE, labels=["1000"])
+    xr = 7000
+    sh.dim_v([0, SOLID], -w(0) - 700, ext=-w(0), labels=["300"])
+    sh.dim_v([-g.WALL_H, 0], xr, ext=6100, labels=["{:g}".format(g.WALL_H)])
+    sh.dim_v([0, RISE], xr, ext=w(0) + 500, labels=["{:g}".format(RISE)])
+    sh.dim_h([-w(RISE), w(RISE)], RISE + 450, ext=RISE, labels=["{:g}".format(round(2 * TOPB))])
+    zg = -g.WALL_H
+    sh.level(-6700, zg, "±0.00", -1); sh.level(-6700, 0, "+2.50", -1); sh.level(-6700, RISE, "+8.50", -1); sh.level(-6700, zg + g.FOOT_Z, "-1.00", -1)
+    sh.callout(7, -6900, zg + 1900, -4200, zg + 1900)
+    sh.callout(8, -6900, zg + 700, -(g.HALF + g.WALL / 2), zg + 700)
+    sh.callout(9, -6900, zg + g.FOOT_Z + 400, -6100, zg + g.FOOT_Z + 250)
     if opt == "A":
         for h in RING_H: sh.line([(-w(h) - 500, h), (-w(h) - 150, h)], 0.15, dash="2 1"); sh.text(-w(h) - 560, h - 60, "+{:.2f}".format((g.WALL_H + h) / 1000), 2.2, "end")
     if opt == "A":
@@ -180,8 +211,8 @@ def sheet(opt):
     else:
         sh.callout(1, 6300, 2300, -1000, 2000)
         sh.callout(2, 6300, 5600, 0, RISE - TOP_RING / 2)
-    sh.text(-HALFB - 500, RISE - 200, "Option " + opt, 4.2, "start", weight="bold")
-    section_inset(sh, -5300, -4000)
+    sh.text(-HALFB - 800, RISE - 200, "Option " + opt, 4.2, "start", weight="bold")
+    section_inset(sh, -5300, -6100)
     return sh
 
 if __name__ == "__main__":
