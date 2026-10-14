@@ -17,7 +17,6 @@ hollow, lapped pieces for **3D concrete printing**, sliced to printer programs w
 | `details/set/cad/*.dxf` | The same 10 sheets as editable CAD: model space 1:1 in mm, a paper-space layout **A3 sheet** with a viewport at the sheet scale (plot at 1:1), title block and legend in paper space, real DIMENSION entities (style `PYR`), hatches, named layers. |
 | `details/make_set.py` | Builds the whole set (PDFs + DXFs): `pip install cairosvg ezdxf shapely`, then `python details/make_set.py` |
 | `details/pyramid_drawings.py`, `roof_grid.py`, `roof_slice.py`, `cad_export.py` | The drawing definitions (geometry, plan, section, D1, roof grids, roof cut) and the DXF writer used by `make_set.py` |
-| `details/structural_check.py` | Hand-calculation screening check (thrust, ring beam, buttress, wind, footing) |
 
 The input/output list for each script is at the top of each `.py` file.
 
@@ -74,6 +73,6 @@ Deetman, Bos, Ferguson, Versteege, *Salad Slicer: An open-source slicer toolkit 
 | `wind_vecs`, `wind_walls` | **Mesh Load**, one per mesh, same order (4 load cases: rotate `wind_dir` 0 / 90 / 180 / 270) |
 
 Then **Assemble** all, **Analyze**, and read utilisation, reactions at `supports` and the displacement.
-Compare: the self weight should match `info` and `details/structural_check.py`. The buttress base reactions
-settle how much of the roof thrust the buttresses take (see the bracket in the check script).
+Compare: the self weight should match `info`. The buttress base reactions settle how much of the roof
+thrust the buttresses take and how much the solid roof base carries as a tension ring.
 Idealisations (ring beam centroid = roof base, no footing, buttress attached along the wall mid-plane) are listed at the top of the script.
