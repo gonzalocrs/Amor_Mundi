@@ -85,7 +85,7 @@ def draw_face(sh, segs):
         sh.poly(p, "#fff", 0.0); sh.poly(p, "url(#cast)", 0.0)
     # centre lines of the bars (one Ø16 pair per rib, drawn as a single dash-dot centreline)
     xo = lambda h: g.HALF + g.rx(h)[3]
-    layers(sh, [(-xo(0), 0), (xo(0), 0), (xo(RISE), RISE), (-xo(RISE), RISE)], 0, 0.05, step=100, color="#8a8a8a")      # printed layer joints on the whole shell (every 100 drawn; real layers are 10)
+    layers(sh, [(-xo(0), 0), (xo(0), 0), (xo(RISE), RISE), (-xo(RISE), RISE)], 0, 0.03, step=100, color="#c4c4c4")      # printed layer joints on the whole shell (every 100 drawn; real layers are 10)
     sh.layer = "REBAR"
     for kind, pts in segs:
         if kind in ("col", "diag"):
@@ -198,15 +198,15 @@ def building(sh):
     HALF, WALL, BUT_L, BUT_W = g.HALF, g.WALL, g.BUT_L, g.BUT_W
     c = HALF + WALL / 2
     sh.poly(rect(-7300, zg - 1100, 7300, zg), "url(#earth)", 0.0)
-    sh.poly(rect(-(HALF + WALL), zg, HALF + WALL, 0), "#f2f2f2", 0.5)                  # printed wall, outer face
-    pr = lambda q: layers(sh, q, zg, 0.05, step=100, color="#8a8a8a")                                     # printed layer joints (every 100 drawn; real layers are 10)
+    sh.poly(rect(-(HALF + WALL), zg, HALF + WALL, 0), "#fff", 0.5)                  # printed wall, outer face
+    pr = lambda q: layers(sh, q, zg, 0.03, step=100, color="#c4c4c4")                                     # printed layer joints (every 100 drawn; real layers are 10)
     pr(rect(-(HALF + WALL), zg, HALF + WALL, 0))
     for x0, x1 in ((HALF + WALL, HALF + WALL + BUT_L), (-HALF - WALL - BUT_L, -HALF - WALL)):
         q = rect(x0, zg, x1, 0)                                                          # east / west corner buttresses, edge on: printed shell, cast core
         sh.poly(q, "#fff", 0.0); pr(q); sh.poly(q, "none", 0.5)
     for x in (-c, 0, c):                                                                 # south buttresses, face on
         q = rect(x - BUT_W / 2, zg, x + BUT_W / 2, 0)
-        sh.poly(q, "#fff", 0.0); sh.poly(q, "#f2f2f2", 0.0); pr(q); sh.poly(q, "none", 0.5)
+        sh.poly(q, "#fff", 0.0); pr(q); sh.poly(q, "none", 0.5)
     ft, fb = zg + g.FOOT_Z + g.FOOT_T, zg + g.FOOT_Z
     fx = c + BUT_L / 2 + g.FOOT_W / 2
     sh.line([(-fx, fb), (fx, fb), (fx, ft), (-fx, ft), (-fx, fb)], 0.25, dash="3 1")      # strip footing, hidden
@@ -214,7 +214,27 @@ def building(sh):
     sh.line([(-7300, zg), (7300, zg)], 0.5)
     # shell silhouette (outer face) behind the grid
     xo = lambda h: g.HALF + g.rx(h)[3]
-    sh.poly([(-xo(0), 0), (xo(0), 0), (xo(RISE), RISE), (-xo(RISE), RISE)], "#f6f6f6", 0.35)
+    sh.poly([(-xo(0), 0), (xo(0), 0), (xo(RISE), RISE), (-xo(RISE), RISE)], "#fff", 0.35)
+    # division between printed pieces, dashed: running bond, about 1500 wide; rows 750 high on the roof, 500 on the wall (assumed)
+    dash = dict(color="#8c8c8c", dash="3 1.6")
+    PW = 1500.0
+    nrow = 8
+    for r in range(nrow):
+        h0, h1 = r * RISE / nrow, (r + 1) * RISE / nrow
+        if r: sh.line([(-xo(h0), h0), (xo(h0), h0)], 0.1, **dash)
+        wm = (xo(h0) + xo(h1)) / 2
+        n = max(1, int(round(2 * wm / PW)))
+        for i in range(1, n):
+            x = -1.0 + 2.0 * (i if r % 2 == 0 else i - 0.5) / n
+            if abs(x) < 1: sh.line([(x * xo(h0), h0), (x * xo(h1), h1)], 0.1, **dash)
+    wr = 5
+    for r in range(wr):
+        z0, z1 = zg + r * g.WALL_H / wr, zg + (r + 1) * g.WALL_H / wr
+        if r: sh.line([(-(HALF + WALL), z0), (HALF + WALL, z0)], 0.1, **dash)
+        n = int(round(2 * (HALF + WALL) / PW))
+        for i in range(1, n):
+            x = -(HALF + WALL) + 2 * (HALF + WALL) * (i if r % 2 == 0 else i - 0.5) / n
+            if abs(x) < HALF + WALL: sh.line([(x, z0), (x, z1)], 0.1, **dash)
 
 def sheet(opt):
     segs, extra = grid_A() if opt == "A" else grid_B()
@@ -243,7 +263,8 @@ def sheet(opt):
     legend = legend + common_legend(opt) + [(7, False, "Printed wall 400 (same layers as the roof), to +2.50."),
                                              (8, False, "Buttresses 400 wide, 1000 from the inner face (600 outside), at the corners and mid-span; roof ribs and wall bars tie into the solid base above them."),
                                              (9, True, "Strip footing 1800 x 250, underside at -1.00 (hidden, dashed): printed edge formwork, cast core.")]
-    notes += ["All 3D printed (after the Obayashi 3dpod paper, 2023): mortar beads are printed as permanent formwork, in 10 mm layers (joints drawn every 100 on the elevation), and the structural concrete is cast into them in lifts limited by formwork pressure; the shell, wall and buttress faces are the printed skin.",
+    notes += ["Dashed lines = divisions between printed pieces, in running bond (assumed about 1500 wide, 750 high on the roof, 500 on the wall). Very faint lines = printed layer joints.",
+              "All 3D printed (after the Obayashi 3dpod paper, 2023): mortar beads are printed as permanent formwork, in 10 mm layers (joints drawn every 100 on the elevation), and the structural concrete is cast into them in lifts limited by formwork pressure; the shell, wall and buttress faces are the printed skin.",
               "The paper fills the formwork with self-compacting steel-fibre UHPC (about 180 N/mm2 compression, 8.8 tension) and needs no rebar in principle; if you use it, the Ø16 bars in the ribs can be dropped or cut back, to be confirmed with the engineer.",
               "Rough quantities, four faces (hips counted twice, so slightly high): ribs {:.0f} m, {} bars, steel {:.0f} kg, cast concrete {:.1f} m3.".format(Lr4 + Lh4, "4 Ø16 each", steel, conc),
               "Rib size, bar count and the 160 x 240 channel are assumptions for the engineer to check. Elevation shows the face square on; true lengths are 1.25 x the drawn heights."]
