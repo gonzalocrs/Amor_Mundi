@@ -62,25 +62,48 @@ Deetman, Bos, Ferguson, Versteege, *Salad Slicer: An open-source slicer toolkit 
 
 `scripts/karamba_model.py` (Py3 Script component, millimetres). The `grid` input picks the roof:
 **A** (ruled-surface columns, sheet 08), **B** (diamond lattice, sheet 09) or **none** (plain shell, the baseline).
-All three have the same shell, walls and 32 buttresses (8 per side, as on the floor plan), so the results compare
-like for like. The roof mesh follows the ribs, so each rib is a chain of beams on shell nodes.
+All three share the same shell, walls and buttresses, so the results compare like for like. The roof mesh follows
+the ribs, so each rib is a chain of beams on shell nodes.
 Run `python scripts/karamba_model.py` to print the three variants and check that everything connects.
 
-Wire its outputs like this:
+### Parameters
+
+Every dimension is an optional input: add an input to the component named exactly like the parameter and wire a
+slider to it. Inputs you leave out keep the drawing value. They work the same for A, B and none.
+
+| Group | Inputs (default) |
+|---|---|
+| Plan and heights | `clear` (10000), `wall` (400), `wall_h` (2500), `base_h` (300, solid roof base = ring beam depth), `rise` (6000), `slope` (deg; if connected it replaces `rise`), `opening` (1000) |
+| Roof thickness, square to the slope | `leaf_base` (160) → `leaf_crown` (80), `lattice` (160), `skin` (80), `fill` (0.35, solid share of the lattice zone) |
+| Ribs | `rib_w` (160), `rib_d` (240); grid A: `n_cols` (10, even), `min_pitch` (500); grid B: `n_diamonds` (8) |
+| Crown ring | `crown_ring` (True), `crown_b` (200), `crown_h` (200) |
+| Buttresses | `but_spacing` (1500), `but_total` (1000 from the inner face), `but_w` (400) |
+| Mesh and loads | `mesh_size` (500), `wind_dir`, `qp`, `clad`, `gamma`, `fck`, `kf`, `fixed` |
+
+A slider combination that can't be built (for example an opening wider than the plan) gives empty outputs and the
+reason in `info`, so an optimiser run doesn't stop on an error.
+
+### Wiring
 
 | Output | Karamba component |
 |---|---|
-| `roof_meshes`, `wall_meshes`, `but_meshes` | one **Mesh to Shell** each, with a Shell cross-section of thickness `t_roof` / `t_wall` / `t_but` and a material from `material` (use `gamma_roof` / `gamma_wall` as the density so the hollow printed layers weigh the right amount) |
-| `ring_lines` | **Line to Beam**, rectangular 400 x 300 (the solid roof base) |
-| `crown_lines` | **Line to Beam**, e.g. 200 x 200 (assumed crown compression ring; set `crown_ring` False to drop it) |
-| `rib_lines` | **Line to Beam** with `rib_ids` into its Id input; rectangular `rib_w` x `rib_d` (160 x 240), full concrete density. The ids (`col`, `hring`, `hip` for A; `diag`, `hip` for B) let you give the hips or the horizontal ribs their own section. Empty for `none`. |
+| `roof_meshes`, `wall_meshes`, `but_meshes` | one **Mesh to Shell** each. Shell cross-section height: `t_roof_elems` for the roof (one thickness per element, tapering like the drawings) if your Karamba version takes a list of heights per element, otherwise `t_roof` (the area-weighted average); `t_wall`, `t_but` for the others. Material from `material`, density `gamma_roof` / `gamma_wall` so the hollow printed layers weigh the right amount |
+| `ring_lines` | **Line to Beam**, rectangular `ring_b` x `ring_h` (the solid roof base) |
+| `crown_lines` | **Line to Beam**, rectangular `crown_b` x `crown_h` |
+| `rib_lines` | **Line to Beam** with `rib_ids` into its Id input; rectangular `rib_w` x `rib_d`, full concrete density. The ids (`col`, `hring`, `hip` for A; `diag`, `hip` for B) let you give the hips or the horizontal ribs their own section. Empty for `none`. |
 | `supports` | **Support** (fixed, or pinned with `fixed` = False) |
 | gravity | Karamba **Gravity** load |
 | `cladding` | **Mesh Load** on `roof_meshes` |
 | `wind_vecs`, `wind_walls` | **Mesh Load**, one per mesh, same order (4 load cases: rotate `wind_dir` 0 / 90 / 180 / 270) |
 
-Then **Assemble** all, **Analyze**, and read utilisation, reactions at `supports` and the displacement. Run it once
-per `grid` value to compare the options. The self weight should match `info`. The buttress base reactions settle how
-much of the roof thrust the buttresses take and how much the solid roof base carries as a tension ring.
-Idealisations (ring beam at the centroid of the solid base, ribs start on the ring beam, crown ring snapped to the
-mesh, no footing) are listed at the top of the script.
+Then **Assemble** all, **Analyze**, and read utilisation, reactions at `supports` and the displacement.
+The buttress base reactions settle how much of the roof thrust the buttresses take and how much the solid roof base
+carries as a tension ring.
+
+### Optimising
+
+`concrete` (m3) and `weight` (kN, without cladding) are outputs, and `rise` / `slope` give the roof actually built.
+For Galapagos (or Octopus for several objectives), use the sliders above as genes. A typical fitness is
+minimise `concrete` subject to Karamba's maximum displacement and utilisation staying under a limit, run once per
+`grid`. `weight` should match the sum of Karamba's vertical reactions under gravity alone. Idealisations (ring beam at
+the centroid of the solid base, ribs start on the ring beam, no footing) are listed at the top of the script.
