@@ -416,23 +416,21 @@ def back_face(sh, grid):
             sh.line(q + [q[0]], 0.2, "#555", dash="2 1")
 
 def back_wall(sh):
-    """north wall seen from inside, with the buttresses (outside the wall) as dashed outlines: every other bay printed wall, the bays in between are openings"""
+    """north wall seen from inside: printed pieces in running bond (shaded rows), openings at the bays: window, door (middle), window"""
     xs = but_pos()
-    wall = rect(-HALF, 0, HALF, WALL_H)
-    sh.poly(wall, "#fff", 0.3)
-    dash = dict(color="#8c8c8c", dash="3 1.6")
-    for j in range(0, len(xs) - 1, 2):
-        xa, xb = max(xs[j] + BUT_W / 2, -HALF), min(xs[j + 1] - BUT_W / 2, HALF)
-        if xb <= xa: continue
-        layers(sh, rect(xa, 0, xb, WALL_H), 0, 0.03, step=100, color="#c4c4c4")
-        for r in range(1, 5): sh.line([(xa, r * WALL_H / 5), (xb, r * WALL_H / 5)], 0.1, **dash)
-        for r in range(5):
-            if r % 2: sh.line([((xa + xb) / 2, r * WALL_H / 5), ((xa + xb) / 2, (r + 1) * WALL_H / 5)], 0.1, **dash)
-    for x in xs:                                                              # buttresses behind the wall
-        xa, xb = max(x - BUT_W / 2, -HALF), min(x + BUT_W / 2, HALF)
-        if xb > xa:
-            sh.line([(xa, 0), (xa, WALL_H)], 0.2, "#777", dash="2 1"); sh.line([(xb, 0), (xb, WALL_H)], 0.2, "#777", dash="2 1")
-    for j in (1, 3, 5):                                                       # openings: window, door (middle), window
+    PIECE_W = 1500.0
+    zt = WALL_H
+    nrow_w = 5
+    nw = int(round(CLEAR / PIECE_W))
+    for r in range(nrow_w):
+        z0, z1 = r * zt / nrow_w, (r + 1) * zt / nrow_w
+        sh.poly(rect(-HALF, z0, HALF, z1), "#f3f3f3" if r % 2 else "#fafafa", 0.0)
+        for i_ in range(1, nw):
+            x = -HALF + CLEAR * ((i_ if r % 2 == 0 else i_ - 0.5) / nw)
+            if -HALF < x < HALF:
+                sh.line([(x, z0), (x, z1)], 0.13, "#a8a8a8")
+        sh.line([(-HALF, z1), (HALF, z1)], 0.13, "#a8a8a8")
+    for j in (1, 3, 5):
         cxm = (xs[j] + xs[j + 1]) / 2
         z0_, z1_ = (0, 2000) if j == 3 else (900, 2000)
         x0_, x1_ = cxm - 500, cxm + 500
@@ -447,18 +445,18 @@ def section(grid=None):
     gname = {"A": "roof grid A, ruled-surface columns", "B": "roof grid B, diamond lattice", None: "no roof grid shown"}[grid]
     sh = Sheet(50, 157, 252, "Total section A-A" + ("" if grid is None else " · grid " + grid),
                "through the east and west buttresses, looking north",
-               [(1, True, "Footing {:g} x {:g}, underside at {:g} (frost depth and bearing are guesses): printed edge formwork, cast core.".format(FOOT_W, FOOT_T, FOOT_Z)),
+               [(1, True, "Footing {:g} x {:g}, underside at {:g} (frost depth and bearing are guesses).".format(FOOT_W, FOOT_T, FOOT_Z)),
                 (2, True, "Printed wall 400, same pattern as the roof: two 80 inner layers, a 160 air zone, an 80 outer layer."),
-                (3, False, "Solid base of the roof: over the first 300 (vertical) above the eave the 160 air zone is filled with cast concrete between the printed layers, so the 400 is solid; there is no ring beam."),
-                (4, False, "Buttress 400 wide, 1000 from the inner face (600 beyond the wall), one about every 1.5 m (8 per side); printed formwork with cast core, rises to +2.50."),
+                (3, False, "Solid base of the roof: the first 300 (vertical) above the eave is completely solid concrete, 400 wide, no air zone; there is no ring beam."),
+                (4, False, "Buttress 400 wide, 1000 from the inner face (600 beyond the wall), one about every 1.5 m (8 per side); it rises to +2.50, flush with the roof base."),
                 (5, False, "Roof shell: 400 thick square to the slope at the base (two 80 inner layers, a 160 air zone, an 80 outer layer), 320 at the crown; about {:.0f} / {:.0f} horizontally.".format(400 * SH, 320 * SH)),
                 (6, False, "Crown opening 1000 clear; roof rises {:g} over {:g}, slope {:.1f}° ({:.1f}° from the vertical).".format(RISE, RUN, SLOPE, 90 - SLOPE)),
-                (7, True, "Everything is 3D printed: mortar beads in 10 mm layers (joints drawn every 100) form permanent formwork. Where a member is solid (roof base, buttress, footing, ribs) the printed shell is filled with cast concrete, crossed hatch. Single hatch = printed only."),
+                (7, True, "Everything is 3D printed in 10 mm layers; crossed hatch = solid cast concrete (roof base, ribs). Printed layer joints and the cast fill of the buttress and footing are shown in the roof-grid sheets and in detail D1."),
                 (8, True, "Outside the printed shell: insulation {:g} (dotted), then the outer layer (cladding {:g}, dark).".format(INS, CLAD)),
                 (9, True, "Cast ribs of the roof grid, seen on the back face as dashed outlines ({}). The cut lies in the air zone between ribs; rib sections are on the roof-grid sheets.".format(gname))],
                ["Layer pattern from your drawing; at the crown the second inner layer ends, so the leaf is 80 there (assumed).",
-                "The cut runs through the 4th buttress from the south (y = {:.0f}). Beyond it the north wall is seen from inside: every other bay is printed wall, the bays in between are openings (door in the middle, windows either side); buttresses behind the wall are dashed.".format(y0),
-                "Faint lines = printed layer joints (every 100 drawn, real 10); dashed lines on the back face and the wall = divisions between printed pieces in running bond (assumed about 1500 wide)."])
+                "The cut runs through the 4th buttress from the south (y = {:.0f}); the north wall with its door and windows is seen beyond.".format(y0),
+                "Faint grid on the back roof face and the north wall = printed pieces in running bond, about 1500 wide (assumed sizes). Dashed outlines on the back roof face = cast ribs."])
     s = sh.s
     ground = [(-6800, 0), (6800, 0)]
     sh.poly(rect(-6800, FOOT_Z - 100, 6800, 0), "url(#earth)", 0.0)
@@ -475,18 +473,9 @@ def section(grid=None):
         for p in (foot, stem, wall, but):
             sh.poly(p, "#000", 0.3 if p in (foot, stem) else 0.7)     # below ground: finer line
         for p in (foot, stem, wall, but):
-            sh.poly(p, "#fff", 0.0); sh.poly(p, "url(#cast)" if p is not wall else "url(#conc)", 0.0)   # printed wall = single hatch; cast cores = crossed hatch
-        # printed permanent formwork of the cast members: 80 end caps, printed layer joints (every 100 drawn here)
-        xo_ = HALF + WALL + BUT_L; xf0 = HALF + WALL / 2 + BUT_L / 2 - FOOT_W / 2; xf1 = HALF + WALL / 2 + BUT_L / 2 + FOOT_W / 2
-        for cap in ([(X(xo_ - 80), 0), (X(xo_), 0), (X(xo_), WALL_H), (X(xo_ - 80), WALL_H)],          # buttress
-                    [(X(xo_ - 80), FOOT_Z + FOOT_T), (X(xo_), FOOT_Z + FOOT_T), (X(xo_), 0), (X(xo_ - 80), 0)],   # stem
-                    [(X(xf0), FOOT_Z), (X(xf0 + 80), FOOT_Z), (X(xf0 + 80), FOOT_Z + FOOT_T), (X(xf0), FOOT_Z + FOOT_T)],   # footing, inner end
-                    [(X(xf1 - 80), FOOT_Z), (X(xf1), FOOT_Z), (X(xf1), FOOT_Z + FOOT_T), (X(xf1 - 80), FOOT_Z + FOOT_T)]):
-            sh.poly(cap, "#fff", 0.0); sh.poly(cap, "url(#conc)", 0.0); layers(sh, cap, min(q[1] for q in cap), 0.08, step=100); sh.poly(cap, "none", 0.3)
+            sh.poly(p, "#fff", 0.0); sh.poly(p, "url(#conc)", 0.0)
         li, ll, _ = WALL_LAYERS
         zt = WALL_H
-        for x0_, x1_ in ((HALF, HALF + li), (HALF + li + ll, HALF + WALL)):       # printed layers of the wall
-            layers(sh, [(X(x0_), 0), (X(x1_), 0), (X(x1_), zt), (X(x0_), zt)], 0, 0.08, step=100)
         sh.poly([(X(HALF + li), 0), (X(HALF + li + ll), 0), (X(HALF + li + ll), zt), (X(HALF + li), zt)], PINK, 0.0)
         loops(sh, "lp{}".format(sgn), X(HALF + li), X(HALF + li + ll), 0, zt, 0.15)      # wall: loop symbol from the reference
         sh.line([(X(HALF + li), 0), (X(HALF + li), zt)], 0.25); sh.line([(X(HALF + li + ll), 0), (X(HALF + li + ll), zt)], 0.25)
@@ -505,16 +494,16 @@ def section(grid=None):
         sh.poly(latp, PINK, 0.25)
         sh.poly(skinp, "#fff", 0.0); sh.poly(skinp, "url(#conc)", 0.0); sh.poly(skinp, "none", 0.45)
         sh.poly(leafp, "none", 0.45)
-        layers(sh, leafp, WALL_H, 0.08, step=100); layers(sh, skinp, WALL_H, 0.08, step=100)       # printed layer joints
         for t0, t1, kind in ((0.0, INS, "ins"), (INS, INS + CLAD, "clad")):                          # insulation and outer layer outside the printed shell
             q = [(X(HALF + rx(0)[3] + t0 * SH), WALL_H), (X(HALF + rx(RISE)[3] + t0 * SH), WALL_H + RISE), (X(HALF + rx(RISE)[3] + t1 * SH), WALL_H + RISE), (X(HALF + rx(0)[3] + t1 * SH), WALL_H)]
             if kind == "ins":
                 sh.poly(q, "#fff", 0.0); sh.poly(q, "url(#dots)", 0.0); sh.poly(q, "none", 0.3)
             else:
                 sh.poly(q, "#555", 0.2)
-        # solid base: the 160 air zone is not left open over the first SOLID_H but filled with cast concrete between the printed layers
-        solid = band(1, 2, 0.0, SOLID_H)
-        sh.poly(solid, "#fff", 0.0); sh.poly(solid, "url(#cast)", 0.0); sh.poly(solid, "none", 0.45)
+        # solid base: the first SOLID_H of the roof is one block of concrete over the full 400 (crossed hatch = cast solid)
+        solid = [(X(HALF + rx(0)[0]), WALL_H), (X(HALF + rx(SOLID_H)[0]), WALL_H + SOLID_H), (X(HALF + rx(SOLID_H)[3]), WALL_H + SOLID_H), (X(HALF + rx(0)[3]), WALL_H)]
+        sh.poly(solid, "#fff", 0.0); sh.poly(solid, "url(#cast)", 0.0); sh.poly(solid, "none", 0.6)
+        sh.line([(X(HALF + rx(0)[0]), WALL_H), (X(HALF + rx(0)[3]), WALL_H)], 0.25)
         sh.line([(X(HALF + rx(0)[0]), WALL_H), (X(HALF + rx(0)[3]), WALL_H)], 0.25)
     back_wall(sh)
     sh.line(ground, 0.5)       # ground line drawn last so it runs unbroken through the walls and buttresses
