@@ -1,7 +1,7 @@
 """Plan slices through the pyramid roof, one sheet per roof-grid option. The cut planes are horizontal, looking down: the shell is cut as a square ring
 (printed inner layers, air zone with the cast ribs cut, outer layer, insulation, cladding). One large slice near the eave (1:50) and two small ones higher up (1:100)
 show how the grid thins out towards the crown.
-Run: python details/roof_slice.py [out_dir]  ->  roof-slice-A.svg/.pdf, roof-slice-B.svg/.pdf"""
+Run: python details/make_set.py"""
 import math, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import pyramid_drawings as g
@@ -50,6 +50,7 @@ def draw_slice(sh, opt, h, f, cx, cz, full, label=True):
         d = "M" + " L".join("{:.2f},{:.2f}".format(*sh.P(*q)) for q in TS(sq(outer))) + "Z M" + " L".join("{:.2f},{:.2f}".format(*sh.P(*q)) for q in TS(sq(inner))) + "Z"
         sh.o.append('<path d="{}" fill="{}" fill-rule="evenodd"/>'.format(d, fill))
         if hatch: sh.o.append('<path d="{}" fill="{}" fill-rule="evenodd"/>'.format(d, hatch))
+        sh._rec("ring", TS(sq(outer)), TS(sq(inner)), fill, hatch)
     def square(r_, lw): sh.poly(TS(sq(r_)), "none", lw)
     def to_plan(face, u, t, hin):
         a = hin + t
@@ -149,6 +150,7 @@ def sheet(opt, h_cut=CUT_H):
     def band(h0, h1):
         d = "M" + " L".join("{:.2f},{:.2f}".format(*sh.P(*q)) for q in TS(sq(rg.w(h0)))) + "Z M" + " L".join("{:.2f},{:.2f}".format(*sh.P(*q)) for q in TS(sq(rg.w(h1)))) + "Z"
         sh.o.append('<path d="{0}" fill="#fff" fill-rule="evenodd"/><path d="{0}" fill="url(#cast)" fill-rule="evenodd"/>'.format(d))
+        sh._rec("ring", TS(sq(rg.w(h0))), TS(sq(rg.w(h1))), "#fff", "url(#cast)")
         sh.poly(TS(sq(rg.w(h0))), "none", 0.3); sh.poly(TS(sq(rg.w(h1))), "none", 0.3)
     band(0.0, g.SOLID_H)
     for kind, pts in segs:
@@ -194,6 +196,5 @@ def sheet(opt, h_cut=CUT_H):
     return sh
 
 if __name__ == "__main__":
-    out = sys.argv[1] if len(sys.argv) > 1 else os.path.dirname(os.path.abspath(__file__))
-    for opt in "AB":
-        g.export(sheet(opt), os.path.join(out, "roof-slice-" + opt))
+    import make_set
+    make_set.main()          # the whole drawing set: details/set/*.pdf, the merged set PDF and details/set/cad/*.dxf

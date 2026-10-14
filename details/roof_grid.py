@@ -1,5 +1,5 @@
 """Two options for a cast column grid inside the printed pyramid roof shell (one roof face, seen square on, 1:50).
-Standalone apart from pyramid_drawings.py (sheet helpers + roof geometry). Run: python details/roof_grid.py [out_dir]
+Standalone apart from pyramid_drawings.py (sheet helpers + roof geometry). Run: python details/make_set.py
   A  ruled-surface grid: columns follow the straight lines from the base edge to the crown edge, drop out in two stages as they converge,
      horizontal ribs at the stage heights.
   B  diamond grid: two families of equal diagonals parallel to the hips, only a bottom ring (the 300 solid base) and a top ring (crown)."""
@@ -135,8 +135,10 @@ def section_inset(sh, X0, Z0, F=5.0, callouts=True, W_=700.0):
         sh.dot(*M(u, v), 8)                                                                                              # 4 Ø16
     sh.layer = None
     sh.text(*M(-20, 40), "outside", 2.4, "end"); sh.text(*M(-20, 360), "inside", 2.4, "end")
+    old_lf, sh.dimlfac = sh.dimlfac, 1.0 / F                                            # dimensions in the inset measure true sizes
     sh.dim_h([X0 + F * v for v in (0, u0, u1, W_)], Z0 - F * (INS + CLAD) - 150 * k, ext=Z0 - F * (INS + CLAD), labels=["{:g}".format(u0), "{:g}".format(RIB_W), "{:g}".format(W_ - u1)])
     sh.dim_v([Z0 + F * v for v in (-INS - CLAD, -INS, 0, 80, 240, 320, 400)], X0 + F * W_ + 150 * k, ext=X0 + F * W_, labels=["30", "100", "80", "160", "80", "80"])
+    sh.dimlfac = old_lf
     sh.text(X0, Z0 + F * 400 + 160 * k, "Plan cut through a rib at one layer, 1:{:g}".format(sh.scale / F), 3.2, "start", weight="bold")
     if callouts:
         sh.callout(3, X0 + F * W_ + 650, Z0 + F * 160, *M(u1 - 60, 200))
@@ -299,13 +301,11 @@ def sheet(opt):
                  "Diagonals do not stop as the roof narrows: the diamonds just get clipped by the hips."]
     legend = legend + common_legend(opt) + [(7, False, "Printed wall 400 (same layers as the roof), to +2.50."),
                                              (12, True, "Build-up outside the printed shell, seen at the sides of the roof: insulation 100 (type to be chosen), then the outer layer (cladding 30). The 160 air zone inside the shell stays open between the ribs."),
-                                             (8, False, "Buttresses 400 wide, 1000 from the inner face (600 outside), about every 1.5 m ({} bays of {:.0f} on the wall centreline, {} per side, corners included); every other bay shows the printed wall (layer joints, dashed piece divisions), the bays between are full-height curtain wall (door in the middle one). Each buttress is one continuous strip 400 thick, also at the corners. Roof ribs and wall bars tie into the solid base above them.".format(round(2 * (g.HALF + g.WALL / 2) / BUT_SPACING), 2 * (g.HALF + g.WALL / 2) / round(2 * (g.HALF + g.WALL / 2) / BUT_SPACING), round(2 * (g.HALF + g.WALL / 2) / BUT_SPACING) + 1)),
+                                             (8, False, "Buttresses 400 wide, 1000 from the inner face (600 outside), about every 1.5 m ({} bays of {:.0f} on the wall centreline, {} per side, corners included); every other bay is printed wall, the bays between are full-height curtain wall (door in the middle one).".format(round(2 * (g.HALF + g.WALL / 2) / BUT_SPACING), 2 * (g.HALF + g.WALL / 2) / round(2 * (g.HALF + g.WALL / 2) / BUT_SPACING), round(2 * (g.HALF + g.WALL / 2) / BUT_SPACING) + 1)),
                                              (9, True, "Strip footing 1800 x 250, underside at -1.00 (hidden, dashed): printed edge formwork, cast core.")]
-    notes += ["Dashed lines = divisions between printed pieces on the roof, in running bond (assumed about 1500 wide, 750 high). Very faint lines = printed layer joints.",
-              "All 3D printed (after the Obayashi 3dpod paper, 2023): mortar beads are printed as permanent formwork, in 10 mm layers (joints drawn every 100 on the elevation), and the structural concrete is cast into them in lifts limited by formwork pressure; the shell, wall and buttress faces are the printed skin.",
-              "The paper fills the formwork with self-compacting steel-fibre UHPC (about 180 N/mm2 compression, 8.8 tension) and needs no rebar in principle; if you use it, the Ø16 bars in the ribs can be dropped or cut back, to be confirmed with the engineer.",
-              "Rough quantities, four faces (hips counted twice, so slightly high): ribs {:.0f} m, {} bars, steel {:.0f} kg, cast concrete {:.1f} m3.".format(Lr4 + Lh4, "4 Ø16 each", steel, conc),
-              "Rib size, bar count and the 160 x 240 channel are assumptions for the engineer to check. Elevation shows the face square on; true lengths are 1.25 x the drawn heights."]
+    notes += ["Dashed lines = printed pieces in running bond (about 1500 x 750); very faint lines = printed layer joints (10 mm layers, drawn every 100).",
+              "Printed mortar beads are permanent formwork; ribs, base and buttress cores are poured concrete (after the Obayashi 3dpod paper, 2023). Steel-fibre concrete could replace the rib bars, to be confirmed by the engineer.",
+              "Rough quantities, four faces: ribs {:.0f} m, steel {:.0f} kg (4 Ø16 per rib), poured concrete {:.1f} m3.".format(Lr4 + Lh4, steel, conc)]
     legend.sort(key=lambda e: e[0])
     sh = Sheet(50, 157, 140, title, sub, legend, notes)
     sh.plain_legend = True
@@ -335,6 +335,5 @@ def sheet(opt):
     return sh
 
 if __name__ == "__main__":
-    out = sys.argv[1] if len(sys.argv) > 1 else os.path.dirname(os.path.abspath(__file__))
-    for o in "AB":
-        g.export(sheet(o), os.path.join(out, "roof-grid-" + o))
+    import make_set
+    make_set.main()          # the whole drawing set: details/set/*.pdf, the merged set PDF and details/set/cad/*.dxf

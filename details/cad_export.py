@@ -1,10 +1,14 @@
 """DXF (CAD) export of the pyramid drawings. Reads the geometry recorded by pyramid_drawings.Sheet, so the CAD files always match the PDFs.
 
-Model space, millimetres, 1:1 (the PDFs are 1:50 / 1:50 / 1:10; text and symbols are sized for those scales, and
-dashed linetypes use LTSCALE = scale). Everything is on named layers; hatches are real HATCH entities, rebar is drawn
-at its TRUE diameter (polyline width), printed layers are every 10 mm. Needs:  pip install ezdxf shapely
-
-Run:  python details/cad_export.py [out_dir]   ->  pyramid-plan.dxf, pyramid-section.dxf, pyramid-detail.dxf"""
+Each file has
+  - MODEL space: the drawing at 1:1 in millimetres (insets drawn at a larger scale on a sheet are scaled up in model space,
+    and their dimensions carry the matching DIMLFAC, so they still read true sizes);
+  - a paper-space layout "A3 sheet" (420 x 297 mm) with ONE viewport at the sheet scale (1:50 or 1:10) and the title block,
+    legend, notes and scale bar in paper space, exactly as in the PDF. Open the layout and plot at 1:1.
+All dimensions are real DIMENSION entities (linear and aligned) with the dimension style "PYR" (DIMSCALE = sheet scale),
+so they are associative to their definition points and remeasure when edited. Hatches are HATCH entities, rebar is drawn
+at its true diameter (polyline width), everything is on named layers. Needs:  pip install ezdxf shapely
+Run the whole set with:  python details/make_set.py"""
 import math, os, sys
 import ezdxf
 from ezdxf import const
@@ -49,15 +53,49 @@ def _lines(g):
     return [l for p in getattr(g, "geoms", []) for l in _lines(p)]
 
 
+def dim_text(label, measured):
+    """'<>' lets CAD print the measured value; words around the number are kept"""
+    m = "{:g}".format(round(measured))
+    if label is None:
+        return "<>"
+    label = str(label)
+    if label == m:
+        return "<>"
+    if m in label:
+        return label.replace(m, "<>", 1)
+    return label
+
+
 def export_dxf(sh, path):
     doc = ezdxf.new("R2010", setup=True)
     doc.units = ezdxf.units.MM
+    doc.header["$INSUNITS"] = 4
+    doc.header["$MEASUREMENT"] = 1
     doc.header["$LTSCALE"] = float(sh.scale)
+    doc.header["$PSLTSCALE"] = 0
     doc.header["$LWDISPLAY"] = 1
     msp = doc.modelspace()
     for name, (aci, lt, lw) in LAYERS.items():
         doc.layers.add(name, color=aci, linetype=lt, lineweight=lw)
+    for name in ("HATCH-INSULATION", "CLADDING"):
+        doc.layers.add(name, color=7, lineweight=9)
     S = float(sh.scale)
+    ds = doc.dimstyles.new("PYR")
+    ds.dxf.dimscale = S                 # overall scale: dimension text / ticks are sized in paper mm
+    ds.dxf.dimtxt = 1.8
+    ds.dxf.dimasz = 1.2
+    ds.dxf.dimexo = 0.8
+    ds.dxf.dimexe = 1.2
+    ds.dxf.dimgap = 0.6
+    ds.dxf.dimtad = 1
+    ds.dxf.dimtih = 0
+    ds.dxf.dimtoh = 0
+    ds.dxf.dimdec = 0
+    ds.dxf.dimzin = 8
+    ds.dxf.dimlunit = 2
+    ds.dxf.dimclrd = 3; ds.dxf.dimclre = 3; ds.dxf.dimclrt = 7
+    ds.set_arrows(blk="ARCHTICK")
+    dims = []
     fills, outlines, items = [], {}, []        # fills: [shapely geom, kind, layer]; outlines keyed for de-duplication
     clip = None
 
@@ -150,6 +188,17 @@ def export_dxf(sh, path):
                     add_outline(ring, layer, 25, True)
         elif k == "solid":
             fills.append([Polygon(r[1]), "solid", r[2]])
+        elif k == "ring":
+            _, outer, inner, fill, hatch = r
+            g = Polygon(outer).difference(Polygon(inner))
+            if fill == "#fff":
+                sub(g)
+            elif fill == "#555":
+                fills.append([g, "solid", "CLADDING"])
+            if hatch and hatch.startswith("url(#"):
+                fills.append([g, hatch[5:-1], None])
+        elif k in ("dimh", "dimv", "dima"):
+            dims.append(r)
 
     # ---- write fills
     for g, kind, layer in fills:
@@ -195,42 +244,62 @@ def export_dxf(sh, path):
                 continue
             t = msp.add_text(str(s), height=size * S * 0.72, rotation=-rot, dxfattribs={"layer": layer or "TEXT"})
             t.set_placement((x, z), align={"start": TA.BOTTOM_LEFT, "end": TA.BOTTOM_RIGHT}.get(anchor, TA.BOTTOM_CENTER))
-    # ---- title / legend / notes block, to the right of the drawing
-    xs = [c[0] for e in msp if e.dxftype() == "LWPOLYLINE" for c in e.get_points()]
-    if not xs:
-        xs = [0.0]
-    ys = [c[1] for e in msp if e.dxftype() == "LWPOLYLINE" for c in e.get_points()]
-    x0, y = max(xs) + 12 * S, max(ys)
-    h = 2.8 * S * 0.72
-    def put(txt, size=2.8, bold=False):
-        nonlocal y
-        t = msp.add_text(txt, height=size * S * 0.72, dxfattribs={"layer": "TITLEBLOCK"})
-        t.set_placement((x0, y), align=TA.BOTTOM_LEFT)
-        y -= (size * 1.45) * S
-    put(sh.title, 5.4); put(sh.sub, 3.1); y -= 4 * S
-    for n, assumed, txt in sh.legend:
-        for i, l in enumerate(pd.wrap(txt, 70)):
-            put(("({}{}) ".format(n, "*" if assumed else "") if i == 0 else "      ") + l)
-        y -= 1 * S
-    if sh.legend:
-        put("* = assumed, to confirm"); y -= 3 * S
-    put("Notes", 3.1)
-    for n_ in sh.notes:
-        for i, l in enumerate(pd.wrap(n_, 78)):
-            put(("- " if i == 0 else "  ") + l)
-    y -= 3 * S
-    put("Model space, mm, 1:1. Drawn for 1:{} at A3 (text, symbols, linetypes). Rebar at true diameter; printed layers 10 mm.".format(sh.scale), 2.6)
+    # ---- dimensions: real DIMENSION entities
+    nd = 0
+    for d in dims:
+        if d[0] == "dimh":
+            _, xs, z, ext, labels, size, lf = d
+            for i, (a_, b_) in enumerate(zip(xs, xs[1:])):
+                ov = {"dimlfac": lf} if abs(lf - 1) > 1e-9 else {}
+                dm = msp.add_linear_dim(base=(a_, z), p1=(a_, ext), p2=(b_, ext), angle=0, dimstyle="PYR",
+                                        text=dim_text(labels[i] if labels else None, (b_ - a_) * lf), override=ov, dxfattribs={"layer": "DIMS"})
+                dm.render(); nd += 1
+        elif d[0] == "dimv":
+            _, zs, x, ext, labels, size, lf = d
+            for i, (a_, b_) in enumerate(zip(zs, zs[1:])):
+                ov = {"dimlfac": lf} if abs(lf - 1) > 1e-9 else {}
+                dm = msp.add_linear_dim(base=(x, a_), p1=(ext, a_), p2=(ext, b_), angle=90, dimstyle="PYR",
+                                        text=dim_text(labels[i] if labels else None, (b_ - a_) * lf), override=ov, dxfattribs={"layer": "DIMS"})
+                dm.render(); nd += 1
+        else:
+            _, pts, t_, off, size, lf = d
+            for a_, b_ in zip(pts, pts[1:]):
+                u = (b_[0] - a_[0], b_[1] - a_[1]); L = math.hypot(*u)
+                n = (-u[1] / L, u[0] / L)
+                dist = off * (t_[0] * n[0] + t_[1] * n[1])
+                ov = {"dimlfac": lf} if abs(lf - 1) > 1e-9 else {}
+                dm = msp.add_aligned_dim(p1=a_, p2=b_, distance=dist, dimstyle="PYR", override=ov, dxfattribs={"layer": "DIMS"})
+                dm.render(); nd += 1
+    # ---- paper space: A3 sheet, one viewport at the sheet scale, title block / legend / notes / scale bar as in the PDF
+    lay = doc.layouts.new("A3 sheet")
+    lay.page_setup(size=(sh.w, sh.h), margins=(0, 0, 0, 0), units="mm")
+    tb = sh.w - 112
+    px0, px1, py0, py1 = 8.0, float(tb), 8.0, sh.h - 8.0        # drawing area, paper mm, y down
+    pcx, pcy = (px0 + px1) / 2, (py0 + py1) / 2
+    vp = lay.add_viewport(center=(pcx, sh.h - pcy), size=(px1 - px0, py1 - py0),
+                          view_center_point=((pcx - sh.ox) * S, (sh.oz - pcy) * S), view_height=(py1 - py0) * S)
+    vp.dxf.layer = "TITLEBLOCK"
+    Y = lambda y: sh.h - y
+    for i in sh.panel():
+        if i[0] == "line":
+            lay.add_line((i[1], Y(i[2])), (i[3], Y(i[4])), dxfattribs={"layer": "TITLEBLOCK", "lineweight": nearest(i[5] * 100)})
+        elif i[0] == "rect":
+            _, x, y, w_, h_, fill, sw = i
+            pts = [(x, Y(y)), (x + w_, Y(y)), (x + w_, Y(y + h_)), (x, Y(y + h_))]
+            if fill == "#000":
+                hh = lay.add_hatch(color=7, dxfattribs={"layer": "TITLEBLOCK"}); hh.set_solid_fill(); hh.paths.add_polyline_path(pts, is_closed=True)
+            lay.add_lwpolyline(pts, close=True, dxfattribs={"layer": "TITLEBLOCK", "lineweight": nearest(sw * 100)})
+        elif i[0] == "circle":
+            lay.add_circle((i[1], Y(i[2])), i[3], dxfattribs={"layer": "TITLEBLOCK", "lineweight": 18})
+        else:
+            _, x, y, size, txt, bold, anchor = i
+            t = lay.add_text(str(txt), height=size * 0.72, dxfattribs={"layer": "TITLEBLOCK"})
+            t.set_placement((x, Y(y)), align={"start": TA.BOTTOM_LEFT, "end": TA.BOTTOM_RIGHT}.get(anchor, TA.BOTTOM_CENTER))
+    doc.layouts.set_active_layout("A3 sheet")
     doc.saveas(path + ".dxf")
-    print("wrote", path + ".dxf", "({} polylines, {} hatches)".format(len(outlines), sum(1 for e in msp if e.dxftype() == "HATCH")))
+    print("wrote", path + ".dxf", "({} polylines, {} hatches, {} dimensions; layout 'A3 sheet' at 1:{})".format(len(outlines), sum(1 for e in msp if e.dxftype() == "HATCH"), nd, sh.scale))
 
 
 if __name__ == "__main__":
-    out = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(os.path.abspath(__file__)), "cad")
-    os.makedirs(out, exist_ok=True)
-    export_dxf(pd.plan(), os.path.join(out, "pyramid-plan"))
-    export_dxf(pd.plan("A"), os.path.join(out, "pyramid-plan-gridA"))
-    export_dxf(pd.plan("B"), os.path.join(out, "pyramid-plan-gridB"))
-    export_dxf(pd.section(), os.path.join(out, "pyramid-section"))
-    export_dxf(pd.section("A"), os.path.join(out, "pyramid-section-gridA"))
-    export_dxf(pd.section("B"), os.path.join(out, "pyramid-section-gridB"))
-    export_dxf(pd.detail(), os.path.join(out, "pyramid-detail"))
+    import make_set
+    make_set.main(dxf_only=True)

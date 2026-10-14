@@ -12,12 +12,12 @@ hollow, lapped pieces for **3D concrete printing**, sliced to printer programs w
 | `scripts/concrete_slicer.py` | General slicer: turns any closed geometry into printed-bead geometry (visual only) |
 | `grasshopper/Pyramide 10_1_2026.gh` | The Grasshopper definition (scripts pasted into Py3 components + SaladSlicer chain) |
 | `rhino/10_1_2026.3dm` | The Rhino model (stored with Git LFS) |
-| `details/cad/*.dxf` + `details/cad_export.py` | The same three drawings as CAD files (DXF, mm, 1:1, named layers, real hatches, rebar at true diameter). Regenerate: `pip install ezdxf shapely`, then `python details/cad_export.py` |
 | `scripts/karamba_model.py` | Karamba3D model: roof/wall/buttress shells, solid roof-base ring, supports, wind and cladding loads |
+| `details/set/pyramid-roof-drawing-set.pdf` | **The drawing set**, 10 A3 sheets: 01 floor plan, 02/03 floor plan with roof grid A/B, 04/05 section A-A grid A/B, 06/07 roof plan cut at +6.00 grid A/B, 08/09 roof-grid elevations A/B, 10 eave detail D1. One PDF per sheet next to it. |
+| `details/set/cad/*.dxf` | The same 10 sheets as editable CAD: model space 1:1 in mm, a paper-space layout **A3 sheet** with a viewport at the sheet scale (plot at 1:1), title block and legend in paper space, real DIMENSION entities (style `PYR`), hatches, named layers. |
+| `details/make_set.py` | Builds the whole set (PDFs + DXFs): `pip install cairosvg ezdxf shapely`, then `python details/make_set.py` |
+| `details/pyramid_drawings.py`, `roof_grid.py`, `roof_slice.py`, `cad_export.py` | The drawing definitions (geometry, plan, section, D1, roof grids, roof cut) and the DXF writer used by `make_set.py` |
 | `details/structural_check.py` | Hand-calculation screening check (thrust, ring beam, buttress, wind, footing) |
-| `details/roof_grid.py` | Two options for a cast column grid inside the roof shell: `roof-grid-A` (ruled-surface columns + horizontal ribs) and `roof-grid-B` (diamond lattice, top and bottom ring only), SVG + PDF, A3 |
-| `details/roof_slice.py` | Roof plan cut at +8.50 (through the top ring) for each grid option, looking down on the ribs from the eave to the crown: `roof-slice-A`, `roof-slice-B`, SVG + PDF, A3 |
-| `details/pyramid_drawings.py` | Buttressed 10 x 10 m pyramid roof: floor plan, total section A-A and eave detail D1 (`pyramid-plan`, `pyramid-section`, `pyramid-detail`, SVG + PDF, A3) |
 
 The input/output list for each script is at the top of each `.py` file.
 

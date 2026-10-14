@@ -1,8 +1,7 @@
 """Plan, total section and eave detail for the 10 x 10 m buttressed pyramid roof (3D concrete printed).
 Standalone: no dependency on scripts/cork_house_roof.py. Model units mm. Every number you may want to change is in PARAMETERS.
 
-Run:  python details/pyramid_drawings.py [out_dir]
-      -> pyramid-plan.svg, pyramid-section.svg, pyramid-detail.svg (+ .pdf/.png if `pip install cairosvg` works)"""
+Run:  python details/make_set.py   (builds the whole set; this file only defines the drawings)"""
 import math, os, sys
 
 # ================= PARAMETERS =================
@@ -51,6 +50,9 @@ class Sheet:
         self.scale = scale
         self.o = []; self.title, self.sub, self.legend, self.notes = title, sub, legend, notes
         self.plain_legend = False
+        self.sheet_no = ""                                  # set by make_set.py
+        self.scale_note = ""                                # e.g. "insets at 1:10" when a sheet mixes scales
+        self.dimlfac = 1.0                                  # measurement factor for dimensions inside scaled insets (CAD DIMLFAC)
         self.rec = []; self.layer = None; self.mute = 0     # recorder for the CAD (DXF) export: model-space geometry, mm
     def _rec(self, *a):
         if not self.mute: self.rec.append(a)
@@ -94,7 +96,9 @@ class Sheet:
         self.circle_label(x, z, n, 2.4)
         self.layer = old
     def dim_h(self, xs, z, text_off=1.0, ext=None, labels=None, size=2.5):
-        """horizontal dimension chain at height z; ext = z the extension lines start from."""
+        """horizontal dimension chain at height z; ext = z the extension lines start from. Recorded for CAD as real DIMENSION entities."""
+        self._rec("dimh", list(xs), z, z if ext is None else ext, labels, size, self.dimlfac)
+        self.mute += 1
         _ol, self.layer = self.layer, "DIMS"
         s = self.s; tick = 1.2 / s
         self.line([(xs[0] - 1.5 / s, z), (xs[-1] + 1.5 / s, z)], 0.2)
@@ -107,7 +111,10 @@ class Sheet:
             t = labels[i] if labels else "{:g}".format(round(b - a))
             self.text((a + b) / 2, z + 0.9 / s, t, size)
         self.layer = _ol
+        self.mute -= 1
     def dim_v(self, zs, x, ext=None, labels=None, size=2.5):
+        self._rec("dimv", list(zs), x, x if ext is None else ext, labels, size, self.dimlfac)
+        self.mute += 1
         _ol, self.layer = self.layer, "DIMS"
         s = self.s; tick = 1.2 / s
         self.line([(x, zs[0] - 1.5 / s), (x, zs[-1] + 1.5 / s)], 0.2)
@@ -120,16 +127,82 @@ class Sheet:
             t = labels[i] if labels else "{:g}".format(round(b - a))
             self.text(x - 0.9 / self.s, (a + b) / 2, t, size, rot=-90)
         self.layer = _ol
-    def level(self, x, z, label, side=1):
+        self.mute -= 1
+    def dim_aligned(self, pts, t_, off, size=2.5):
+        """dimension chain between points pts that lie on a straight line, measured along that line; the dimension line is offset by off
+        along the unit vector t_ (perpendicular to the measured direction). Recorded for CAD as ALIGNED dimensions."""
+        self._rec("dima", [tuple(p) for p in pts], tuple(t_), off, size, self.dimlfac)
+        self.mute += 1
         _ol, self.layer = self.layer, "DIMS"
+        s = self.s
+        dl = [(p[0] + t_[0] * off, p[1] + t_[1] * off) for p in pts]
+        d = (pts[-1][0] - pts[0][0], pts[-1][1] - pts[0][1]); L = math.hypot(*d); u = (d[0] / L, d[1] / L)
+        ang = -math.degrees(math.atan2(u[1], u[0])); ang = ang if abs(ang) <= 90 else ang + 180
+        self.line([dl[0], dl[-1]], 0.2)
+        tk = 1.2 / s / 2
+        for p, q in zip(pts, dl):
+            self.line([(p[0] + t_[0] * 0.8 / s, p[1] + t_[1] * 0.8 / s), (q[0] + t_[0] * 1.2 / s, q[1] + t_[1] * 1.2 / s)], 0.12)
+            self.line([(q[0] - (u[0] + t_[0]) * tk, q[1] - (u[1] + t_[1]) * tk), (q[0] + (u[0] + t_[0]) * tk, q[1] + (u[1] + t_[1]) * tk)], 0.45)
+        sg = 1 if (u[0] * t_[1] - u[1] * t_[0]) < 0 else -1
+        for k in range(len(pts) - 1):
+            mx, mz = (dl[k][0] + dl[k + 1][0]) / 2 + t_[0] * 0.9 / s, (dl[k][1] + dl[k + 1][1]) / 2 + t_[1] * 0.9 / s
+            self.text(mx, mz, "{:g}".format(round(math.hypot(pts[k + 1][0] - pts[k][0], pts[k + 1][1] - pts[k][1]) * self.dimlfac)), size, rot=ang)
+        self.layer = _ol
+        self.mute -= 1
+    def level(self, x, z, label, side=1):
+        _ol, self.layer = self.layer, "ANNOTATION"          # level marks are annotation, not dimensions
         s = self.s
         self.line([(x, z), (x + side * 6 / s, z)], 0.2)
         self.poly([(x, z), (x + 1.2 / s, z + 1.6 / s), (x - 1.2 / s, z + 1.6 / s)], "#000", 0.1)
         self.text(x + side * 7 / s, z - 0.5 / s, label, 2.5, "start" if side > 0 else "end")
         self.layer = _ol
+    def panel(self):
+        """everything outside the drawing area, in paper mm (y down): border, title block, legend, notes, scale bar, footer.
+        Used by svg() and by the CAD export (paper space), so both are identical. Items: ("line", x1, y1, x2, y2, w), ("rect", x, y, w, h, fill, sw),
+        ("circle", cx, cy, r, fill), ("text", x, y, size, text, bold, anchor)."""
+        W, H = self.w, self.h
+        tb = W - 112
+        it = [("rect", 8, 8, W - 16, H - 16, None, 0.35), ("line", tb, 8, tb, H - 8, 0.35)]
+        x0, y = tb + 4, 20
+        it.append(("text", x0, y, 5.4, self.title, True, "start")); y += 5.5
+        if self.sub:
+            it.append(("text", x0, y, 3.1, self.sub, False, "start"))
+        y += 9
+        for n, _assumed, txt in self.legend:
+            lines = wrap(txt, 52)
+            it.append(("circle", x0 + 2.3, y - 1, 2.3, "#fff"))
+            it.append(("text", x0 + 2.3, y, 2.7, str(n), False, "middle"))
+            for i, l in enumerate(lines):
+                it.append(("text", x0 + 7, y + i * 3.5, 2.8, l, False, "start"))
+            y += 3.5 * len(lines) + 2
+        if self.notes:
+            y += 3
+            it.append(("text", x0, y, 3.1, "Notes", True, "start")); y += 4.5
+        for n_ in self.notes:
+            for i, l in enumerate(wrap(n_, 58)):
+                it.append(("text", x0 + (0 if i == 0 else 2), y, 2.8, l, False, "start")); y += 3.5
+            y += 1
+        # scale bar (5 x 1 m or 5 x 100 mm)
+        unit = 1000 if self.scale >= 50 else 100
+        label = "m" if unit == 1000 else "dm"
+        sy = H - 30
+        nb = 4
+        for i in range(nb):
+            it.append(("rect", x0 + i * unit * self.s, sy, unit * self.s, 1.6, "#000" if i % 2 == 0 else "#fff", 0.2))
+            it.append(("text", x0 + i * unit * self.s, sy - 1, 2.5, str(i), False, "middle"))
+        it.append(("text", x0 + nb * unit * self.s, sy - 1, 2.5, str(nb), False, "middle"))
+        it.append(("text", x0 + nb * unit * self.s + 2, sy + 1.4, 2.5, label, False, "start"))
+        # title block footer
+        it.append(("line", tb, H - 24, W - 8, H - 24, 0.35))
+        it.append(("text", x0, H - 18.5, 2.6, "Pyramid roof · 3D-printed concrete · GSAPP", True, "start"))
+        it.append(("text", x0, H - 14.5, 2.6, "Scale 1:{} at A3{} · dimensions in mm".format(self.scale, (" · " + self.scale_note) if self.scale_note else ""), False, "start"))
+        it.append(("text", x0, H - 10.5, 2.6, "2026-10-14 · hand estimates, not engineered", False, "start"))
+        if self.sheet_no:
+            it.append(("text", W - 11, H - 12, 6.0, self.sheet_no, True, "end"))
+        return it
+
     def svg(self):
         W, H = self.w, self.h
-        tb = W - 112                      # title block x
         parts = ['<svg xmlns="http://www.w3.org/2000/svg" width="{}mm" height="{}mm" viewBox="0 0 {} {}" font-family="Helvetica, Arial, sans-serif">'.format(W, H, W, H),
                  '<defs>'
                  '<pattern id="conc" width="1.6" height="1.6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="1.6" stroke="#000" stroke-width="0.14"/></pattern>'
@@ -137,52 +210,22 @@ class Sheet:
                  '<pattern id="cast" width="1.6" height="1.6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="1.6" stroke="#000" stroke-width="0.14"/><line x1="0" y1="0" x2="1.6" y2="0" stroke="#000" stroke-width="0.14"/></pattern>'
                  '<pattern id="dots" width="1.5" height="1.5" patternUnits="userSpaceOnUse"><circle cx="0.4" cy="0.4" r="0.11" fill="#000"/><circle cx="1.15" cy="1.1" r="0.11" fill="#000"/></pattern>'
                  '</defs>',
-                 '<rect width="{}" height="{}" fill="#fff"/>'.format(W, H),
-                 '<rect x="8" y="8" width="{}" height="{}" fill="none" stroke="#000" stroke-width="0.35"/>'.format(W - 16, H - 16),
-                 '<g clip-path="url(#cl)">'.replace(' clip-path="url(#cl)"', "")]
+                 '<rect width="{}" height="{}" fill="#fff"/>'.format(W, H), '<g>']
         parts += self.o
         parts.append('</g>')
-        parts.append('<line x1="{0}" y1="8" x2="{0}" y2="{1}" stroke="#000" stroke-width="0.35"/>'.format(tb, H - 8))
-        x0, y = tb + 4, 20
-        parts.append('<text x="{}" y="{}" font-size="5.4" font-weight="bold">{}</text>'.format(x0, y, self.title)); y += 5.5
-        parts.append('<text x="{}" y="{}" font-size="3.1">{}</text>'.format(x0, y, self.sub)); y += 9
-        if self.plain_legend:
-            for n, assumed, txt in self.legend:
-                lines = wrap("({}{}) {}".format(n, "*" if assumed else "", txt), 66)
-                for i, l in enumerate(lines):
-                    parts.append('<text x="{}" y="{:.1f}" font-size="2.8">{}</text>'.format(x0 + (0 if i == 0 else 4), y + i * 3.5, l))
-                y += 3.5 * len(lines) + 1.5
-            y += 1
-            parts.append('<text x="{}" y="{}" font-size="2.8">* = assumed, to confirm</text>'.format(x0, y)); y += 8
-        else:
-          for n, assumed, txt in self.legend:
-            lines = wrap(txt, 52)
-            parts.append('<circle cx="{}" cy="{}" r="2.3" fill="{}" stroke="#000" stroke-width="0.3"/>'.format(x0 + 2.3, y - 1, "#fff" if assumed else "#000"))
-            parts.append('<text x="{}" y="{}" font-size="2.7" text-anchor="middle" fill="{}">{}</text>'.format(x0 + 2.3, y, "#000" if assumed else "#fff", n))
-            for i, l in enumerate(lines):
-                parts.append('<text x="{}" y="{:.1f}" font-size="2.8">{}</text>'.format(x0 + 7, y + i * 3.5, l))
-            y += 3.5 * len(lines) + 2
-          if self.legend:
-            y += 2
-            parts.append('<circle cx="{}" cy="{}" r="2" fill="#000"/><text x="{}" y="{}" font-size="2.7">from your sketches</text>'.format(x0 + 2.3, y - 1, x0 + 7, y)); y += 5
-            parts.append('<circle cx="{}" cy="{}" r="2" fill="#fff" stroke="#000" stroke-width="0.3"/><text x="{}" y="{}" font-size="2.7">assumed by me, to confirm</text>'.format(x0 + 2.3, y - 1, x0 + 7, y)); y += 8
-        if self.notes:
-            parts.append('<text x="{}" y="{}" font-size="3.1" font-weight="bold">Notes</text>'.format(x0, y)); y += 4.5
-        for n_ in self.notes:
-            for i, l in enumerate(wrap(n_, 58)):
-                parts.append('<text x="{}" y="{:.1f}" font-size="2.8">{}</text>'.format(x0 + (0 if i == 0 else 2), y, l)); y += 3.5
-            y += 1
-        # scale bar (5 x 1 m or 5 x 100 mm)
-        unit = 1000 if self.scale >= 50 else 100
-        label = "m" if unit == 1000 else "dm"
-        sy = H - 20
-        for i in range(5):
-            parts.append('<rect x="{:.2f}" y="{}" width="{:.2f}" height="1.6" fill="{}" stroke="#000" stroke-width="0.2"/>'.format(x0 + i * unit * self.s, sy, unit * self.s, "#000" if i % 2 == 0 else "#fff"))
-            parts.append('<text x="{:.2f}" y="{}" font-size="2.5" text-anchor="middle">{}</text>'.format(x0 + i * unit * self.s, sy - 1, i))
-        parts.append('<text x="{:.2f}" y="{}" font-size="2.5" text-anchor="middle">{}</text>'.format(x0 + 5 * unit * self.s, sy - 1, 5))
-        parts.append('<text x="{:.2f}" y="{}" font-size="2.5">{}</text>'.format(x0 + 5 * unit * self.s + 3, sy + 1.4, label))
-        parts.append('<text x="{}" y="{}" font-size="2.6">Scale 1:{} at A3 · dimensions in mm · draft 1, 2026-10-11</text>'.format(x0, H - 12, self.scale))
-        parts.append('<text x="{}" y="{}" font-size="2.6">pyramid-roof · hand estimates, not engineered</text>'.format(x0, H - 9))
+        tb = W - 112
+        parts.append('<rect x="{}" y="0" width="{}" height="{}" fill="#fff"/>'.format(tb, W - tb, H))      # nothing of the drawing runs into the title block
+        for i in self.panel():
+            if i[0] == "line":
+                parts.append('<line x1="{}" y1="{}" x2="{}" y2="{}" stroke="#000" stroke-width="{}"/>'.format(*i[1:]))
+            elif i[0] == "rect":
+                _, x, y, w, h, fill, sw = i
+                parts.append('<rect x="{:.2f}" y="{:.2f}" width="{:.2f}" height="{:.2f}" fill="{}" stroke="#000" stroke-width="{}"/>'.format(x, y, w, h, fill or "none", sw))
+            elif i[0] == "circle":
+                parts.append('<circle cx="{:.2f}" cy="{:.2f}" r="{}" fill="{}" stroke="#000" stroke-width="0.3"/>'.format(*i[1:]))
+            else:
+                _, x, y, size, txt, bold, anchor = i
+                parts.append('<text x="{:.2f}" y="{:.2f}" font-size="{}" text-anchor="{}"{}>{}</text>'.format(x, y, size, anchor, ' font-weight="bold"' if bold else "", txt))
         parts.append('</svg>')
         return "\n".join(parts)
 
@@ -255,11 +298,11 @@ def conc(sh, ps): sh.poly(ps, "#fff", 0.0); sh.poly(ps, "url(#conc)", 0.0)
 # 1. PLAN
 # =====================================================================
 def plan(grid=None):
-    sh = Sheet(50, 150, 148.5, "Floor plan" + ("" if grid is None else " · roof grid " + grid),
+    sh = Sheet(50, 154, 148.5, "Floor plan" + ("" if grid is None else " · roof grid " + grid),
                "10 x 10 m clear · buttress every 1.5 m · printed walls",
                [(1, True, "Printed wall 400 (= roof base width). Buttresses solid black: 400 wide (same as the wall), 1000 deep from the inner face (flush with the wall inside), so they project 600 outside; one about every 1.5 m (7 bays of 1486 on the wall centreline, 8 per side, corners included)."),
                 (2, True, "Every other bay (the 2nd, 4th and 6th) is a full-height curtain wall, the whole bay between two buttresses; the middle bay of the south and north walls has a 1000 door instead. The other bays stay printed wall. Positions and sizes are placeholders."),
-                (3, False, "Pyramid roof above (dashed): 1000 square crown, hips to the corners, roof base 400 thick square to the slope, so its outer edge lands about 59 outside the wall face."),
+                (3, False, "Pyramid roof above (dashed): 1000 x 1000 clear crown opening, hips to the corners; the roof base is 400 thick square to the slope, so the shell ends {:.0f} outside the wall face, and {:.0f} with the insulation and outer layer.".format(HALF + (T_LEAF0 + T_LAT + T_SKIN) * SH - HALF - WALL, HALF + (T_LEAF0 + T_LAT + T_SKIN + INS + CLAD) * SH - HALF - WALL)),
                 (4, True, "Buttress axes 1486 apart along each wall (centre to centre), corners included.")],
                ["Section A-A cuts through the 4th buttress from the south on the east and west walls (y = {:.0f}).".format(but_pos()[3]),
                 "Detail D1 is the eave at the east buttress on that cut."], )
@@ -341,9 +384,10 @@ def plan(grid=None):
         sh.poly([pt(side, al - w / 2, -5), pt(side, al + w / 2, -5), pt(side, al + w / 2, WALL + 5), pt(side, al - w / 2, WALL + 5)], "#fff", 0.0)
         for e in (-w / 2, w / 2):
             sh.line([pt(side, al + e, 0), pt(side, al + e, WALL)], 0.5)
-        sh.line([pt(side, al - w / 2, WALL / 2), pt(side, al + w / 2, WALL / 2)], 0.35)
-        for e in (-w / 2, 0.0, w / 2):
-            sh.line([pt(side, al + e, WALL / 2 - 70), pt(side, al + e, WALL / 2 + 70)], 0.35)
+        for dv in (-25, 25):                                                     # glazing: two thin lines
+            sh.line([pt(side, al - w / 2, WALL / 2 + dv), pt(side, al + w / 2, WALL / 2 + dv)], 0.25)
+        for e in (-w / 2 + 25, 0.0, w / 2 - 25):                                  # mullions 50 x 150
+            sh.poly([pt(side, al + e - 25, WALL / 2 - 75), pt(side, al + e + 25, WALL / 2 - 75), pt(side, al + e + 25, WALL / 2 + 75), pt(side, al + e - 25, WALL / 2 + 75)], "#000", 0.2)
     for side in "SNEW":                                  # every other bay (the odd ones) is a full curtain wall, or the door (middle bay of the south and north walls); the even bays stay printed wall
         for j in (1, 3, 5):
             cxm = (xs[j] + xs[j + 1]) / 2
@@ -365,7 +409,7 @@ def plan(grid=None):
     cl_o = base_o + (INS + CLAD) * SH
     sh.line([(-cl_o, -cl_o), (cl_o, -cl_o), (cl_o, cl_o), (-cl_o, cl_o), (-cl_o, -cl_o)], 0.25, "#555")
     sh.legend.append((5, True, "Roof build-up outside the shell (outline at the eave): insulation 100 (very thin line), then the outer layer 30."))
-    sh.callout(5, base_o + 1400, base_o + 1500, ins_o, ins_o - 200)
+    sh.callout(5, 3600, (xs[5] + xs[6]) / 2, ins_o, xs[6] - 300)
     if grid:                                                  # cast ribs of the roof grid, seen from above, on the four faces (dashed)
         import roof_grid as rg
         segs, _ = rg.segments(grid)
@@ -381,37 +425,39 @@ def plan(grid=None):
         sh.legend.append((6, True, "Cast ribs of roof grid {} seen from above (dashed), with the bottom ring (the 300 solid base) and the horizontal / top rings.".format(grid)))
     # grid
     gx = 7500
+    E = b + BUT_L + 800                                  # grid bubbles, just inside the sheet border
     for lab, v in zip("ABCDEFGH", xs):
-        sh.line([(v, -b - BUT_L - 600), (v, b + BUT_L + 700)], 0.12, dash="6 1 1 1")
-        sh.circle_label(v, b + BUT_L + 700 + 400, lab, 2.6); sh.circle_label(v, -b - BUT_L - 600 - 400, lab, 2.6)
+        sh.line([(v, -E + 200), (v, E - 200)], 0.12, dash="6 1 1 1")
+        sh.circle_label(v, E, lab, 2.6); sh.circle_label(v, -E, lab, 2.6)
     for lab, v in zip("12345678", xs):
-        sh.line([(-b - BUT_L - 600, v), (b + BUT_L + 700, v)], 0.12, dash="6 1 1 1")
+        sh.line([(-E + 200, v), (E - 200, v)], 0.12, dash="6 1 1 1")
         if v != y0:                                      # the section line A-A runs along this axis; its markers sit there
-            sh.circle_label(-b - BUT_L - 1000, v, lab, 2.6); sh.circle_label(b + BUT_L + 1100, v, lab, 2.6)
+            sh.circle_label(-E, v, lab, 2.6); sh.circle_label(E, v, lab, 2.6)
     # dimensions
     sh.dim_h([-b, -a, a, b], -b - BUT_L - 350, ext=-b - 100, labels=["{:g}".format(WALL), "10000 clear", "{:g}".format(WALL)])
     sh.dim_h([-b - BUT_L, b + BUT_L], -b - BUT_L - 700 + 0, ext=-b - BUT_L, labels=["{:g} overall".format(2 * (b + BUT_L))])
     bay_l = ["{:.0f}".format(xs[1] - xs[0])] * (len(xs) - 1)
     sh.dim_v(xs, -b - BUT_L - 350, ext=-b - 100, labels=bay_l)
     sh.dim_h(xs, b + BUT_L + 350, ext=b + 100, labels=bay_l)
-    sh.text(b + BUT_L / 2, y0 + BUT_W / 2 + 120, "{:g}".format(BUT_L), 2.4); sh.text(b + BUT_L / 2, y0 - BUT_W / 2 - 330, "{:g}".format(BUT_W), 2.4)
-    sh.dim_h([a, a + BUT_TOTAL], y0 + BUT_W / 2 + 520, ext=y0 + BUT_W / 2 + 60, labels=["{:g} from the inner face".format(BUT_TOTAL)])
+    sh.dim_h([a, b, b + BUT_L], y0 + BUT_W / 2 + 350, ext=y0 + BUT_W / 2 + 40)                                   # wall 400 | buttress 600 beyond the wall
+    sh.dim_h([a, a + BUT_TOTAL], y0 + BUT_W / 2 + 750, ext=y0 + BUT_W / 2 + 350, labels=["{:g} from the inner face".format(BUT_TOTAL)])
+    sh.dim_v([y0 - BUT_W / 2, y0 + BUT_W / 2], b + BUT_L + 350, ext=b + BUT_L + 40)                                  # buttress width 400
     # section line A-A and detail marker
-    L = b + BUT_L + 700
+    L = E - 450
     sh.line([(-L, y0), (-b - BUT_L - 350, y0)], 0.5, dash="6 1.5 1 1.5"); sh.line([(b + BUT_L + 350, y0), (L, y0)], 0.5, dash="6 1.5 1 1.5")
     for sgn in (-1, 1):
         px_, py_ = sh.P(sgn * L, y0)
         tri = [(px_, py_ - 0.2), (px_, py_ - 4.5), (px_ + sgn * 3, py_ - 2.2)]
         sh.o.append('<polygon points="{:.2f},{:.2f} {:.2f},{:.2f} {:.2f},{:.2f}" fill="#000"/>'.format(*[c for p in tri for c in p]))
         sh._rec("solid", [((q[0] - sh.ox) / sh.s, (sh.oz - q[1]) / sh.s) for q in tri], "ANNOTATION")
-        sh.circle_label(sgn * (L + 500), y0, "A", 2.6, "#000", "#fff")
+        sh.circle_label(sgn * E, y0, "A", 2.6, "#000", "#fff")
     # detail D1 marker around the east eave
     sh.line([(b - 450, y0 - 450), (b + 450, y0 - 450), (b + 450, y0 + 450), (b - 450, y0 + 450), (b - 450, y0 - 450)], 0.25, dash="1.5 0.8")
     sh.circle_label(b + 450, y0 - 450 - 400, "D1", 3.0)
     sh.callout(1, b + BUT_L + 1100, c + 700, b, c + 100)
     sh.callout(2, -c / 2 - 1500, -b - BUT_L - 100, -c / 2 - 500, -b)
     sh.callout(3, 2500, 2500, top_o, top_o)
-    sh.callout(4, -b - BUT_L - 1400, c, -b - BUT_L, c)
+    sh.callout(4, -3600, (xs[5] + xs[6]) / 2, -b - BUT_L / 2, xs[6])
     return sh
 
 # =====================================================================
@@ -484,7 +530,7 @@ def back_wall(sh):
 def section(grid=None):
     y0 = but_pos()[3]
     gname = {"A": "roof grid A, ruled-surface columns", "B": "roof grid B, diamond lattice", None: "no roof grid shown"}[grid]
-    sh = Sheet(50, 157, 252, "Total section A-A" + ("" if grid is None else " · grid " + grid),
+    sh = Sheet(50, 161, 240, "Total section A-A" + ("" if grid is None else " · grid " + grid),
                "through the east and west buttresses, looking north",
                [(1, True, "Footing {:g} x {:g}, underside at {:g} (frost depth and bearing are guesses).".format(FOOT_W, FOOT_T, FOOT_Z)),
                 (2, True, "Wall 400. The cut passes through a buttress, so the wall is solid with the buttress here (no insulation). Between buttresses it is printed like the roof: two 80 inner layers, a 160 air / insulation zone, an 80 outer layer."),
@@ -495,7 +541,7 @@ def section(grid=None):
                 (7, True, "Everything is 3D printed in 10 mm layers; crossed hatch = solid cast concrete (roof base, ribs). Printed layer joints and the cast fill of the buttress and footing are shown in the roof-grid sheets and in detail D1."),
                 (8, True, "Outside the printed shell: insulation {:g} (dotted), then the outer layer (cladding {:g}, dark).".format(INS, CLAD)),
                 (9, True, "Cast ribs of the roof grid, seen on the back face as dashed outlines ({}). The cut lies in the air zone between ribs; rib sections are on the roof-grid sheets.".format(gname))],
-               ["Layer pattern from your drawing; at the crown the second inner layer ends, so the leaf is 80 there (assumed).",
+               ["At the crown the second inner layer ends, so the leaf is 80 there.",
                 "The cut runs through the 4th buttress from the south (y = {:.0f}), as on the floor plan. Beyond it the north wall is seen as on the plan: buttress every 1.5 m (strips outside the wall), every other bay printed wall, the bays in between full-height curtain wall (door in the middle one).".format(y0),
                 "Faint grid on the back roof face and the north wall = printed pieces in running bond, about 1500 wide (assumed sizes). Dashed outlines on the back roof face = cast ribs."])
     s = sh.s
@@ -693,7 +739,7 @@ def piece_plan_b(sh, X0, Z0):
         sh.line([(M(-40, v)), M(500, v)], 0.25, "#000", dash="3 1 0.6 1")
 
 def detail():
-    ZB, ZT = 1500.0, 3400.0
+    ZB, ZT = 1800.0, 3400.0
     def rx(h):
         """layer edges at height h for THIS detail: constant thicknesses 160 leaf (two 80 layers) / 160 air zone / 80 outer layer, as at the eave
         (the leaf only thins towards the crown, far above this detail)"""
@@ -794,18 +840,7 @@ def detail():
     sh.dim_h([0, BUT_TOTAL], ZB - 330, ext=ZB - 130, labels=["{:g} from the inner face".format(BUT_TOTAL)])
     # dimension chain along the dash-dot cut, square to the slope: true thickness of every layer, inside to outside
     pts = [tip(0), tip(0, 80 * SH), tip(2), tip(3), tip(3, INS * SH), tip(3, (INS + CLAD) * SH)]       # layer 1 | rib core (layer 2 + 160 zone) | outer layer | insulation | cladding
-    off = 420.0
-    ang = -math.degrees(math.atan2(t_[1], t_[0]))
-    ang = ang if abs(ang) <= 90 else ang + 180
-    dl = [(p_[0] + t_[0] * off, p_[1] + t_[1] * off) for p_ in pts]
-    sh.line([dl[0], dl[-1]], 0.2)
-    tk = 1.2 / sh.s / 2
-    for p_, q_ in zip(pts, dl):
-        sh.line([(p_[0] + t_[0] * 60, p_[1] + t_[1] * 60), (q_[0] + t_[0] * 40, q_[1] + t_[1] * 40)], 0.12)
-        sh.line([(q_[0] - (t_[0] + nrm[0]) * tk, q_[1] - (t_[1] + nrm[1]) * tk), (q_[0] + (t_[0] + nrm[0]) * tk, q_[1] + (t_[1] + nrm[1]) * tk)], 0.45)
-    for k in range(len(pts) - 1):
-        mx, mz = (dl[k][0] + dl[k + 1][0]) / 2 + t_[0] * 60, (dl[k][1] + dl[k + 1][1]) / 2 + t_[1] * 60
-        sh.text(mx, mz, "{:g}".format(round(math.hypot(pts[k + 1][0] - pts[k][0], pts[k + 1][1] - pts[k][1]))), 2.5, rot=ang)
+    sh.dim_aligned(pts, t_, 420.0)
     sh.text(-860, WALL_H + 30, "+2.50 eave", 2.6, "start", weight="bold")
     sh.line([(-860, WALL_H), (-100, WALL_H)], 0.2, dash="4 1")
     # ---- callouts
@@ -835,12 +870,5 @@ def export(sh, path):
     print("wrote", path + ".svg")
 
 if __name__ == "__main__":
-    out = sys.argv[1] if len(sys.argv) > 1 else os.path.dirname(os.path.abspath(__file__))
-    export(plan(), os.path.join(out, "pyramid-plan"))
-    export(plan("A"), os.path.join(out, "pyramid-plan-gridA"))
-    export(plan("B"), os.path.join(out, "pyramid-plan-gridB"))
-    export(section(), os.path.join(out, "pyramid-section"))
-    export(section("A"), os.path.join(out, "pyramid-section-gridA"))
-    export(section("B"), os.path.join(out, "pyramid-section-gridB"))
-    export(detail(), os.path.join(out, "pyramid-detail"))
-    print("slope {:.1f} deg, run {:g}, rise {:g}".format(SLOPE, RUN, RISE))
+    import make_set
+    make_set.main()          # the whole drawing set: details/set/*.pdf, the merged set PDF and details/set/cad/*.dxf
