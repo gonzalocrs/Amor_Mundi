@@ -6,7 +6,7 @@ Standalone apart from pyramid_drawings.py (sheet helpers + roof geometry). Run: 
 import math, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import pyramid_drawings as g
-from pyramid_drawings import Sheet, rect
+from pyramid_drawings import Sheet, rect, layers
 
 # ================= PARAMETERS =================
 RIB_W = 160.0              # rib / column width in the face (assumed)
@@ -112,6 +112,9 @@ def section_inset(sh, X0, Z0):
     sh.poly([M(u1, 240), M(W_, 240), M(W_, 320), M(u1, 320)], "url(#conc)", 0.0)
     sh.poly([M(0, 80), M(u0, 80), M(u0, 240), M(0, 240)], "url(#dots)", 0.0)        # open air zone = insulation
     sh.poly([M(u1, 80), M(W_, 80), M(W_, 240), M(u1, 240)], "url(#dots)", 0.0)
+    for a_, b_ in ((u0 - 80, u0), (u1, u1 + 80)):                                   # printed channel walls (permanent formwork), 80 each side of the rib
+        q = [M(a_, 80), M(b_, 80), M(b_, 240), M(a_, 240)]
+        sh.poly(q, "#fff", 0.0); sh.poly(q, "url(#conc)", 0.0); sh.poly(q, "none", 0.4)
     rib = [M(u0, 80), M(u1, 80), M(u1, 320), M(u0, 320)]
     sh.poly(rib, "#fff", 0.0); sh.poly(rib, "url(#cast)", 0.0); sh.poly(rib, "none", 0.45)
     for v in (80, 240, 320):
@@ -130,12 +133,14 @@ def section_inset(sh, X0, Z0):
     sh.callout(4, X0 + F * W_ + 650, Z0 + F * 360, *M(550, 360))
     sh.callout(5, X0 + F * W_ + 650, Z0 + F * 40, *M(550, 40))
     sh.callout(6, X0 + F * W_ + 650, Z0 + F * 260, *M(550, 160))
+    sh.callout(10, X0 + F * W_ + 1450, Z0 + F * 160, *M(u0 - 40, 160))
 
 def common_legend(opt):
-    L = [(3, True, "Rib (column): printed channel {:g} wide x {:g} deep in the 160 air zone + layer 2, filled with cast concrete, 4 Ø16 + Ø8 stirrups every 200 (assumed).".format(RIB_W, RIB_D)),
+    L = [(3, True, "Rib (column): a channel {:g} wide x {:g} deep printed in the 160 air zone + layer 2 stays in place as formwork and is filled with cast concrete, 4 Ø16 + Ø8 stirrups every 200 (assumed). Fibre concrete could replace the bars (see notes).".format(RIB_W, RIB_D)),
          (4, False, "Inner layer 1, 80: continuous, covers the grid on the room side."),
          (5, False, "Outer skin 80: continuous, covers the grid on the outside (cladding on it)."),
-         (6, True, "Between the ribs the air zone stays open for thermal insulation (dotted).")]
+         (6, True, "Between the ribs the air zone stays open for thermal insulation (dotted)."),
+         (10, False, "Printed channel walls, 80 each side of the rib: permanent formwork, printed in the same pass as the shell.")]
     return L
 
 def building(sh):
@@ -144,13 +149,15 @@ def building(sh):
     HALF, WALL, BUT_L, BUT_W = g.HALF, g.WALL, g.BUT_L, g.BUT_W
     c = HALF + WALL / 2
     sh.poly(rect(-7300, zg - 1100, 7300, zg), "url(#earth)", 0.0)
-    sh.poly(rect(-(HALF + WALL), zg, HALF + WALL, 0), "#e6e6e6", 0.5)                  # printed wall, outer face
+    sh.poly(rect(-(HALF + WALL), zg, HALF + WALL, 0), "#f2f2f2", 0.5)                  # printed wall, outer face
+    pr = lambda q: layers(sh, q, zg, 0.05, step=100)                                     # printed layer joints (every 100 drawn; real layers are 10)
+    pr(rect(-(HALF + WALL), zg, HALF + WALL, 0))
     for x0, x1 in ((HALF + WALL, HALF + WALL + BUT_L), (-HALF - WALL - BUT_L, -HALF - WALL)):
-        sh.poly(rect(x0, zg, x1, 0), "#fff", 0.5); sh.poly(rect(x0, zg, x1, 0), "url(#conc)", 0.0)     # east / west corner buttresses, edge on
-        sh.poly(rect(x0, zg, x1, 0), "none", 0.5)
+        q = rect(x0, zg, x1, 0)                                                          # east / west corner buttresses, edge on: printed shell, cast core
+        sh.poly(q, "#fff", 0.0); pr(q); sh.poly(q, "none", 0.5)
     for x in (-c, 0, c):                                                                 # south buttresses, face on
         q = rect(x - BUT_W / 2, zg, x + BUT_W / 2, 0)
-        sh.poly(q, "#fff", 0.5); sh.poly(q, "url(#conc)", 0.0); sh.poly(q, "none", 0.5)
+        sh.poly(q, "#fff", 0.0); sh.poly(q, "#f2f2f2", 0.0); pr(q); sh.poly(q, "none", 0.5)
     ft, fb = zg + g.FOOT_Z + g.FOOT_T, zg + g.FOOT_Z
     fx = c + BUT_L / 2 + g.FOOT_W / 2
     sh.line([(-fx, fb), (fx, fb), (fx, ft), (-fx, ft), (-fx, fb)], 0.25, dash="3 1")      # strip footing, hidden
@@ -186,9 +193,12 @@ def sheet(opt):
                  "Diagonals do not stop as the roof narrows: the diamonds just get clipped by the hips."]
     legend = legend + common_legend(opt) + [(7, False, "Printed wall 400 (same layers as the roof), to +2.50."),
                                              (8, False, "Buttresses 400 wide, 1000 from the inner face (600 outside), at the corners and mid-span; roof ribs and wall bars tie into the solid base above them."),
-                                             (9, True, "Strip footing 1800 x 250, underside at -1.00 (hidden, dashed).")]
-    notes += ["Rough quantities, four faces (hips counted twice, so slightly high): ribs {:.0f} m, {} bars, steel {:.0f} kg, cast concrete {:.1f} m3.".format(Lr4 + Lh4, "4 Ø16 each", steel, conc),
+                                             (9, True, "Strip footing 1800 x 250, underside at -1.00 (hidden, dashed): printed edge formwork, cast core.")]
+    notes += ["All 3D printed (after the Obayashi 3dpod paper, 2023): mortar beads are printed as permanent formwork, in 10 mm layers (joints drawn every 100 on the elevation), and the structural concrete is cast into them in lifts limited by formwork pressure; the shell, wall and buttress faces are the printed skin.",
+              "The paper fills the formwork with self-compacting steel-fibre UHPC (about 180 N/mm2 compression, 8.8 tension) and needs no rebar in principle; if you use it, the Ø16 bars in the ribs can be dropped or cut back, to be confirmed with the engineer.",
+              "Rough quantities, four faces (hips counted twice, so slightly high): ribs {:.0f} m, {} bars, steel {:.0f} kg, cast concrete {:.1f} m3.".format(Lr4 + Lh4, "4 Ø16 each", steel, conc),
               "Rib size, bar count and the 160 x 240 channel are assumptions for the engineer to check. Elevation shows the face square on; true lengths are 1.25 x the drawn heights."]
+    legend.sort(key=lambda e: e[0])
     sh = Sheet(50, 157, 150, title, sub, legend, notes)
     sh.plain_legend = True
     building(sh)
