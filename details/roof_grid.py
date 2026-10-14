@@ -256,12 +256,17 @@ def building(sh):
             x = -1.0 + 2.0 * (i if r % 2 == 0 else i - 0.5) / n
             if abs(x) < 1: sh.line([(x * xo(h0), h0), (x * xo(h1), h1)], 0.1, **dash)
 
-def sheet(opt):
+def segments(opt):
+    """all rib segments of option opt ('A' or 'B') incl. the bottom (solid base) and top rings; extra = stop heights for A"""
     segs, extra = grid_A() if opt == "A" else grid_B()
     if opt == "A":
         segs = segs + [("solid", [(-w(0), 0), (w(0), 0)]), ("ring", [(-w(RISE - TOP_RING / 2), RISE - TOP_RING / 2), (w(RISE - TOP_RING / 2), RISE - TOP_RING / 2)])]
     else:
         segs = segs + ring_segs(True)
+    return segs, extra
+
+def sheet(opt):
+    segs, extra = segments(opt)
     Lr, Lh = stats(segs)
     Lr4, Lh4 = 4 * Lr / 1000, 4 * Lh / 1000                                   # m, four faces (hips counted on both faces: shared, so a little high)
     nbars = 4

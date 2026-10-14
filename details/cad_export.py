@@ -25,7 +25,7 @@ LAYERS = {   # name: (ACI colour, linetype, lineweight 1/100 mm)
 }
 LW = [0, 5, 9, 13, 15, 18, 20, 25, 30, 35, 40, 50, 53, 60, 70, 80, 90, 100, 106, 120, 140, 158, 200, 211]
 nearest = lambda v: min(LW, key=lambda x: abs(x - v))
-PATTERN = {"conc": ("ANSI31", "HATCH-PRINTED", 1.6), "cast": ("ANSI37", "HATCH-CAST", 1.6), "earth": ("EARTH", "HATCH-EARTH", 2.4)}
+PATTERN = {"conc": ("ANSI31", "HATCH-PRINTED", 1.6), "cast": ("ANSI37", "HATCH-CAST", 1.6), "earth": ("EARTH", "HATCH-EARTH", 2.4), "dots": ("DOTS", "HATCH-INSULATION", 1.5)}
 SPACING = 3.175       # ANSI31 line spacing at pattern scale 1
 
 
@@ -106,6 +106,8 @@ def export_dxf(sh, path):
                 sub(gc)
             elif fill == "#000":
                 fills.append([gc, "solid", layer or "BUTTRESS-SOLID"])
+            elif fill == "#555":
+                fills.append([gc, "solid", layer or "CLADDING"])
             elif fill.startswith("url(#"):
                 fills.append([gc, fill[5:-1], None])
             if sw > 0 and stroke != "#fff":
@@ -227,4 +229,6 @@ if __name__ == "__main__":
     os.makedirs(out, exist_ok=True)
     export_dxf(pd.plan(), os.path.join(out, "pyramid-plan"))
     export_dxf(pd.section(), os.path.join(out, "pyramid-section"))
+    export_dxf(pd.section("A"), os.path.join(out, "pyramid-section-gridA"))
+    export_dxf(pd.section("B"), os.path.join(out, "pyramid-section-gridB"))
     export_dxf(pd.detail(), os.path.join(out, "pyramid-detail"))

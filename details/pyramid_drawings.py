@@ -17,6 +17,8 @@ RISE = 6000.0              # roof height
 T_LEAF0, T_LEAF1 = 160.0, 80.0   # inner structural leaf, horizontal width at base / crown
 T_LAT, T_SKIN = 160.0, 80.0      # lattice zone and outer skin (constant)
 CLAD = 30.0                # outer cladding on the roof (assumed)
+INS = 100.0                # insulation outside the printed roof shell (assumed)
+BUT_SPACING = 1500.0       # buttresses about every 1.5 m along each wall
 WALL_LAYERS = (160.0, 160.0, 80.0)   # wall inner leaf (two 80 layers) / air zone / outer layer: same pattern as the roof
 FOOT_W, FOOT_T, FOOT_Z = 1800.0, 250.0, -1000.0   # footing width, thickness, underside level (assumed)
 HALF = CLEAR / 2
@@ -24,6 +26,12 @@ RUN = HALF - OPEN / 2
 K = RUN / RISE             # inward lean of the roof (horizontal per vertical)
 SLOPE = math.degrees(math.atan2(RISE, RUN))
 assert abs(sum(WALL_LAYERS) - WALL) < 1e-6
+
+def but_pos():
+    """buttress axes along a wall (centre line, corners included): equal bays of about BUT_SPACING"""
+    c = HALF + WALL / 2
+    nb = int(round(2 * c / BUT_SPACING))
+    return [-c + 2 * c * k / nb for k in range(nb + 1)]
 
 def leaf(h): return T_LEAF0 + (T_LEAF1 - T_LEAF0) * h / RISE
 # layer thicknesses are square to the slope; horizontally each is wider by 1 / sin(slope)
@@ -247,16 +255,17 @@ def conc(sh, ps): sh.poly(ps, "#fff", 0.0); sh.poly(ps, "url(#conc)", 0.0)
 # =====================================================================
 def plan():
     sh = Sheet(50, 150, 148.5, "Floor plan",
-               "10 x 10 m clear · 8 buttresses · printed walls",
-               [(1, True, "Printed wall 400 (= roof base width). Buttresses solid black: 400 wide (same as the wall), 1000 deep from the inner face (flush with the wall inside), so they project 600 outside."),
-                (2, True, "Openings, one per bay between the buttresses: doors 1000 (south-west and north-east bays), windows 1800 in the other six. Positions and sizes are placeholders."),
+               "10 x 10 m clear · buttress every 1.5 m · printed walls",
+               [(1, True, "Printed wall 400 (= roof base width). Buttresses solid black: 400 wide (same as the wall), 1000 deep from the inner face (flush with the wall inside), so they project 600 outside; one about every 1.5 m (7 bays of 1486 on the wall centreline, 8 per side, corners included)."),
+                (2, True, "Openings, 1000 wide, in every other bay (the 2nd, 4th and 6th): doors in the middle bay of the south and north walls, windows elsewhere. The other bays stay printed wall. Positions and sizes are placeholders."),
                 (3, False, "Pyramid roof above (dashed): 1000 square crown, hips to the corners, roof base 400 thick square to the slope, so its outer edge lands about 59 outside the wall face."),
-                (4, True, "Buttresses at the 4 corners and the 4 mid-spans, axes 5200 apart (centre to centre of wall).")],
-               ["Section A-A cuts through the east and west mid-span buttresses.",
-                "Detail D1 is the eave at the east mid-span buttress."], )
+                (4, True, "Buttress axes 1486 apart along each wall (centre to centre), corners included.")],
+               ["Section A-A cuts through the 4th buttress from the south on the east and west walls (y = {:.0f}).".format(but_pos()[3]),
+                "Detail D1 is the eave at the east buttress on that cut."], )
     a, b = HALF, HALF + WALL            # inner / outer face
     c = HALF + WALL / 2                 # wall centreline
-    xs = [-c, 0, c]
+    xs = but_pos()
+    y0 = xs[3]                           # section A-A cuts through the 4th buttress from the south (y = {:.0f})
     # strokes first, fills second so overlapping joints disappear
     fins = []
     fin = lambda x0, y0, x1, y1: [(x0, y0), (x1, y0), (x1, y1), (x0, y1)]
@@ -325,11 +334,10 @@ def plan():
         else:
             for ac in (WALL * 0.35, WALL * 0.65):
                 sh.line([pt(side, al - w / 2, ac), pt(side, al + w / 2, ac)], 0.2)
-    bays = [("S", -c / 2, True), ("S", c / 2, False), ("N", -c / 2, False), ("N", c / 2, True),
-            ("E", -c / 2, False), ("E", c / 2, False), ("W", -c / 2, False), ("W", c / 2, False)]
-    DOOR_W, WIN_W = 1000.0, 1800.0
-    for side, al, door in bays:
-        opening(side, al, DOOR_W if door else WIN_W, door)
+    DOOR_W, WIN_W = 1000.0, 1000.0
+    for side in "SNEW":                                  # openings in every other bay (the odd ones); the even bays stay printed wall
+        for j in (1, 3, 5):
+            opening(side, (xs[j] + xs[j + 1]) / 2, DOOR_W, side in "SN" and j == 3)
     # roof above, dashed
     top_o = HALF - RUN + T_LEAF1 + T_LAT + T_SKIN   # outer face half-width at the crown = 500 + 240
     top_o = OPEN / 2 + (T_LEAF1 + T_LAT + T_SKIN) * SH
@@ -342,32 +350,33 @@ def plan():
     sh.text(0, 0, "pyramid roof above", 2.6, italic=True); sh.text(0, -450, "crown opening 1000 x 1000", 2.4, italic=True)
     # grid
     gx = 7500
-    for lab, v in zip("ABC", xs):
+    for lab, v in zip("ABCDEFGH", xs):
         sh.line([(v, -b - BUT_L - 600), (v, b + BUT_L + 700)], 0.12, dash="6 1 1 1")
         sh.circle_label(v, b + BUT_L + 700 + 400, lab, 2.6); sh.circle_label(v, -b - BUT_L - 600 - 400, lab, 2.6)
-    for lab, v in zip("123", xs):
+    for lab, v in zip("12345678", xs):
         sh.line([(-b - BUT_L - 600, v), (b + BUT_L + 700, v)], 0.12, dash="6 1 1 1")
-        if v != 0:
+        if v != y0:                                      # the section line A-A runs along this axis; its markers sit there
             sh.circle_label(-b - BUT_L - 1000, v, lab, 2.6); sh.circle_label(b + BUT_L + 1100, v, lab, 2.6)
     # dimensions
     sh.dim_h([-b, -a, a, b], -b - BUT_L - 350, ext=-b - 100, labels=["{:g}".format(WALL), "10000 clear", "{:g}".format(WALL)])
     sh.dim_h([-b - BUT_L, b + BUT_L], -b - BUT_L - 700 + 0, ext=-b - BUT_L, labels=["{:g} overall".format(2 * (b + BUT_L))])
-    sh.dim_v([-c, 0, c], -b - BUT_L - 350, ext=-b - 100, labels=["{:g}".format(c), "{:g}".format(c)])
-    sh.dim_h([-c, 0, c], b + BUT_L + 350, ext=b + 100, labels=["{:g}".format(c), "{:g}".format(c)])
-    sh.text(b + BUT_L / 2, BUT_W / 2 + 120, "{:g}".format(BUT_L), 2.4); sh.text(b + BUT_L / 2, -BUT_W / 2 - 330, "{:g}".format(BUT_W), 2.4)
-    sh.dim_h([a, a + BUT_TOTAL], BUT_W / 2 + 520, ext=BUT_W / 2 + 60, labels=["{:g} from the inner face".format(BUT_TOTAL)])
+    bay_l = ["{:.0f}".format(xs[1] - xs[0])] * (len(xs) - 1)
+    sh.dim_v(xs, -b - BUT_L - 350, ext=-b - 100, labels=bay_l)
+    sh.dim_h(xs, b + BUT_L + 350, ext=b + 100, labels=bay_l)
+    sh.text(b + BUT_L / 2, y0 + BUT_W / 2 + 120, "{:g}".format(BUT_L), 2.4); sh.text(b + BUT_L / 2, y0 - BUT_W / 2 - 330, "{:g}".format(BUT_W), 2.4)
+    sh.dim_h([a, a + BUT_TOTAL], y0 + BUT_W / 2 + 520, ext=y0 + BUT_W / 2 + 60, labels=["{:g} from the inner face".format(BUT_TOTAL)])
     # section line A-A and detail marker
     L = b + BUT_L + 700
-    sh.line([(-L, 0), (-b - BUT_L - 350, 0)], 0.5, dash="6 1.5 1 1.5"); sh.line([(b + BUT_L + 350, 0), (L, 0)], 0.5, dash="6 1.5 1 1.5")
+    sh.line([(-L, y0), (-b - BUT_L - 350, y0)], 0.5, dash="6 1.5 1 1.5"); sh.line([(b + BUT_L + 350, y0), (L, y0)], 0.5, dash="6 1.5 1 1.5")
     for sgn in (-1, 1):
-        px_, py_ = sh.P(sgn * L, 0)
+        px_, py_ = sh.P(sgn * L, y0)
         tri = [(px_, py_ - 0.2), (px_, py_ - 4.5), (px_ + sgn * 3, py_ - 2.2)]
         sh.o.append('<polygon points="{:.2f},{:.2f} {:.2f},{:.2f} {:.2f},{:.2f}" fill="#000"/>'.format(*[c for p in tri for c in p]))
         sh._rec("solid", [((q[0] - sh.ox) / sh.s, (sh.oz - q[1]) / sh.s) for q in tri], "ANNOTATION")
-        sh.circle_label(sgn * (L + 500), 0, "A", 2.6, "#000", "#fff")
+        sh.circle_label(sgn * (L + 500), y0, "A", 2.6, "#000", "#fff")
     # detail D1 marker around the east eave
-    sh.line([(b - 450, -450), (b + 450, -450), (b + 450, 450), (b - 450, 450), (b - 450, -450)], 0.25, dash="1.5 0.8")
-    sh.circle_label(b + 450, 450 + 400, "D1", 3.0)
+    sh.line([(b - 450, y0 - 450), (b + 450, y0 - 450), (b + 450, y0 + 450), (b - 450, y0 + 450), (b - 450, y0 - 450)], 0.25, dash="1.5 0.8")
+    sh.circle_label(b + 450, y0 - 450 - 400, "D1", 3.0)
     sh.callout(1, b + BUT_L + 1100, c + 700, b, c + 100)
     sh.callout(2, -c / 2 - 1500, -b - BUT_L - 100, -c / 2 - 500, -b)
     sh.callout(3, 2500, 2500, top_o, top_o)
@@ -377,36 +386,84 @@ def plan():
 # =====================================================================
 # 2. TOTAL SECTION  A-A  (looking north, cut through y = 0)
 # =====================================================================
-def section():
-    sh = Sheet(50, 157, 252, "Total section A-A",
-               "through the east and west mid-span buttresses, looking north",
-               [(1, True, "Footing {:g} x {:g}, underside at {:g} (frost depth and bearing are guesses).".format(FOOT_W, FOOT_T, FOOT_Z)),
+def back_face(sh, grid):
+    """north roof face seen from inside: white, very faint printed layer joints, dashed piece divisions in running bond, and (grid = 'A' or 'B')
+    the cast ribs behind the inner layer as dashed outlines. Uses the mid-surface geometry of roof_grid.py."""
+    dz = WALL_H
+    import roof_grid as rg
+    wd = rg.w
+    face = [(-wd(0), dz), (wd(0), dz), (wd(RISE), dz + RISE), (-wd(RISE), dz + RISE)]
+    sh.poly(face, "#fff", 0.3)
+    layers(sh, face, dz, 0.03, step=100, color="#c4c4c4")
+    dash = dict(color="#8c8c8c", dash="3 1.6")
+    nrow = 8
+    for r in range(nrow):
+        h0, h1_ = r * RISE / nrow, (r + 1) * RISE / nrow
+        if r: sh.line([(-wd(h0), dz + h0), (wd(h0), dz + h0)], 0.1, **dash)
+        n = max(1, int(round(2 * (wd(h0) + wd(h1_)) / 2 / 1500.0)))
+        for i in range(1, n):
+            x = -1.0 + 2.0 * (i if r % 2 == 0 else i - 0.5) / n
+            if abs(x) < 1: sh.line([(x * wd(h0), dz + h0), (x * wd(h1_), dz + h1_)], 0.1, **dash)
+    if grid:
+        segs, _ = rg.segments(grid)
+        for kind, pts in segs:
+            if kind == "solid": continue
+            if kind == "ring":
+                y = pts[0][1]; q = rect(pts[0][0], y - rg.TOP_RING / 2, pts[1][0], y + rg.TOP_RING / 2)
+            else:
+                q = rg.quad(pts[0], pts[1], rg.RIB_W, kind)
+            q = [(x, h + dz) for x, h in q]
+            sh.line(q + [q[0]], 0.2, "#555", dash="2 1")
+
+def back_wall(sh):
+    """north wall seen from inside, with the buttresses (outside the wall) as dashed outlines: every other bay printed wall, the bays in between are openings"""
+    xs = but_pos()
+    wall = rect(-HALF, 0, HALF, WALL_H)
+    sh.poly(wall, "#fff", 0.3)
+    dash = dict(color="#8c8c8c", dash="3 1.6")
+    for j in range(0, len(xs) - 1, 2):
+        xa, xb = max(xs[j] + BUT_W / 2, -HALF), min(xs[j + 1] - BUT_W / 2, HALF)
+        if xb <= xa: continue
+        layers(sh, rect(xa, 0, xb, WALL_H), 0, 0.03, step=100, color="#c4c4c4")
+        for r in range(1, 5): sh.line([(xa, r * WALL_H / 5), (xb, r * WALL_H / 5)], 0.1, **dash)
+        for r in range(5):
+            if r % 2: sh.line([((xa + xb) / 2, r * WALL_H / 5), ((xa + xb) / 2, (r + 1) * WALL_H / 5)], 0.1, **dash)
+    for x in xs:                                                              # buttresses behind the wall
+        xa, xb = max(x - BUT_W / 2, -HALF), min(x + BUT_W / 2, HALF)
+        if xb > xa:
+            sh.line([(xa, 0), (xa, WALL_H)], 0.2, "#777", dash="2 1"); sh.line([(xb, 0), (xb, WALL_H)], 0.2, "#777", dash="2 1")
+    for j in (1, 3, 5):                                                       # openings: window, door (middle), window
+        cxm = (xs[j] + xs[j + 1]) / 2
+        z0_, z1_ = (0, 2000) if j == 3 else (900, 2000)
+        x0_, x1_ = cxm - 500, cxm + 500
+        sh.poly(rect(x0_, z0_, x1_, z1_), "#fff", 0.3, "#444")
+        sh.poly(rect(x0_ - 40, z0_, x1_ + 40, z1_ + 40), "none", 0.15, "#444")
+        if j != 3:
+            sh.line([((x0_ + x1_) / 2, z0_), ((x0_ + x1_) / 2, z1_)], 0.2, "#444")
+            sh.poly(rect(x0_ - 40, z0_ - 60, x1_ + 40, z0_), "none", 0.2, "#444")
+
+def section(grid=None):
+    y0 = but_pos()[3]
+    gname = {"A": "roof grid A, ruled-surface columns", "B": "roof grid B, diamond lattice", None: "no roof grid shown"}[grid]
+    sh = Sheet(50, 157, 252, "Total section A-A" + ("" if grid is None else " · grid " + grid),
+               "through the east and west buttresses, looking north",
+               [(1, True, "Footing {:g} x {:g}, underside at {:g} (frost depth and bearing are guesses): printed edge formwork, cast core.".format(FOOT_W, FOOT_T, FOOT_Z)),
                 (2, True, "Printed wall 400, same pattern as the roof: two 80 inner layers, a 160 air zone, an 80 outer layer."),
                 (3, False, "Solid base of the roof: over the first 300 (vertical) above the eave the 160 air zone is filled with cast concrete between the printed layers, so the 400 is solid; there is no ring beam."),
-                (4, False, "Buttress 400 wide, 1000 from the inner face (600 beyond the wall); it rises to +2.50, flush with the roof base."),
+                (4, False, "Buttress 400 wide, 1000 from the inner face (600 beyond the wall), one about every 1.5 m (8 per side); printed formwork with cast core, rises to +2.50."),
                 (5, False, "Roof shell: 400 thick square to the slope at the base (two 80 inner layers, a 160 air zone, an 80 outer layer), 320 at the crown; about {:.0f} / {:.0f} horizontally.".format(400 * SH, 320 * SH)),
                 (6, False, "Crown opening 1000 clear; roof rises {:g} over {:g}, slope {:.1f}° ({:.1f}° from the vertical).".format(RISE, RUN, SLOPE, 90 - SLOPE)),
-                (7, True, "Everything is 3D printed: mortar beads in 10 mm layers (joints drawn every 100) form permanent formwork. Where a member is solid (roof base, buttress, footing) the printed shell is filled with cast concrete, crossed hatch. Single hatch = printed only.")],
+                (7, True, "Everything is 3D printed: mortar beads in 10 mm layers (joints drawn every 100) form permanent formwork. Where a member is solid (roof base, buttress, footing, ribs) the printed shell is filled with cast concrete, crossed hatch. Single hatch = printed only."),
+                (8, True, "Outside the printed shell: insulation {:g} (dotted), then the outer layer (cladding {:g}, dark).".format(INS, CLAD)),
+                (9, True, "Cast ribs of the roof grid, seen on the back face as dashed outlines ({}). The cut lies in the air zone between ribs; rib sections are on the roof-grid sheets.".format(gname))],
                ["Layer pattern from your drawing; at the crown the second inner layer ends, so the leaf is 80 there (assumed).",
-                "The cut runs through the mid-span buttresses; the north wall with its door and window is seen beyond.", "Faint grid on the back roof face and the north wall = printed pieces in running bond, about 1500 wide, 800 high on the roof and 440 on the wall (assumed sizes)."])
+                "The cut runs through the 4th buttress from the south (y = {:.0f}). Beyond it the north wall is seen from inside: every other bay is printed wall, the bays in between are openings (door in the middle, windows either side); buttresses behind the wall are dashed.".format(y0),
+                "Faint lines = printed layer joints (every 100 drawn, real 10); dashed lines on the back face and the wall = divisions between printed pieces in running bond (assumed about 1500 wide)."])
     s = sh.s
     ground = [(-6800, 0), (6800, 0)]
     sh.poly(rect(-6800, FOOT_Z - 100, 6800, 0), "url(#earth)", 0.0)
     sh.line(ground, 0.5)
-    # back (north) roof face seen from inside: printed pieces in running bond, very faint
-    PIECE_H, PIECE_W = 800.0, 1500.0
-    half_w = lambda h: HALF - K * h
-    nrow = int(round(RISE / PIECE_H))
-    for r in range(nrow):
-        h0, h1_ = r * RISE / nrow, (r + 1) * RISE / nrow
-        w0, w1 = half_w(h0), half_w(h1_)
-        sh.poly([(-w0, WALL_H + h0), (w0, WALL_H + h0), (w1, WALL_H + h1_), (-w1, WALL_H + h1_)], "#f3f3f3" if r % 2 else "#fafafa", 0.0)
-        n = max(1, int(round(2 * ((w0 + w1) / 2) / PIECE_W)))
-        for i in range(1, n):
-            x = -1.0 + 2.0 * i / n if r % 2 == 0 else -1.0 + 2.0 * (i - 0.5) / n
-            if abs(x) < 1:
-                sh.line([(x * w0, WALL_H + h0), (x * w1, WALL_H + h1_)], 0.13, "#a8a8a8")
-        sh.line([(-w1, WALL_H + h1_), (w1, WALL_H + h1_)], 0.13, "#a8a8a8")
+    back_face(sh, grid)
     for sgn in (-1, 1):
         def X(x): return sgn * x
         # footing + stem + wall + buttress
@@ -449,29 +506,17 @@ def section():
         sh.poly(skinp, "#fff", 0.0); sh.poly(skinp, "url(#conc)", 0.0); sh.poly(skinp, "none", 0.45)
         sh.poly(leafp, "none", 0.45)
         layers(sh, leafp, WALL_H, 0.08, step=100); layers(sh, skinp, WALL_H, 0.08, step=100)       # printed layer joints
+        for t0, t1, kind in ((0.0, INS, "ins"), (INS, INS + CLAD, "clad")):                          # insulation and outer layer outside the printed shell
+            q = [(X(HALF + rx(0)[3] + t0 * SH), WALL_H), (X(HALF + rx(RISE)[3] + t0 * SH), WALL_H + RISE), (X(HALF + rx(RISE)[3] + t1 * SH), WALL_H + RISE), (X(HALF + rx(0)[3] + t1 * SH), WALL_H)]
+            if kind == "ins":
+                sh.poly(q, "#fff", 0.0); sh.poly(q, "url(#dots)", 0.0); sh.poly(q, "none", 0.3)
+            else:
+                sh.poly(q, "#555", 0.2)
         # solid base: the 160 air zone is not left open over the first SOLID_H but filled with cast concrete between the printed layers
         solid = band(1, 2, 0.0, SOLID_H)
         sh.poly(solid, "#fff", 0.0); sh.poly(solid, "url(#cast)", 0.0); sh.poly(solid, "none", 0.45)
         sh.line([(X(HALF + rx(0)[0]), WALL_H), (X(HALF + rx(0)[3]), WALL_H)], 0.25)
-    # north wall beyond the cut, seen from inside: printed pieces, door (NE bay) and window (NW bay)
-    zt = WALL_H
-    nrow_w = 5
-    nw = int(round(CLEAR / PIECE_W))
-    for r in range(nrow_w):
-        z0, z1 = r * zt / nrow_w, (r + 1) * zt / nrow_w
-        sh.poly(rect(-HALF, z0, HALF, z1), "#f3f3f3" if r % 2 else "#fafafa", 0.0)
-        for i_ in range(1, nw):
-            x = -HALF + CLEAR * ((i_ if r % 2 == 0 else i_ - 0.5) / nw)
-            if -HALF < x < HALF:
-                sh.line([(x, z0), (x, z1)], 0.13, "#a8a8a8")
-        sh.line([(-HALF, z1), (HALF, z1)], 0.13, "#a8a8a8")
-    cx = (HALF + WALL / 2) / 2
-    for x0, x1, z0, z1, lab in ((cx - 500, cx + 500, 0, 2000, "door"), (-cx - 900, -cx + 900, 900, 2000, "window")):
-        sh.poly(rect(x0, z0, x1, z1), "#fff", 0.3, "#444")
-        sh.poly(rect(x0 - 40, z0, x1 + 40, z1 + 40), "none", 0.15, "#444")
-        if lab == "window":
-            sh.line([((x0 + x1) / 2, z0), ((x0 + x1) / 2, z1)], 0.2, "#444")
-            sh.poly(rect(x0 - 40, z0 - 60, x1 + 40, z0), "none", 0.2, "#444")
+    back_wall(sh)
     sh.line(ground, 0.5)       # ground line drawn last so it runs unbroken through the walls and buttresses
     # floor, openings
     sh.line([(-HALF, 0), (HALF, 0)], 0.6)
@@ -479,9 +524,9 @@ def section():
     sh.text(0, -420, "floor slab on gravel (not detailed)", 2.4, italic=True)
     # dims
     xr = HALF + WALL + BUT_L
-    sh.dim_v([0, WALL_H, WALL_H + RISE], xr + 900 + 600 * 0, ext=xr + 150, labels=["{:g}".format(WALL_H), "{:g}".format(RISE)])
-    sh.dim_v([0, WALL_H + RISE], xr + 1500, ext=xr + 150, labels=["{:g} total".format(WALL_H + RISE)])
-    sh.dim_v([FOOT_Z, 0], xr + 900, ext=xr + 150, labels=["1000"])
+    sh.dim_v([0, WALL_H, WALL_H + RISE], xr + 300, ext=xr + 150, labels=["{:g}".format(WALL_H), "{:g}".format(RISE)])
+    sh.dim_v([0, WALL_H + RISE], xr + 700, ext=xr + 150, labels=["{:g} total".format(WALL_H + RISE)])
+    sh.dim_v([FOOT_Z, 0], xr + 300, ext=xr + 150, labels=["1000"])
     sh.dim_h([-HALF - WALL, -HALF, HALF, HALF + WALL], FOOT_Z - 650, ext=FOOT_Z, labels=["{:g}".format(WALL), "10000 clear", "{:g}".format(WALL)])
     sh.dim_h([-HALF - WALL - BUT_L, HALF + WALL + BUT_L], FOOT_Z - 1150, ext=FOOT_Z - 700, labels=["{:g} overall incl. buttresses".format(CLEAR + 2 * (WALL + BUT_L))])
     sh.dim_h([-OPEN / 2, OPEN / 2], WALL_H + RISE + 600, ext=WALL_H + RISE, labels=["1000"])
@@ -489,16 +534,21 @@ def section():
     sh.level(-xr - 600, 0, "±0.00", -1); sh.level(-xr - 600, WALL_H, "+2.50 eave", -1); sh.level(-xr - 600, WALL_H + RISE, "+{:.2f} crown".format((WALL_H + RISE) / 1000), -1)
     sh.level(-xr - 600, FOOT_Z, "-1.00", -1)
     sh.text(HALF - RUN * 0.5 - 1000, WALL_H + RISE * 0.5, "{:.1f}°".format(SLOPE), 2.8, rot=0, italic=True)
-    sh.callout(1, xr + 2400, FOOT_Z + 200, xr - 200, FOOT_Z + 200)
-    sh.callout(2, HALF + WALL / 2 + 2600, 1800, HALF + WALL / 2, 1200)
-    sh.callout(3, HALF + WALL / 2 + 3300, 3200, HALF + WALL / 2 - 80, WALL_H + SOLID_H / 2)
-    sh.callout(4, xr + 2400, 900, HALF + WALL + BUT_L - 150, 700)
+    sh.callout(1, xr + 1200, FOOT_Z + 200, xr - 200, FOOT_Z + 200)
+    sh.callout(2, xr + 1200, 1800, HALF + WALL / 2, 1200)
+    sh.callout(3, xr + 1200, 3200, HALF + WALL / 2 - 80, WALL_H + SOLID_H / 2)
+    sh.callout(4, xr + 1200, 900, HALF + WALL + BUT_L - 150, 700)
     sh.callout(5, 3600, 7500, HALF - K * 5200 + 200, WALL_H + 5200)
     sh.callout(6, 1800, WALL_H + RISE + 1100, 300, WALL_H + RISE)
-    sh.callout(7, xr + 2400, 150, HALF + WALL + BUT_L - 40, 150)
+    sh.callout(7, xr + 1200, 150, HALF + WALL + BUT_L - 40, 150)
+    hx = 2600
+    sh.callout(8, 4300, WALL_H + 4900, HALF + rx(hx)[3] + (INS / 2) * SH + 0.0, WALL_H + hx)
+    gx_, gz_ = ((0.0, 3000.0) if grid == "A" else (-1008.0, 2000.0)) if grid else (0.0, 3000.0)
+    if grid:
+        sh.callout(9, -3600, WALL_H + 4600, gx_, WALL_H + gz_)
     # detail marker D1
     sh.line([(HALF + 450 - 900, WALL_H - 450), (HALF + 450 + 900, WALL_H - 450), (HALF + 450 + 900, WALL_H + 1500), (HALF + 450 - 900, WALL_H + 1500), (HALF + 450 - 900, WALL_H - 450)], 0.25, dash="1.5 0.8")
-    sh.circle_label(HALF + 450 + 900 + 400, WALL_H + 1500, "D1", 3.0)
+    sh.circle_label(HALF + 450 + 300, WALL_H + 1500 + 450, "D1", 3.0)
     return sh
 
 # =====================================================================
@@ -618,7 +668,7 @@ def detail():
     ZB, ZT = 1500.0, 3400.0
     sh = Sheet(10, 100, 420, "Detail D1: eave, roof to wall",
                "",
-               [(1, False, "Roof outer layer 80, printed with the rest of the piece; cladding on the outside face (dashed line)."),
+               [(1, False, "Roof outer layer 80, printed with the rest of the piece; outside it the insulation 100 (dotted) and the outer layer 30 (dark)."),
                 (2, False, "Zig-zag lattice 80 in a 160 zone; it touches the outer layer and layer 2 every @ 600; the cells between are open air pockets for ventilation."),
                 (3, False, "Layer 2, 80: printed bead that curves to leave a pocket for the bar."),
                 (4, False, "Inner layer 1, 80, room side. Layers 1 and 2 together are the structural leaf: 160 at the base, 80 at the crown (layer 2 ends)."),
@@ -671,9 +721,13 @@ def detail():
     solid = [(rx(0)[1], ZH), (rx(SOLID_H)[1], ZH + SOLID_H), (rx(SOLID_H)[2], ZH + SOLID_H), (rx(0)[2], ZH)]
     sh.poly(solid, "#fff", 0.0); sh.poly(solid, "url(#cast)", 0.0); sh.poly(solid, "none", 0.55)      # air zone filled with cast concrete; layers 1, 2 and the outer layer stay printed
     loops(sh, "lpd", li, li + ll, ZB, WALL_H, 0.2)      # wall: loop symbol from the reference
-    # cladding on the outside face: a row of short dashes just outside the outer layer
-    off = 8.0
-    sh.line([(rx(0)[3] + nrm[0] * off, ZH + nrm[1] * off), (rx(h1)[3] + nrm[0] * off, ZH + h1 + nrm[1] * off)], 0.7, "#000", dash="1.3 0.9")
+    # insulation (dotted) and outer layer (dark) outside the printed shell, up to the cut line
+    for a0, a1, kind in ((0.0, INS * SH, "ins"), (INS * SH, (INS + CLAD) * SH, "clad")):
+        q = [(rx(0)[3] + a0, ZH), tip(3, a0), tip(3, a1), (rx(0)[3] + a1, ZH)]
+        if kind == "ins":
+            sh.poly(q, "#fff", 0.0); sh.poly(q, "url(#dots)", 0.0); sh.poly(q, "none", 0.45)
+        else:
+            sh.poly(q, "#555", 0.3)
     # the roof continues: dash-dot line at the top of the detail, square to the slope
     sh.line([(c[0] - nrm[0] * 380, c[1] - nrm[1] * 380), (c[0] + nrm[0] * 560, c[1] + nrm[1] * 560)], 0.5, "#000", dash="7 1.5 1.2 1.5")
     # ---- rebar: every bar is drawn at its true diameter (1:10, so Ø16 = 1.6 mm on the sheet); black = steel
@@ -747,5 +801,7 @@ if __name__ == "__main__":
     out = sys.argv[1] if len(sys.argv) > 1 else os.path.dirname(os.path.abspath(__file__))
     export(plan(), os.path.join(out, "pyramid-plan"))
     export(section(), os.path.join(out, "pyramid-section"))
+    export(section("A"), os.path.join(out, "pyramid-section-gridA"))
+    export(section("B"), os.path.join(out, "pyramid-section-gridB"))
     export(detail(), os.path.join(out, "pyramid-detail"))
     print("slope {:.1f} deg, run {:g}, rise {:g}".format(SLOPE, RUN, RISE))
