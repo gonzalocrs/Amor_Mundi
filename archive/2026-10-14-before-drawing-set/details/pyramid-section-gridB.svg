@@ -1,0 +1,357 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420mm" height="297mm" viewBox="0 0 420 297" font-family="Helvetica, Arial, sans-serif">
+<defs><pattern id="conc" width="1.6" height="1.6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="1.6" stroke="#000" stroke-width="0.14"/></pattern><pattern id="earth" width="2.4" height="2.4" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><line x1="0" y1="0" x2="0" y2="2.4" stroke="#777" stroke-width="0.12"/></pattern><pattern id="cast" width="1.6" height="1.6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="1.6" stroke="#000" stroke-width="0.14"/><line x1="0" y1="0" x2="1.6" y2="0" stroke="#000" stroke-width="0.14"/></pattern><pattern id="dots" width="1.5" height="1.5" patternUnits="userSpaceOnUse"><circle cx="0.4" cy="0.4" r="0.11" fill="#000"/><circle cx="1.15" cy="1.1" r="0.11" fill="#000"/></pattern></defs>
+<rect width="420" height="297" fill="#fff"/>
+<rect x="8" y="8" width="404" height="281" fill="none" stroke="#000" stroke-width="0.35"/>
+<g>
+<polygon points="21.00,274.00 293.00,274.00 293.00,252.00 21.00,252.00" fill="url(#earth)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polyline points="21.00,252.00 293.00,252.00" fill="none" stroke="#000" stroke-width="0.5" stroke-linejoin="round" />
+<polygon points="52.00,202.00 262.00,202.00 171.00,82.00 143.00,82.00" fill="#fff" stroke="#000" stroke-width="0.3" stroke-linejoin="round" />
+<path d="M53.5,200.0 L260.5,200.0 M55.0,198.0 L259.0,198.0 M56.5,196.0 L257.4,196.0 M58.1,194.0 L255.9,194.0 M59.6,192.0 L254.4,192.0 M61.1,190.0 L252.9,190.0 M62.6,188.0 L251.4,188.0 M64.1,186.0 L249.9,186.0 M65.6,184.0 L248.4,184.0 M67.2,182.0 L246.8,182.0 M68.7,180.0 L245.3,180.0 M70.2,178.0 L243.8,178.0 M71.7,176.0 L242.3,176.0 M73.2,174.0 L240.8,174.0 M74.8,172.0 L239.2,172.0 M76.3,170.0 L237.7,170.0 M77.8,168.0 L236.2,168.0 M79.3,166.0 L234.7,166.0 M80.8,164.0 L233.2,164.0 M82.3,162.0 L231.7,162.0 M83.8,160.0 L230.2,160.0 M85.4,158.0 L228.6,158.0 M86.9,156.0 L227.1,156.0 M88.4,154.0 L225.6,154.0 M89.9,152.0 L224.1,152.0 M91.4,150.0 L222.6,150.0 M93.0,148.0 L221.1,148.0 M94.5,146.0 L219.5,146.0 M96.0,144.0 L218.0,144.0 M97.5,142.0 L216.5,142.0 M99.0,140.0 L215.0,140.0 M100.5,138.0 L213.5,138.0 M102.0,136.0 L211.9,136.0 M103.6,134.0 L210.4,134.0 M105.1,132.0 L208.9,132.0 M106.6,130.0 L207.4,130.0 M108.1,128.0 L205.9,128.0 M109.6,126.0 L204.4,126.0 M111.2,124.0 L202.8,124.0 M112.7,122.0 L201.3,122.0 M114.2,120.0 L199.8,120.0 M115.7,118.0 L198.3,118.0 M117.2,116.0 L196.8,116.0 M118.7,114.0 L195.3,114.0 M120.2,112.0 L193.8,112.0 M121.8,110.0 L192.2,110.0 M123.3,108.0 L190.7,108.0 M124.8,106.0 L189.2,106.0 M126.3,104.0 L187.7,104.0 M127.8,102.0 L186.2,102.0 M129.3,100.0 L184.7,100.0 M130.9,98.0 L183.1,98.0 M132.4,96.0 L181.6,96.0 M133.9,94.0 L180.1,94.0 M135.4,92.0 L178.6,92.0 M136.9,90.0 L177.1,90.0 M138.4,88.0 L175.6,88.0 M140.0,86.0 L174.0,86.0 M141.5,84.0 L172.5,84.0" fill="none" stroke="#c4c4c4" stroke-width="0.03" stroke-linejoin="round"/>
+<polyline points="82.00,202.00 90.12,187.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="112.00,202.00 116.88,187.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="142.00,202.00 143.62,187.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="172.00,202.00 170.38,187.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="202.00,202.00 197.12,187.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="232.00,202.00 223.88,187.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="63.38,187.00 250.62,187.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="78.98,187.00 88.46,172.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="110.19,187.00 115.88,172.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="141.40,187.00 143.29,172.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="172.60,187.00 170.71,172.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="203.81,187.00 198.12,172.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="74.75,172.00 239.25,172.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="107.65,172.00 114.47,157.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="140.55,172.00 142.82,157.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="173.45,172.00 171.18,157.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="206.35,172.00 199.53,157.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="86.12,157.00 227.88,157.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="103.84,157.00 112.38,142.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="139.28,157.00 142.12,142.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="174.72,157.00 171.88,142.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="97.50,142.00 216.50,142.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="127.25,142.00 132.94,127.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="157.00,142.00 157.00,127.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="186.75,142.00 181.06,127.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="108.88,127.00 205.12,127.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="124.92,127.00 132.50,112.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="157.00,127.00 157.00,112.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="120.25,112.00 193.75,112.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="157.00,112.00 157.00,97.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="131.62,97.00 182.38,97.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="55.18,195.34 140.66,82.62 143.40,83.94 57.92,196.66 55.18,195.34" fill="none" stroke="#555" stroke-width="0.2" stroke-linejoin="round" stroke-dasharray="2 1" />
+<polyline points="256.08,196.66 170.60,83.94 173.34,82.62 258.82,195.34 256.08,196.66" fill="none" stroke="#555" stroke-width="0.2" stroke-linejoin="round" stroke-dasharray="2 1" />
+<polyline points="81.43,195.34 166.91,82.62 169.65,83.94 84.17,196.66 81.43,195.34" fill="none" stroke="#555" stroke-width="0.2" stroke-linejoin="round" stroke-dasharray="2 1" />
+<polyline points="229.83,196.66 144.35,83.94 147.09,82.62 232.57,195.34 229.83,196.66" fill="none" stroke="#555" stroke-width="0.2" stroke-linejoin="round" stroke-dasharray="2 1" />
+<polyline points="107.68,195.34 181.88,97.49 184.62,98.81 110.42,196.66 107.68,195.34" fill="none" stroke="#555" stroke-width="0.2" stroke-linejoin="round" stroke-dasharray="2 1" />
+<polyline points="203.58,196.66 129.38,98.81 132.12,97.49 206.32,195.34 203.58,196.66" fill="none" stroke="#555" stroke-width="0.2" stroke-linejoin="round" stroke-dasharray="2 1" />
+<polyline points="133.93,195.34 195.01,114.80 197.74,116.12 136.67,196.66 133.93,195.34" fill="none" stroke="#555" stroke-width="0.2" stroke-linejoin="round" stroke-dasharray="2 1" />
+<polyline points="177.33,196.66 116.26,116.12 118.99,114.80 180.07,195.34 177.33,196.66" fill="none" stroke="#555" stroke-width="0.2" stroke-linejoin="round" stroke-dasharray="2 1" />
+<polyline points="160.18,195.34 208.13,132.11 210.87,133.43 162.92,196.66 160.18,195.34" fill="none" stroke="#555" stroke-width="0.2" stroke-linejoin="round" stroke-dasharray="2 1" />
+<polyline points="151.08,196.66 103.13,133.43 105.87,132.11 153.82,195.34 151.08,196.66" fill="none" stroke="#555" stroke-width="0.2" stroke-linejoin="round" stroke-dasharray="2 1" />
+<polyline points="186.43,195.34 221.26,149.42 223.99,150.74 189.17,196.66 186.43,195.34" fill="none" stroke="#555" stroke-width="0.2" stroke-linejoin="round" stroke-dasharray="2 1" />
+<polyline points="124.83,196.66 90.01,150.74 92.74,149.42 127.57,195.34 124.83,196.66" fill="none" stroke="#555" stroke-width="0.2" stroke-linejoin="round" stroke-dasharray="2 1" />
+<polyline points="212.68,195.34 234.38,166.73 237.12,168.04 215.42,196.66 212.68,195.34" fill="none" stroke="#555" stroke-width="0.2" stroke-linejoin="round" stroke-dasharray="2 1" />
+<polyline points="98.58,196.66 76.88,168.04 79.62,166.73 101.32,195.34 98.58,196.66" fill="none" stroke="#555" stroke-width="0.2" stroke-linejoin="round" stroke-dasharray="2 1" />
+<polyline points="238.93,195.34 247.51,184.03 250.24,185.35 241.67,196.66 238.93,195.34" fill="none" stroke="#555" stroke-width="0.2" stroke-linejoin="round" stroke-dasharray="2 1" />
+<polyline points="72.33,196.66 63.76,185.35 66.49,184.03 75.07,195.34 72.33,196.66" fill="none" stroke="#555" stroke-width="0.2" stroke-linejoin="round" stroke-dasharray="2 1" />
+<polyline points="52.00,202.00 262.00,202.00 257.45,196.00 56.55,196.00 52.00,202.00" fill="none" stroke="#555" stroke-width="0.2" stroke-linejoin="round" stroke-dasharray="2 1" />
+<polyline points="142.03,84.56 171.97,84.56 171.97,82.00 142.03,82.00 142.03,84.56" fill="none" stroke="#555" stroke-width="0.2" stroke-linejoin="round" stroke-dasharray="2 1" />
+<polygon points="65.00,272.00 29.00,272.00 29.00,267.00 65.00,267.00" fill="#000" stroke="#000" stroke-width="0.3" stroke-linejoin="round" />
+<polygon points="57.00,267.00 37.00,267.00 37.00,252.00 57.00,252.00" fill="#000" stroke="#000" stroke-width="0.3" stroke-linejoin="round" />
+<polygon points="57.00,252.00 49.00,252.00 49.00,202.00 57.00,202.00" fill="#000" stroke="#000" stroke-width="0.7" stroke-linejoin="round" />
+<polygon points="49.00,252.00 37.00,252.00 37.00,202.00 49.00,202.00" fill="#000" stroke="#000" stroke-width="0.7" stroke-linejoin="round" />
+<polygon points="65.00,272.00 29.00,272.00 29.00,267.00 65.00,267.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="65.00,272.00 29.00,272.00 29.00,267.00 65.00,267.00" fill="url(#conc)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="57.00,267.00 37.00,267.00 37.00,252.00 57.00,252.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="57.00,267.00 37.00,267.00 37.00,252.00 57.00,252.00" fill="url(#conc)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="57.00,252.00 49.00,252.00 49.00,202.00 57.00,202.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="57.00,252.00 49.00,252.00 49.00,202.00 57.00,202.00" fill="url(#conc)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="49.00,252.00 37.00,252.00 37.00,202.00 49.00,202.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="49.00,252.00 37.00,252.00 37.00,202.00 49.00,202.00" fill="url(#conc)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polyline points="57.00,252.00 57.00,202.00" fill="none" stroke="#000" stroke-width="0.6" stroke-linejoin="round" />
+<polygon points="57.00,202.00 147.00,82.00 145.00,82.00 53.00,202.00" fill="#000" stroke="#000" stroke-width="0.7" stroke-linejoin="round" />
+<polygon points="53.00,202.00 145.00,82.00 141.00,82.00 49.00,202.00" fill="#000" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="49.00,202.00 141.00,82.00 139.00,82.00 47.00,202.00" fill="#000" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="57.00,202.00 147.00,82.00 145.00,82.00 53.00,202.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="57.00,202.00 147.00,82.00 145.00,82.00 53.00,202.00" fill="url(#conc)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="53.00,202.00 145.00,82.00 141.00,82.00 49.00,202.00" fill="#fff" stroke="#000" stroke-width="0.25" stroke-linejoin="round" />
+<polygon points="49.00,202.00 141.00,82.00 139.00,82.00 47.00,202.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="49.00,202.00 141.00,82.00 139.00,82.00 47.00,202.00" fill="url(#conc)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="49.00,202.00 141.00,82.00 139.00,82.00 47.00,202.00" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<polygon points="57.00,202.00 147.00,82.00 145.00,82.00 53.00,202.00" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<polygon points="47.00,202.00 139.00,82.00 136.50,82.00 44.50,202.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="47.00,202.00 139.00,82.00 136.50,82.00 44.50,202.00" fill="url(#dots)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="47.00,202.00 139.00,82.00 136.50,82.00 44.50,202.00" fill="none" stroke="#000" stroke-width="0.07" stroke-linejoin="round" />
+<polygon points="44.50,202.00 136.50,82.00 135.75,82.00 43.75,202.00" fill="#555" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
+<polygon points="57.00,202.00 61.50,196.00 51.60,196.00 47.00,202.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="57.00,202.00 61.50,196.00 51.60,196.00 47.00,202.00" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="57.00,202.00 61.50,196.00 51.60,196.00 47.00,202.00" fill="none" stroke="#000" stroke-width="0.6" stroke-linejoin="round" />
+<polyline points="57.00,202.00 47.00,202.00" fill="none" stroke="#000" stroke-width="0.25" stroke-linejoin="round" />
+<polyline points="57.00,202.00 47.00,202.00" fill="none" stroke="#000" stroke-width="0.25" stroke-linejoin="round" />
+<polygon points="249.00,272.00 285.00,272.00 285.00,267.00 249.00,267.00" fill="#000" stroke="#000" stroke-width="0.3" stroke-linejoin="round" />
+<polygon points="257.00,267.00 277.00,267.00 277.00,252.00 257.00,252.00" fill="#000" stroke="#000" stroke-width="0.3" stroke-linejoin="round" />
+<polygon points="257.00,252.00 265.00,252.00 265.00,202.00 257.00,202.00" fill="#000" stroke="#000" stroke-width="0.7" stroke-linejoin="round" />
+<polygon points="265.00,252.00 277.00,252.00 277.00,202.00 265.00,202.00" fill="#000" stroke="#000" stroke-width="0.7" stroke-linejoin="round" />
+<polygon points="249.00,272.00 285.00,272.00 285.00,267.00 249.00,267.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="249.00,272.00 285.00,272.00 285.00,267.00 249.00,267.00" fill="url(#conc)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="257.00,267.00 277.00,267.00 277.00,252.00 257.00,252.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="257.00,267.00 277.00,267.00 277.00,252.00 257.00,252.00" fill="url(#conc)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="257.00,252.00 265.00,252.00 265.00,202.00 257.00,202.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="257.00,252.00 265.00,252.00 265.00,202.00 257.00,202.00" fill="url(#conc)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="265.00,252.00 277.00,252.00 277.00,202.00 265.00,202.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="265.00,252.00 277.00,252.00 277.00,202.00 265.00,202.00" fill="url(#conc)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polyline points="257.00,252.00 257.00,202.00" fill="none" stroke="#000" stroke-width="0.6" stroke-linejoin="round" />
+<polygon points="257.00,202.00 167.00,82.00 169.00,82.00 261.00,202.00" fill="#000" stroke="#000" stroke-width="0.7" stroke-linejoin="round" />
+<polygon points="261.00,202.00 169.00,82.00 173.00,82.00 265.00,202.00" fill="#000" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="265.00,202.00 173.00,82.00 175.00,82.00 267.00,202.00" fill="#000" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="257.00,202.00 167.00,82.00 169.00,82.00 261.00,202.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="257.00,202.00 167.00,82.00 169.00,82.00 261.00,202.00" fill="url(#conc)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="261.00,202.00 169.00,82.00 173.00,82.00 265.00,202.00" fill="#fff" stroke="#000" stroke-width="0.25" stroke-linejoin="round" />
+<polygon points="265.00,202.00 173.00,82.00 175.00,82.00 267.00,202.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="265.00,202.00 173.00,82.00 175.00,82.00 267.00,202.00" fill="url(#conc)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="265.00,202.00 173.00,82.00 175.00,82.00 267.00,202.00" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<polygon points="257.00,202.00 167.00,82.00 169.00,82.00 261.00,202.00" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<polygon points="267.00,202.00 175.00,82.00 177.50,82.00 269.50,202.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="267.00,202.00 175.00,82.00 177.50,82.00 269.50,202.00" fill="url(#dots)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="267.00,202.00 175.00,82.00 177.50,82.00 269.50,202.00" fill="none" stroke="#000" stroke-width="0.07" stroke-linejoin="round" />
+<polygon points="269.50,202.00 177.50,82.00 178.25,82.00 270.25,202.00" fill="#555" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
+<polygon points="257.00,202.00 252.50,196.00 262.40,196.00 267.00,202.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="257.00,202.00 252.50,196.00 262.40,196.00 267.00,202.00" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="257.00,202.00 252.50,196.00 262.40,196.00 267.00,202.00" fill="none" stroke="#000" stroke-width="0.6" stroke-linejoin="round" />
+<polyline points="257.00,202.00 267.00,202.00" fill="none" stroke="#000" stroke-width="0.25" stroke-linejoin="round" />
+<polyline points="257.00,202.00 267.00,202.00" fill="none" stroke="#000" stroke-width="0.25" stroke-linejoin="round" />
+<polygon points="57.00,252.00 257.00,252.00 257.00,202.00 57.00,202.00" fill="#fff" stroke="#000" stroke-width="0.3" stroke-linejoin="round" />
+<path d="M57.0,250.0 L78.7,250.0 M57.0,248.0 L78.7,248.0 M57.0,246.0 L78.7,246.0 M57.0,244.0 L78.7,244.0 M57.0,242.0 L78.7,242.0 M57.0,240.0 L78.7,240.0 M57.0,238.0 L78.7,238.0 M57.0,236.0 L78.7,236.0 M57.0,234.0 L78.7,234.0 M57.0,232.0 L78.7,232.0 M57.0,230.0 L78.7,230.0 M57.0,228.0 L78.7,228.0 M57.0,226.0 L78.7,226.0 M57.0,224.0 L78.7,224.0 M57.0,222.0 L78.7,222.0 M57.0,220.0 L78.7,220.0 M57.0,218.0 L78.7,218.0 M57.0,216.0 L78.7,216.0 M57.0,214.0 L78.7,214.0 M57.0,212.0 L78.7,212.0 M57.0,210.0 L78.7,210.0 M57.0,208.0 L78.7,208.0 M57.0,206.0 L78.7,206.0 M57.0,204.0 L78.7,204.0" fill="none" stroke="#c4c4c4" stroke-width="0.03" stroke-linejoin="round"/>
+<polyline points="57.00,242.00 78.71,242.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="57.00,232.00 78.71,232.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="57.00,222.00 78.71,222.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="57.00,212.00 78.71,212.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="67.86,242.00 67.86,232.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="67.86,222.00 67.86,212.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<path d="M116.4,250.0 L138.1,250.0 M116.4,248.0 L138.1,248.0 M116.4,246.0 L138.1,246.0 M116.4,244.0 L138.1,244.0 M116.4,242.0 L138.1,242.0 M116.4,240.0 L138.1,240.0 M116.4,238.0 L138.1,238.0 M116.4,236.0 L138.1,236.0 M116.4,234.0 L138.1,234.0 M116.4,232.0 L138.1,232.0 M116.4,230.0 L138.1,230.0 M116.4,228.0 L138.1,228.0 M116.4,226.0 L138.1,226.0 M116.4,224.0 L138.1,224.0 M116.4,222.0 L138.1,222.0 M116.4,220.0 L138.1,220.0 M116.4,218.0 L138.1,218.0 M116.4,216.0 L138.1,216.0 M116.4,214.0 L138.1,214.0 M116.4,212.0 L138.1,212.0 M116.4,210.0 L138.1,210.0 M116.4,208.0 L138.1,208.0 M116.4,206.0 L138.1,206.0 M116.4,204.0 L138.1,204.0" fill="none" stroke="#c4c4c4" stroke-width="0.03" stroke-linejoin="round"/>
+<polyline points="116.43,242.00 138.14,242.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="116.43,232.00 138.14,232.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="116.43,222.00 138.14,222.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="116.43,212.00 138.14,212.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="127.29,242.00 127.29,232.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="127.29,222.00 127.29,212.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<path d="M175.9,250.0 L197.6,250.0 M175.9,248.0 L197.6,248.0 M175.9,246.0 L197.6,246.0 M175.9,244.0 L197.6,244.0 M175.9,242.0 L197.6,242.0 M175.9,240.0 L197.6,240.0 M175.9,238.0 L197.6,238.0 M175.9,236.0 L197.6,236.0 M175.9,234.0 L197.6,234.0 M175.9,232.0 L197.6,232.0 M175.9,230.0 L197.6,230.0 M175.9,228.0 L197.6,228.0 M175.9,226.0 L197.6,226.0 M175.9,224.0 L197.6,224.0 M175.9,222.0 L197.6,222.0 M175.9,220.0 L197.6,220.0 M175.9,218.0 L197.6,218.0 M175.9,216.0 L197.6,216.0 M175.9,214.0 L197.6,214.0 M175.9,212.0 L197.6,212.0 M175.9,210.0 L197.6,210.0 M175.9,208.0 L197.6,208.0 M175.9,206.0 L197.6,206.0 M175.9,204.0 L197.6,204.0" fill="none" stroke="#c4c4c4" stroke-width="0.03" stroke-linejoin="round"/>
+<polyline points="175.86,242.00 197.57,242.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="175.86,232.00 197.57,232.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="175.86,222.00 197.57,222.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="175.86,212.00 197.57,212.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="186.71,242.00 186.71,232.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="186.71,222.00 186.71,212.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<path d="M235.3,250.0 L257.0,250.0 M235.3,248.0 L257.0,248.0 M235.3,246.0 L257.0,246.0 M235.3,244.0 L257.0,244.0 M235.3,242.0 L257.0,242.0 M235.3,240.0 L257.0,240.0 M235.3,238.0 L257.0,238.0 M235.3,236.0 L257.0,236.0 M235.3,234.0 L257.0,234.0 M235.3,232.0 L257.0,232.0 M235.3,230.0 L257.0,230.0 M235.3,228.0 L257.0,228.0 M235.3,226.0 L257.0,226.0 M235.3,224.0 L257.0,224.0 M235.3,222.0 L257.0,222.0 M235.3,220.0 L257.0,220.0 M235.3,218.0 L257.0,218.0 M235.3,216.0 L257.0,216.0 M235.3,214.0 L257.0,214.0 M235.3,212.0 L257.0,212.0 M235.3,210.0 L257.0,210.0 M235.3,208.0 L257.0,208.0 M235.3,206.0 L257.0,206.0 M235.3,204.0 L257.0,204.0" fill="none" stroke="#c4c4c4" stroke-width="0.03" stroke-linejoin="round"/>
+<polyline points="235.29,242.00 257.00,242.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="235.29,232.00 257.00,232.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="235.29,222.00 257.00,222.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="235.29,212.00 257.00,212.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="246.14,242.00 246.14,232.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polyline points="246.14,222.00 246.14,212.00" fill="none" stroke="#8c8c8c" stroke-width="0.1" stroke-linejoin="round" stroke-dasharray="3 1.6" />
+<polygon points="78.71,252.00 86.71,252.00 86.71,202.00 78.71,202.00" fill="#fff" stroke="#555" stroke-width="0.35" stroke-linejoin="round" />
+<path d="M78.7,250.0 L86.7,250.0 M78.7,248.0 L86.7,248.0 M78.7,246.0 L86.7,246.0 M78.7,244.0 L86.7,244.0 M78.7,242.0 L86.7,242.0 M78.7,240.0 L86.7,240.0 M78.7,238.0 L86.7,238.0 M78.7,236.0 L86.7,236.0 M78.7,234.0 L86.7,234.0 M78.7,232.0 L86.7,232.0 M78.7,230.0 L86.7,230.0 M78.7,228.0 L86.7,228.0 M78.7,226.0 L86.7,226.0 M78.7,224.0 L86.7,224.0 M78.7,222.0 L86.7,222.0 M78.7,220.0 L86.7,220.0 M78.7,218.0 L86.7,218.0 M78.7,216.0 L86.7,216.0 M78.7,214.0 L86.7,214.0 M78.7,212.0 L86.7,212.0 M78.7,210.0 L86.7,210.0 M78.7,208.0 L86.7,208.0 M78.7,206.0 L86.7,206.0 M78.7,204.0 L86.7,204.0" fill="none" stroke="#c4c4c4" stroke-width="0.03" stroke-linejoin="round"/>
+<polygon points="108.43,252.00 116.43,252.00 116.43,202.00 108.43,202.00" fill="#fff" stroke="#555" stroke-width="0.35" stroke-linejoin="round" />
+<path d="M108.4,250.0 L116.4,250.0 M108.4,248.0 L116.4,248.0 M108.4,246.0 L116.4,246.0 M108.4,244.0 L116.4,244.0 M108.4,242.0 L116.4,242.0 M108.4,240.0 L116.4,240.0 M108.4,238.0 L116.4,238.0 M108.4,236.0 L116.4,236.0 M108.4,234.0 L116.4,234.0 M108.4,232.0 L116.4,232.0 M108.4,230.0 L116.4,230.0 M108.4,228.0 L116.4,228.0 M108.4,226.0 L116.4,226.0 M108.4,224.0 L116.4,224.0 M108.4,222.0 L116.4,222.0 M108.4,220.0 L116.4,220.0 M108.4,218.0 L116.4,218.0 M108.4,216.0 L116.4,216.0 M108.4,214.0 L116.4,214.0 M108.4,212.0 L116.4,212.0 M108.4,210.0 L116.4,210.0 M108.4,208.0 L116.4,208.0 M108.4,206.0 L116.4,206.0 M108.4,204.0 L116.4,204.0" fill="none" stroke="#c4c4c4" stroke-width="0.03" stroke-linejoin="round"/>
+<polygon points="138.14,252.00 146.14,252.00 146.14,202.00 138.14,202.00" fill="#fff" stroke="#555" stroke-width="0.35" stroke-linejoin="round" />
+<path d="M138.1,250.0 L146.1,250.0 M138.1,248.0 L146.1,248.0 M138.1,246.0 L146.1,246.0 M138.1,244.0 L146.1,244.0 M138.1,242.0 L146.1,242.0 M138.1,240.0 L146.1,240.0 M138.1,238.0 L146.1,238.0 M138.1,236.0 L146.1,236.0 M138.1,234.0 L146.1,234.0 M138.1,232.0 L146.1,232.0 M138.1,230.0 L146.1,230.0 M138.1,228.0 L146.1,228.0 M138.1,226.0 L146.1,226.0 M138.1,224.0 L146.1,224.0 M138.1,222.0 L146.1,222.0 M138.1,220.0 L146.1,220.0 M138.1,218.0 L146.1,218.0 M138.1,216.0 L146.1,216.0 M138.1,214.0 L146.1,214.0 M138.1,212.0 L146.1,212.0 M138.1,210.0 L146.1,210.0 M138.1,208.0 L146.1,208.0 M138.1,206.0 L146.1,206.0 M138.1,204.0 L146.1,204.0" fill="none" stroke="#c4c4c4" stroke-width="0.03" stroke-linejoin="round"/>
+<polygon points="167.86,252.00 175.86,252.00 175.86,202.00 167.86,202.00" fill="#fff" stroke="#555" stroke-width="0.35" stroke-linejoin="round" />
+<path d="M167.9,250.0 L175.9,250.0 M167.9,248.0 L175.9,248.0 M167.9,246.0 L175.9,246.0 M167.9,244.0 L175.9,244.0 M167.9,242.0 L175.9,242.0 M167.9,240.0 L175.9,240.0 M167.9,238.0 L175.9,238.0 M167.9,236.0 L175.9,236.0 M167.9,234.0 L175.9,234.0 M167.9,232.0 L175.9,232.0 M167.9,230.0 L175.9,230.0 M167.9,228.0 L175.9,228.0 M167.9,226.0 L175.9,226.0 M167.9,224.0 L175.9,224.0 M167.9,222.0 L175.9,222.0 M167.9,220.0 L175.9,220.0 M167.9,218.0 L175.9,218.0 M167.9,216.0 L175.9,216.0 M167.9,214.0 L175.9,214.0 M167.9,212.0 L175.9,212.0 M167.9,210.0 L175.9,210.0 M167.9,208.0 L175.9,208.0 M167.9,206.0 L175.9,206.0 M167.9,204.0 L175.9,204.0" fill="none" stroke="#c4c4c4" stroke-width="0.03" stroke-linejoin="round"/>
+<polygon points="197.57,252.00 205.57,252.00 205.57,202.00 197.57,202.00" fill="#fff" stroke="#555" stroke-width="0.35" stroke-linejoin="round" />
+<path d="M197.6,250.0 L205.6,250.0 M197.6,248.0 L205.6,248.0 M197.6,246.0 L205.6,246.0 M197.6,244.0 L205.6,244.0 M197.6,242.0 L205.6,242.0 M197.6,240.0 L205.6,240.0 M197.6,238.0 L205.6,238.0 M197.6,236.0 L205.6,236.0 M197.6,234.0 L205.6,234.0 M197.6,232.0 L205.6,232.0 M197.6,230.0 L205.6,230.0 M197.6,228.0 L205.6,228.0 M197.6,226.0 L205.6,226.0 M197.6,224.0 L205.6,224.0 M197.6,222.0 L205.6,222.0 M197.6,220.0 L205.6,220.0 M197.6,218.0 L205.6,218.0 M197.6,216.0 L205.6,216.0 M197.6,214.0 L205.6,214.0 M197.6,212.0 L205.6,212.0 M197.6,210.0 L205.6,210.0 M197.6,208.0 L205.6,208.0 M197.6,206.0 L205.6,206.0 M197.6,204.0 L205.6,204.0" fill="none" stroke="#c4c4c4" stroke-width="0.03" stroke-linejoin="round"/>
+<polygon points="227.29,252.00 235.29,252.00 235.29,202.00 227.29,202.00" fill="#fff" stroke="#555" stroke-width="0.35" stroke-linejoin="round" />
+<path d="M227.3,250.0 L235.3,250.0 M227.3,248.0 L235.3,248.0 M227.3,246.0 L235.3,246.0 M227.3,244.0 L235.3,244.0 M227.3,242.0 L235.3,242.0 M227.3,240.0 L235.3,240.0 M227.3,238.0 L235.3,238.0 M227.3,236.0 L235.3,236.0 M227.3,234.0 L235.3,234.0 M227.3,232.0 L235.3,232.0 M227.3,230.0 L235.3,230.0 M227.3,228.0 L235.3,228.0 M227.3,226.0 L235.3,226.0 M227.3,224.0 L235.3,224.0 M227.3,222.0 L235.3,222.0 M227.3,220.0 L235.3,220.0 M227.3,218.0 L235.3,218.0 M227.3,216.0 L235.3,216.0 M227.3,214.0 L235.3,214.0 M227.3,212.0 L235.3,212.0 M227.3,210.0 L235.3,210.0 M227.3,208.0 L235.3,208.0 M227.3,206.0 L235.3,206.0 M227.3,204.0 L235.3,204.0" fill="none" stroke="#c4c4c4" stroke-width="0.03" stroke-linejoin="round"/>
+<polygon points="86.71,252.00 108.43,252.00 108.43,202.00 86.71,202.00" fill="#fff" stroke="#444" stroke-width="0.35" stroke-linejoin="round" />
+<polygon points="87.51,251.20 107.63,251.20 107.63,202.80 87.51,202.80" fill="none" stroke="#444" stroke-width="0.15" stroke-linejoin="round" />
+<polyline points="97.57,251.20 97.57,202.80" fill="none" stroke="#444" stroke-width="0.2" stroke-linejoin="round" />
+<polyline points="87.51,235.33 107.63,235.33" fill="none" stroke="#444" stroke-width="0.15" stroke-linejoin="round" />
+<polyline points="87.51,218.67 107.63,218.67" fill="none" stroke="#444" stroke-width="0.15" stroke-linejoin="round" />
+<polygon points="147.00,252.00 167.00,252.00 167.00,212.00 147.00,212.00" fill="#fff" stroke="#444" stroke-width="0.3" stroke-linejoin="round" />
+<polygon points="146.20,252.00 167.80,252.00 167.80,211.20 146.20,211.20" fill="none" stroke="#444" stroke-width="0.15" stroke-linejoin="round" />
+<polygon points="205.57,252.00 227.29,252.00 227.29,202.00 205.57,202.00" fill="#fff" stroke="#444" stroke-width="0.35" stroke-linejoin="round" />
+<polygon points="206.37,251.20 226.49,251.20 226.49,202.80 206.37,202.80" fill="none" stroke="#444" stroke-width="0.15" stroke-linejoin="round" />
+<polyline points="216.43,251.20 216.43,202.80" fill="none" stroke="#444" stroke-width="0.2" stroke-linejoin="round" />
+<polyline points="206.37,235.33 226.49,235.33" fill="none" stroke="#444" stroke-width="0.15" stroke-linejoin="round" />
+<polyline points="206.37,218.67 226.49,218.67" fill="none" stroke="#444" stroke-width="0.15" stroke-linejoin="round" />
+<polyline points="21.00,252.00 293.00,252.00" fill="none" stroke="#000" stroke-width="0.5" stroke-linejoin="round" />
+<polyline points="57.00,252.00 257.00,252.00" fill="none" stroke="#000" stroke-width="0.6" stroke-linejoin="round" />
+<polyline points="57.40,255.00 256.60,255.00" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" stroke-dasharray="3 1" />
+<text x="157.00" y="260.40" font-size="2.4" text-anchor="middle" font-weight="normal" fill="#000" font-style="italic">floor slab on gravel (not detailed)</text>
+<polyline points="283.00,253.50 283.00,80.50" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
+<polyline points="280.80,252.00 284.20,252.00" fill="none" stroke="#000" stroke-width="0.12" stroke-linejoin="round" />
+<polyline points="282.40,252.60 283.60,251.40" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<polyline points="280.80,202.00 284.20,202.00" fill="none" stroke="#000" stroke-width="0.12" stroke-linejoin="round" />
+<polyline points="282.40,202.60 283.60,201.40" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<polyline points="280.80,82.00 284.20,82.00" fill="none" stroke="#000" stroke-width="0.12" stroke-linejoin="round" />
+<polyline points="282.40,82.60 283.60,81.40" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<text x="282.10" y="227.00" font-size="2.5" text-anchor="middle" font-weight="normal" fill="#000" transform="rotate(-90 282.10 227.00)">2500</text>
+<text x="282.10" y="142.00" font-size="2.5" text-anchor="middle" font-weight="normal" fill="#000" transform="rotate(-90 282.10 142.00)">6000</text>
+<polyline points="291.00,253.50 291.00,80.50" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
+<polyline points="280.80,252.00 292.20,252.00" fill="none" stroke="#000" stroke-width="0.12" stroke-linejoin="round" />
+<polyline points="290.40,252.60 291.60,251.40" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<polyline points="280.80,82.00 292.20,82.00" fill="none" stroke="#000" stroke-width="0.12" stroke-linejoin="round" />
+<polyline points="290.40,82.60 291.60,81.40" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<text x="290.10" y="167.00" font-size="2.5" text-anchor="middle" font-weight="normal" fill="#000" transform="rotate(-90 290.10 167.00)">8500 total</text>
+<polyline points="283.00,273.50 283.00,250.50" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
+<polyline points="280.80,272.00 284.20,272.00" fill="none" stroke="#000" stroke-width="0.12" stroke-linejoin="round" />
+<polyline points="282.40,272.60 283.60,271.40" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<polyline points="280.80,252.00 284.20,252.00" fill="none" stroke="#000" stroke-width="0.12" stroke-linejoin="round" />
+<polyline points="282.40,252.60 283.60,251.40" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<text x="282.10" y="262.00" font-size="2.5" text-anchor="middle" font-weight="normal" fill="#000" transform="rotate(-90 282.10 262.00)">1000</text>
+<polyline points="47.50,285.00 266.50,285.00" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
+<polyline points="49.00,272.80 49.00,286.20" fill="none" stroke="#000" stroke-width="0.12" stroke-linejoin="round" />
+<polyline points="48.40,285.60 49.60,284.40" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<polyline points="57.00,272.80 57.00,286.20" fill="none" stroke="#000" stroke-width="0.12" stroke-linejoin="round" />
+<polyline points="56.40,285.60 57.60,284.40" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<polyline points="257.00,272.80 257.00,286.20" fill="none" stroke="#000" stroke-width="0.12" stroke-linejoin="round" />
+<polyline points="256.40,285.60 257.60,284.40" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<polyline points="265.00,272.80 265.00,286.20" fill="none" stroke="#000" stroke-width="0.12" stroke-linejoin="round" />
+<polyline points="264.40,285.60 265.60,284.40" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<text x="53.00" y="284.10" font-size="2.5" text-anchor="middle" font-weight="normal" fill="#000">400</text>
+<text x="157.00" y="284.10" font-size="2.5" text-anchor="middle" font-weight="normal" fill="#000">10000 clear</text>
+<text x="261.00" y="284.10" font-size="2.5" text-anchor="middle" font-weight="normal" fill="#000">400</text>
+<polyline points="35.50,295.00 278.50,295.00" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
+<polyline points="37.00,286.80 37.00,296.20" fill="none" stroke="#000" stroke-width="0.12" stroke-linejoin="round" />
+<polyline points="36.40,295.60 37.60,294.40" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<polyline points="277.00,286.80 277.00,296.20" fill="none" stroke="#000" stroke-width="0.12" stroke-linejoin="round" />
+<polyline points="276.40,295.60 277.60,294.40" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<text x="157.00" y="294.10" font-size="2.5" text-anchor="middle" font-weight="normal" fill="#000">12000 overall incl. buttresses</text>
+<polyline points="145.50,70.00 168.50,70.00" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
+<polyline points="147.00,81.20 147.00,68.80" fill="none" stroke="#000" stroke-width="0.12" stroke-linejoin="round" />
+<polyline points="146.40,70.60 147.60,69.40" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<polyline points="167.00,81.20 167.00,68.80" fill="none" stroke="#000" stroke-width="0.12" stroke-linejoin="round" />
+<polyline points="166.40,70.60 167.60,69.40" fill="none" stroke="#000" stroke-width="0.45" stroke-linejoin="round" />
+<text x="157.00" y="69.10" font-size="2.5" text-anchor="middle" font-weight="normal" fill="#000">1000</text>
+<polyline points="257.00,202.00 167.00,82.00" fill="none" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polyline points="25.00,252.00 19.00,252.00" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
+<polygon points="25.00,252.00 26.20,250.40 23.80,250.40" fill="#000" stroke="#000" stroke-width="0.1" stroke-linejoin="round" />
+<text x="18.00" y="252.50" font-size="2.5" text-anchor="end" font-weight="normal" fill="#000">±0.00</text>
+<polyline points="25.00,202.00 19.00,202.00" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
+<polygon points="25.00,202.00 26.20,200.40 23.80,200.40" fill="#000" stroke="#000" stroke-width="0.1" stroke-linejoin="round" />
+<text x="18.00" y="202.50" font-size="2.5" text-anchor="end" font-weight="normal" fill="#000">+2.50 eave</text>
+<polyline points="25.00,82.00 19.00,82.00" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
+<polygon points="25.00,82.00 26.20,80.40 23.80,80.40" fill="#000" stroke="#000" stroke-width="0.1" stroke-linejoin="round" />
+<text x="18.00" y="82.50" font-size="2.5" text-anchor="end" font-weight="normal" fill="#000">+8.50 crown</text>
+<polyline points="25.00,272.00 19.00,272.00" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
+<polygon points="25.00,272.00 26.20,270.40 23.80,270.40" fill="#000" stroke="#000" stroke-width="0.1" stroke-linejoin="round" />
+<text x="18.00" y="272.50" font-size="2.5" text-anchor="end" font-weight="normal" fill="#000">-1.00</text>
+<text x="192.00" y="142.00" font-size="2.8" text-anchor="middle" font-weight="normal" fill="#000" font-style="italic">53.1°</text>
+<polyline points="301.00,268.00 273.00,268.00" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
+<circle cx="273.00" cy="268.00" r="0.35" fill="#000"/>
+<circle cx="301.00" cy="268.00" r="2.4" fill="#fff" stroke="#000" stroke-width="0.3"/>
+<text x="301.00" y="268.86" font-size="2.76" text-anchor="middle" fill="#000">1</text>
+<polyline points="301.00,216.00 261.00,228.00" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
+<circle cx="261.00" cy="228.00" r="0.35" fill="#000"/>
+<circle cx="301.00" cy="216.00" r="2.4" fill="#fff" stroke="#000" stroke-width="0.3"/>
+<text x="301.00" y="216.86" font-size="2.76" text-anchor="middle" fill="#000">2</text>
+<polyline points="301.00,188.00 259.40,199.00" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
+<circle cx="259.40" cy="199.00" r="0.35" fill="#000"/>
+<circle cx="301.00" cy="188.00" r="2.4" fill="#fff" stroke="#000" stroke-width="0.3"/>
+<text x="301.00" y="188.86" font-size="2.76" text-anchor="middle" fill="#000">3</text>
+<polyline points="301.00,234.00 274.00,238.00" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
+<circle cx="274.00" cy="238.00" r="0.35" fill="#000"/>
+<circle cx="301.00" cy="234.00" r="2.4" fill="#fff" stroke="#000" stroke-width="0.3"/>
+<text x="301.00" y="234.86" font-size="2.76" text-anchor="middle" fill="#000">4</text>
+<polyline points="229.00,102.00 183.00,98.00" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
+<circle cx="183.00" cy="98.00" r="0.35" fill="#000"/>
+<circle cx="229.00" cy="102.00" r="2.4" fill="#fff" stroke="#000" stroke-width="0.3"/>
+<text x="229.00" y="102.86" font-size="2.76" text-anchor="middle" fill="#000">5</text>
+<polyline points="193.00,60.00 163.00,82.00" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
+<circle cx="163.00" cy="82.00" r="0.35" fill="#000"/>
+<circle cx="193.00" cy="60.00" r="2.4" fill="#fff" stroke="#000" stroke-width="0.3"/>
+<text x="193.00" y="60.86" font-size="2.76" text-anchor="middle" fill="#000">6</text>
+<polyline points="301.00,249.00 276.20,249.00" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
+<circle cx="276.20" cy="249.00" r="0.35" fill="#000"/>
+<circle cx="301.00" cy="249.00" r="2.4" fill="#fff" stroke="#000" stroke-width="0.3"/>
+<text x="301.00" y="249.86" font-size="2.76" text-anchor="middle" fill="#000">7</text>
+<polyline points="243.00,104.00 228.38,150.00" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
+<circle cx="228.38" cy="150.00" r="0.35" fill="#000"/>
+<circle cx="243.00" cy="104.00" r="2.4" fill="#fff" stroke="#000" stroke-width="0.3"/>
+<text x="243.00" y="104.86" font-size="2.76" text-anchor="middle" fill="#000">8</text>
+<polyline points="85.00,110.00 136.84,162.00" fill="none" stroke="#000" stroke-width="0.2" stroke-linejoin="round" />
+<circle cx="136.84" cy="162.00" r="0.35" fill="#000"/>
+<circle cx="85.00" cy="110.00" r="2.4" fill="#fff" stroke="#000" stroke-width="0.3"/>
+<text x="85.00" y="110.86" font-size="2.76" text-anchor="middle" fill="#000">9</text>
+<polyline points="248.00,211.00 284.00,211.00 284.00,172.00 248.00,172.00 248.00,211.00" fill="none" stroke="#000" stroke-width="0.25" stroke-linejoin="round" stroke-dasharray="1.5 0.8" />
+<circle cx="272.00" cy="163.00" r="3.0" fill="#fff" stroke="#000" stroke-width="0.3"/>
+<text x="272.00" y="164.08" font-size="3.4499999999999997" text-anchor="middle" fill="#000">D1</text>
+</g>
+<line x1="308" y1="8" x2="308" y2="289" stroke="#000" stroke-width="0.35"/>
+<text x="312" y="20" font-size="5.4" font-weight="bold">Total section A-A · grid B</text>
+<text x="312" y="25.5" font-size="3.1">through the east and west buttresses, looking north</text>
+<circle cx="314.3" cy="33.5" r="2.3" fill="#fff" stroke="#000" stroke-width="0.3"/>
+<text x="314.3" y="34.5" font-size="2.7" text-anchor="middle" fill="#000">1</text>
+<text x="319" y="34.5" font-size="2.8">Footing 1800 x 250, underside at -1000 (frost depth</text>
+<text x="319" y="38.0" font-size="2.8">and bearing are guesses).</text>
+<circle cx="314.3" cy="42.5" r="2.3" fill="#fff" stroke="#000" stroke-width="0.3"/>
+<text x="314.3" y="43.5" font-size="2.7" text-anchor="middle" fill="#000">2</text>
+<text x="319" y="43.5" font-size="2.8">Wall 400. The cut passes through a buttress, so the</text>
+<text x="319" y="47.0" font-size="2.8">wall is solid with the buttress here (no</text>
+<text x="319" y="50.5" font-size="2.8">insulation). Between buttresses it is printed like</text>
+<text x="319" y="54.0" font-size="2.8">the roof: two 80 inner layers, a 160 air /</text>
+<text x="319" y="57.5" font-size="2.8">insulation zone, an 80 outer layer.</text>
+<circle cx="314.3" cy="62.0" r="2.3" fill="#000" stroke="#000" stroke-width="0.3"/>
+<text x="314.3" y="63.0" font-size="2.7" text-anchor="middle" fill="#fff">3</text>
+<text x="319" y="63.0" font-size="2.8">Solid base of the roof: the first 300 (vertical)</text>
+<text x="319" y="66.5" font-size="2.8">above the eave is completely solid concrete, 400</text>
+<text x="319" y="70.0" font-size="2.8">wide, no air zone; there is no ring beam.</text>
+<circle cx="314.3" cy="74.5" r="2.3" fill="#000" stroke="#000" stroke-width="0.3"/>
+<text x="314.3" y="75.5" font-size="2.7" text-anchor="middle" fill="#fff">4</text>
+<text x="319" y="75.5" font-size="2.8">Buttress 400 wide, 1000 from the inner face (600</text>
+<text x="319" y="79.0" font-size="2.8">beyond the wall), one about every 1.5 m (8 per</text>
+<text x="319" y="82.5" font-size="2.8">side); it rises to +2.50, flush with the roof base.</text>
+<circle cx="314.3" cy="87.0" r="2.3" fill="#000" stroke="#000" stroke-width="0.3"/>
+<text x="314.3" y="88.0" font-size="2.7" text-anchor="middle" fill="#fff">5</text>
+<text x="319" y="88.0" font-size="2.8">Roof shell: 400 thick square to the slope at the</text>
+<text x="319" y="91.5" font-size="2.8">base (two 80 inner layers, a 160 air zone, an 80</text>
+<text x="319" y="95.0" font-size="2.8">outer layer), 320 at the crown; about 500 / 400</text>
+<text x="319" y="98.5" font-size="2.8">horizontally.</text>
+<circle cx="314.3" cy="103.0" r="2.3" fill="#000" stroke="#000" stroke-width="0.3"/>
+<text x="314.3" y="104.0" font-size="2.7" text-anchor="middle" fill="#fff">6</text>
+<text x="319" y="104.0" font-size="2.8">Crown opening 1000 clear; roof rises 6000 over 4500,</text>
+<text x="319" y="107.5" font-size="2.8">slope 53.1° (36.9° from the vertical).</text>
+<circle cx="314.3" cy="112.0" r="2.3" fill="#fff" stroke="#000" stroke-width="0.3"/>
+<text x="314.3" y="113.0" font-size="2.7" text-anchor="middle" fill="#000">7</text>
+<text x="319" y="113.0" font-size="2.8">Everything is 3D printed in 10 mm layers; crossed</text>
+<text x="319" y="116.5" font-size="2.8">hatch = solid cast concrete (roof base, ribs).</text>
+<text x="319" y="120.0" font-size="2.8">Printed layer joints and the cast fill of the</text>
+<text x="319" y="123.5" font-size="2.8">buttress and footing are shown in the roof-grid</text>
+<text x="319" y="127.0" font-size="2.8">sheets and in detail D1.</text>
+<circle cx="314.3" cy="131.5" r="2.3" fill="#fff" stroke="#000" stroke-width="0.3"/>
+<text x="314.3" y="132.5" font-size="2.7" text-anchor="middle" fill="#000">8</text>
+<text x="319" y="132.5" font-size="2.8">Outside the printed shell: insulation 100 (dotted),</text>
+<text x="319" y="136.0" font-size="2.8">then the outer layer (cladding 30, dark).</text>
+<circle cx="314.3" cy="140.5" r="2.3" fill="#fff" stroke="#000" stroke-width="0.3"/>
+<text x="314.3" y="141.5" font-size="2.7" text-anchor="middle" fill="#000">9</text>
+<text x="319" y="141.5" font-size="2.8">Cast ribs of the roof grid, seen on the back face as</text>
+<text x="319" y="145.0" font-size="2.8">dashed outlines (roof grid B, diamond lattice). The</text>
+<text x="319" y="148.5" font-size="2.8">cut lies in the air zone between ribs; rib sections</text>
+<text x="319" y="152.0" font-size="2.8">are on the roof-grid sheets.</text>
+<circle cx="314.3" cy="158.5" r="2" fill="#000"/><text x="319" y="159.5" font-size="2.7">from your sketches</text>
+<circle cx="314.3" cy="163.5" r="2" fill="#fff" stroke="#000" stroke-width="0.3"/><text x="319" y="164.5" font-size="2.7">assumed by me, to confirm</text>
+<text x="312" y="172.5" font-size="3.1" font-weight="bold">Notes</text>
+<text x="312" y="177.0" font-size="2.8">Layer pattern from your drawing; at the crown the second</text>
+<text x="314" y="180.5" font-size="2.8">inner layer ends, so the leaf is 80 there (assumed).</text>
+<text x="312" y="185.0" font-size="2.8">The cut runs through the 4th buttress from the south (y =</text>
+<text x="314" y="188.5" font-size="2.8">-743), as on the floor plan. Beyond it the north wall is</text>
+<text x="314" y="192.0" font-size="2.8">seen as on the plan: buttress every 1.5 m (strips outside</text>
+<text x="314" y="195.5" font-size="2.8">the wall), every other bay printed wall, the bays in</text>
+<text x="314" y="199.0" font-size="2.8">between full-height curtain wall (door in the middle one).</text>
+<text x="312" y="203.5" font-size="2.8">Faint grid on the back roof face and the north wall =</text>
+<text x="314" y="207.0" font-size="2.8">printed pieces in running bond, about 1500 wide (assumed</text>
+<text x="314" y="210.5" font-size="2.8">sizes). Dashed outlines on the back roof face = cast ribs.</text>
+<rect x="312.00" y="277" width="20.00" height="1.6" fill="#000" stroke="#000" stroke-width="0.2"/>
+<text x="312.00" y="276" font-size="2.5" text-anchor="middle">0</text>
+<rect x="332.00" y="277" width="20.00" height="1.6" fill="#fff" stroke="#000" stroke-width="0.2"/>
+<text x="332.00" y="276" font-size="2.5" text-anchor="middle">1</text>
+<rect x="352.00" y="277" width="20.00" height="1.6" fill="#000" stroke="#000" stroke-width="0.2"/>
+<text x="352.00" y="276" font-size="2.5" text-anchor="middle">2</text>
+<rect x="372.00" y="277" width="20.00" height="1.6" fill="#fff" stroke="#000" stroke-width="0.2"/>
+<text x="372.00" y="276" font-size="2.5" text-anchor="middle">3</text>
+<rect x="392.00" y="277" width="20.00" height="1.6" fill="#000" stroke="#000" stroke-width="0.2"/>
+<text x="392.00" y="276" font-size="2.5" text-anchor="middle">4</text>
+<text x="412.00" y="276" font-size="2.5" text-anchor="middle">5</text>
+<text x="415.00" y="278.4" font-size="2.5">m</text>
+<text x="312" y="285" font-size="2.6">Scale 1:50 at A3 · dimensions in mm · draft 1, 2026-10-11</text>
+<text x="312" y="288" font-size="2.6">pyramid-roof · hand estimates, not engineered</text>
+</svg>
