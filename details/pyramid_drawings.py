@@ -679,6 +679,11 @@ def piece_plan_b(sh, X0, Z0):
 
 def detail():
     ZB, ZT = 1500.0, 3400.0
+    def rx(h):
+        """layer edges at height h for THIS detail: constant thicknesses 160 leaf (two 80 layers) / 160 air zone / 80 outer layer, as at the eave
+        (the leaf only thins towards the crown, far above this detail)"""
+        x = -K * h
+        return (x, x + T_LEAF0 * SH, x + (T_LEAF0 + T_LAT) * SH, x + (T_LEAF0 + T_LAT + T_SKIN) * SH)
     sh = Sheet(10, 100, 420, "Detail D1: eave, roof to wall",
                "",
                [(1, False, "Roof outer layer 80, printed with the rest of the piece; outside it the insulation 100 (dotted) and the outer layer 30 (dark)."),
@@ -773,8 +778,8 @@ def detail():
     sh.dim_h([0, li, li + ll, WALL], ZB - 130, ext=ZB, labels=["{:g}".format(li), "{:g}".format(ll), "{:g}".format(WALL - li - ll)])
     sh.dim_h([WALL, WALL + BUT_L], ZB - 130, ext=ZB, labels=["{:g}".format(BUT_L)])
     sh.dim_h([0, BUT_TOTAL], ZB - 330, ext=ZB - 130, labels=["{:g} from the inner face".format(BUT_TOTAL)])
-    # dimension chain along the dash-dot cut, square to the slope: true thickness of each zone
-    pts = [tip(0), tip(1), tip(2), tip(3)]
+    # dimension chain along the dash-dot cut, square to the slope: true thickness of every layer, inside to outside
+    pts = [tip(0), tip(0, 80 * SH), tip(2), tip(3), tip(3, INS * SH), tip(3, (INS + CLAD) * SH)]       # layer 1 | rib core (layer 2 + 160 zone) | outer layer | insulation | cladding
     off = 420.0
     ang = -math.degrees(math.atan2(t_[1], t_[0]))
     ang = ang if abs(ang) <= 90 else ang + 180
@@ -784,7 +789,7 @@ def detail():
     for p_, q_ in zip(pts, dl):
         sh.line([(p_[0] + t_[0] * 60, p_[1] + t_[1] * 60), (q_[0] + t_[0] * 40, q_[1] + t_[1] * 40)], 0.12)
         sh.line([(q_[0] - (t_[0] + nrm[0]) * tk, q_[1] - (t_[1] + nrm[1]) * tk), (q_[0] + (t_[0] + nrm[0]) * tk, q_[1] + (t_[1] + nrm[1]) * tk)], 0.45)
-    for k in range(3):
+    for k in range(len(pts) - 1):
         mx, mz = (dl[k][0] + dl[k + 1][0]) / 2 + t_[0] * 60, (dl[k][1] + dl[k + 1][1]) / 2 + t_[1] * 60
         sh.text(mx, mz, "{:g}".format(round(math.hypot(pts[k + 1][0] - pts[k][0], pts[k + 1][1] - pts[k][1]))), 2.5, rot=ang)
     sh.text(-860, WALL_H + 30, "+2.50 eave", 2.6, "start", weight="bold")
