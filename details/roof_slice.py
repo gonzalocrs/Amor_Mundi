@@ -8,7 +8,7 @@ import pyramid_drawings as g
 import roof_grid as rg
 from pyramid_drawings import Sheet
 
-MAIN_H = 3400.0                  # large slice, above the eave (+5.90): just below the middle horizontal rib of grid A (at +6.13)
+MAIN_H = 3500.0                  # large slice, above the eave (+6.00): just below the middle horizontal rib of grid A (at +6.13)
 SMALL = [(4500.0, 250.0, 78.0), (5500.0, 250.0, 205.0)]    # (height above the eave, paper x, paper y of the centre) of the two small slices (+7.00, +8.00)
 SH = g.SH
 ALPHA = math.radians(g.SLOPE)
