@@ -325,30 +325,25 @@
 <circle cx="106.00" cy="269.00" r="0.35" fill="#000"/>
 <circle cx="134.00" cy="269.00" r="2.4" fill="#fff" stroke="#000" stroke-width="0.3"/>
 <text x="134.00" y="269.86" font-size="2.76" text-anchor="middle" fill="#000">12</text>
-<polygon points="217.00,262.00 187.00,222.00 192.00,222.00 222.00,262.00" fill="#000" stroke="#000" stroke-width="0.5" stroke-linejoin="round" />
-<polygon points="237.00,262.00 206.33,222.00 211.33,222.00 242.00,262.00" fill="#000" stroke="#000" stroke-width="0.5" stroke-linejoin="round" />
-<polygon points="222.00,262.00 210.75,247.00 215.50,247.00 227.00,262.00" fill="#000" stroke="#000" stroke-width="0.5" stroke-linejoin="round" />
-<polygon points="227.00,262.00 215.50,247.00 225.50,247.00 237.00,262.00" fill="#000" stroke="#000" stroke-width="0.5" stroke-linejoin="round" />
+<polygon points="205.75,247.00 187.00,222.00 192.00,222.00 210.75,247.00" fill="#000" stroke="#000" stroke-width="0.5" stroke-linejoin="round" />
+<polygon points="225.50,247.00 206.33,222.00 211.33,222.00 230.50,247.00" fill="#000" stroke="#000" stroke-width="0.5" stroke-linejoin="round" />
+<polygon points="217.00,262.00 205.75,247.00 230.50,247.00 242.00,262.00" fill="#000" stroke="#000" stroke-width="0.5" stroke-linejoin="round" />
 <polygon points="210.75,247.00 192.00,222.00 206.33,222.00 225.50,247.00" fill="#000" stroke="#000" stroke-width="0.5" stroke-linejoin="round" />
-<polygon points="217.00,262.00 187.00,222.00 192.00,222.00 222.00,262.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="217.00,262.00 187.00,222.00 192.00,222.00 222.00,262.00" fill="url(#conc)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<path d="M216.2,261.0 L221.2,261.0 M215.5,260.0 L220.5,260.0 M214.8,259.0 L219.8,259.0 M214.0,258.0 L219.0,258.0 M213.2,257.0 L218.2,257.0 M212.5,256.0 L217.5,256.0 M211.8,255.0 L216.8,255.0 M211.0,254.0 L216.0,254.0 M210.2,253.0 L215.2,253.0 M209.5,252.0 L214.5,252.0 M208.8,251.0 L213.8,251.0 M208.0,250.0 L213.0,250.0 M207.2,249.0 L212.2,249.0 M206.5,248.0 L211.5,248.0 M205.8,247.0 L210.8,247.0 M205.0,246.0 L210.0,246.0 M204.2,245.0 L209.2,245.0 M203.5,244.0 L208.5,244.0 M202.8,243.0 L207.8,243.0 M202.0,242.0 L207.0,242.0 M201.2,241.0 L206.2,241.0 M200.5,240.0 L205.5,240.0 M199.8,239.0 L204.8,239.0 M199.0,238.0 L204.0,238.0 M198.2,237.0 L203.2,237.0 M197.5,236.0 L202.5,236.0 M196.8,235.0 L201.8,235.0 M196.0,234.0 L201.0,234.0 M195.2,233.0 L200.2,233.0 M194.5,232.0 L199.5,232.0 M193.8,231.0 L198.8,231.0 M193.0,230.0 L198.0,230.0 M192.2,229.0 L197.2,229.0 M191.5,228.0 L196.5,228.0 M190.8,227.0 L195.8,227.0 M190.0,226.0 L195.0,226.0 M189.2,225.0 L194.2,225.0 M188.5,224.0 L193.5,224.0 M187.8,223.0 L192.8,223.0" fill="none" stroke="#000" stroke-width="0.06" stroke-linejoin="round"/>
-<polygon points="237.00,262.00 206.33,222.00 211.33,222.00 242.00,262.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="237.00,262.00 206.33,222.00 211.33,222.00 242.00,262.00" fill="url(#conc)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<path d="M236.2,261.0 L241.2,261.0 M235.5,260.0 L240.5,260.0 M234.7,259.0 L239.7,259.0 M233.9,258.0 L238.9,258.0 M233.2,257.0 L238.2,257.0 M232.4,256.0 L237.4,256.0 M231.6,255.0 L236.6,255.0 M230.9,254.0 L235.9,254.0 M230.1,253.0 L235.1,253.0 M229.3,252.0 L234.3,252.0 M228.6,251.0 L233.6,251.0 M227.8,250.0 L232.8,250.0 M227.0,249.0 L232.0,249.0 M226.3,248.0 L231.3,248.0 M225.5,247.0 L230.5,247.0 M224.7,246.0 L229.7,246.0 M224.0,245.0 L229.0,245.0 M223.2,244.0 L228.2,244.0 M222.4,243.0 L227.4,243.0 M221.7,242.0 L226.7,242.0 M220.9,241.0 L225.9,241.0 M220.1,240.0 L225.1,240.0 M219.4,239.0 L224.4,239.0 M218.6,238.0 L223.6,238.0 M217.8,237.0 L222.8,237.0 M217.1,236.0 L222.1,236.0 M216.3,235.0 L221.3,235.0 M215.5,234.0 L220.5,234.0 M214.8,233.0 L219.8,233.0 M214.0,232.0 L219.0,232.0 M213.2,231.0 L218.2,231.0 M212.5,230.0 L217.5,230.0 M211.7,229.0 L216.7,229.0 M210.9,228.0 L215.9,228.0 M210.2,227.0 L215.2,227.0 M209.4,226.0 L214.4,226.0 M208.6,225.0 L213.6,225.0 M207.9,224.0 L212.9,224.0 M207.1,223.0 L212.1,223.0" fill="none" stroke="#000" stroke-width="0.06" stroke-linejoin="round"/>
-<polygon points="222.00,262.00 210.75,247.00 215.50,247.00 227.00,262.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="222.00,262.00 210.75,247.00 215.50,247.00 227.00,262.00" fill="url(#conc)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<path d="M221.2,261.0 L226.2,261.0 M220.5,260.0 L225.5,260.0 M219.8,259.0 L224.7,259.0 M219.0,258.0 L223.9,258.0 M218.2,257.0 L223.2,257.0 M217.5,256.0 L222.4,256.0 M216.8,255.0 L221.6,255.0 M216.0,254.0 L220.9,254.0 M215.2,253.0 L220.1,253.0 M214.5,252.0 L219.3,252.0 M213.8,251.0 L218.6,251.0 M213.0,250.0 L217.8,250.0 M212.2,249.0 L217.0,249.0 M211.5,248.0 L216.3,248.0" fill="none" stroke="#000" stroke-width="0.06" stroke-linejoin="round"/>
-<polygon points="227.00,262.00 215.50,247.00 225.50,247.00 237.00,262.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="227.00,262.00 215.50,247.00 225.50,247.00 237.00,262.00" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="205.75,247.00 187.00,222.00 192.00,222.00 210.75,247.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="205.75,247.00 187.00,222.00 192.00,222.00 210.75,247.00" fill="url(#conc)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<path d="M205.0,246.0 L210.0,246.0 M204.2,245.0 L209.2,245.0 M203.5,244.0 L208.5,244.0 M202.8,243.0 L207.8,243.0 M202.0,242.0 L207.0,242.0 M201.2,241.0 L206.2,241.0 M200.5,240.0 L205.5,240.0 M199.8,239.0 L204.8,239.0 M199.0,238.0 L204.0,238.0 M198.2,237.0 L203.2,237.0 M197.5,236.0 L202.5,236.0 M196.8,235.0 L201.8,235.0 M196.0,234.0 L201.0,234.0 M195.2,233.0 L200.2,233.0 M194.5,232.0 L199.5,232.0 M193.8,231.0 L198.8,231.0 M193.0,230.0 L198.0,230.0 M192.2,229.0 L197.2,229.0 M191.5,228.0 L196.5,228.0 M190.8,227.0 L195.8,227.0 M190.0,226.0 L195.0,226.0 M189.2,225.0 L194.2,225.0 M188.5,224.0 L193.5,224.0 M187.8,223.0 L192.8,223.0" fill="none" stroke="#000" stroke-width="0.06" stroke-linejoin="round"/>
+<polygon points="225.50,247.00 206.33,222.00 211.33,222.00 230.50,247.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="225.50,247.00 206.33,222.00 211.33,222.00 230.50,247.00" fill="url(#conc)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<path d="M224.7,246.0 L229.7,246.0 M224.0,245.0 L229.0,245.0 M223.2,244.0 L228.2,244.0 M222.4,243.0 L227.4,243.0 M221.7,242.0 L226.7,242.0 M220.9,241.0 L225.9,241.0 M220.1,240.0 L225.1,240.0 M219.4,239.0 L224.4,239.0 M218.6,238.0 L223.6,238.0 M217.8,237.0 L222.8,237.0 M217.1,236.0 L222.1,236.0 M216.3,235.0 L221.3,235.0 M215.5,234.0 L220.5,234.0 M214.8,233.0 L219.8,233.0 M214.0,232.0 L219.0,232.0 M213.2,231.0 L218.2,231.0 M212.5,230.0 L217.5,230.0 M211.7,229.0 L216.7,229.0 M210.9,228.0 L215.9,228.0 M210.2,227.0 L215.2,227.0 M209.4,226.0 L214.4,226.0 M208.6,225.0 L213.6,225.0 M207.9,224.0 L212.9,224.0 M207.1,223.0 L212.1,223.0" fill="none" stroke="#000" stroke-width="0.06" stroke-linejoin="round"/>
+<polygon points="217.00,262.00 205.75,247.00 230.50,247.00 242.00,262.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
+<polygon points="217.00,262.00 205.75,247.00 230.50,247.00 242.00,262.00" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
 <polygon points="210.75,247.00 192.00,222.00 206.33,222.00 225.50,247.00" fill="#fff" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
 <polygon points="210.75,247.00 192.00,222.00 206.33,222.00 225.50,247.00" fill="url(#cast)" stroke="#000" stroke-width="0.0" stroke-linejoin="round" />
-<polygon points="217.00,262.00 187.00,222.00 192.00,222.00 222.00,262.00" fill="none" stroke="#000" stroke-width="0.4" stroke-linejoin="round" />
-<polygon points="237.00,262.00 206.33,222.00 211.33,222.00 242.00,262.00" fill="none" stroke="#000" stroke-width="0.4" stroke-linejoin="round" />
-<polygon points="222.00,262.00 210.75,247.00 215.50,247.00 227.00,262.00" fill="none" stroke="#000" stroke-width="0.4" stroke-linejoin="round" />
-<polygon points="227.00,262.00 215.50,247.00 225.50,247.00 237.00,262.00" fill="none" stroke="#000" stroke-width="0.4" stroke-linejoin="round" />
+<polygon points="205.75,247.00 187.00,222.00 192.00,222.00 210.75,247.00" fill="none" stroke="#000" stroke-width="0.4" stroke-linejoin="round" />
+<polygon points="225.50,247.00 206.33,222.00 211.33,222.00 230.50,247.00" fill="none" stroke="#000" stroke-width="0.4" stroke-linejoin="round" />
+<polygon points="217.00,262.00 205.75,247.00 230.50,247.00 242.00,262.00" fill="none" stroke="#000" stroke-width="0.4" stroke-linejoin="round" />
 <polygon points="210.75,247.00 192.00,222.00 206.33,222.00 225.50,247.00" fill="none" stroke="#000" stroke-width="0.4" stroke-linejoin="round" />
-<polyline points="210.75,247.00 225.50,247.00" fill="none" stroke="#000" stroke-width="0.3" stroke-linejoin="round" stroke-dasharray="2 1" />
+<polyline points="210.75,247.00 225.50,247.00" fill="none" stroke="#fff" stroke-width="0.5" stroke-linejoin="round" />
 <polyline points="199.50,232.00 214.00,232.00" fill="none" stroke="#000" stroke-width="0.3" stroke-linejoin="round" stroke-dasharray="2 1" />
 <polyline points="227.50,262.00 197.17,222.00" fill="none" stroke="#000" stroke-width="0.8" stroke-linejoin="round" />
 <polyline points="231.50,262.00 201.17,222.00" fill="none" stroke="#000" stroke-width="0.8" stroke-linejoin="round" />
@@ -414,40 +409,41 @@
 <text x="312" y="135.5" font-size="2.8">(10) Printed channel walls, 80 each side of the rib: permanent</text>
 <text x="316" y="139.0" font-size="2.8">formwork, printed in the same pass as the shell (layer 2 turns</text>
 <text x="316" y="142.5" font-size="2.8">into them).</text>
-<text x="312" y="147.5" font-size="2.8">(11*) Poured core: the first lift is the solid base (300), then</text>
-<text x="316" y="151.0" font-size="2.8">the rib is poured in lifts of about 600 (assumed), without a joint</text>
-<text x="316" y="154.5" font-size="2.8">between base and rib; dashed lines = lift joints. Printed layer</text>
-<text x="316" y="158.0" font-size="2.8">joints are every 10 (drawn every 20 here).</text>
-<text x="312" y="163.0" font-size="2.8">(12*) Build-up outside the printed shell, seen at the sides of the</text>
-<text x="316" y="166.5" font-size="2.8">roof: insulation 100 (type to be chosen), then the outer layer</text>
-<text x="316" y="170.0" font-size="2.8">(cladding 30). The 160 air zone inside the shell stays open</text>
-<text x="316" y="173.5" font-size="2.8">between the ribs.</text>
-<text x="312" y="179.5" font-size="2.8">* = assumed, to confirm</text>
-<text x="312" y="187.5" font-size="3.1" font-weight="bold">Notes</text>
-<text x="312" y="192.0" font-size="2.8">Every diagonal ends on a ring or on a hip, so no bar has a</text>
-<text x="314" y="195.5" font-size="2.8">free end in the shell.</text>
-<text x="312" y="200.0" font-size="2.8">Diagonals do not stop as the roof narrows: the diamonds</text>
-<text x="314" y="203.5" font-size="2.8">just get clipped by the hips.</text>
-<text x="312" y="208.0" font-size="2.8">Dashed lines = divisions between printed pieces on the</text>
-<text x="314" y="211.5" font-size="2.8">roof, in running bond (assumed about 1500 wide, 750 high).</text>
-<text x="314" y="215.0" font-size="2.8">Very faint lines = printed layer joints.</text>
-<text x="312" y="219.5" font-size="2.8">All 3D printed (after the Obayashi 3dpod paper, 2023):</text>
-<text x="314" y="223.0" font-size="2.8">mortar beads are printed as permanent formwork, in 10 mm</text>
-<text x="314" y="226.5" font-size="2.8">layers (joints drawn every 100 on the elevation), and the</text>
-<text x="314" y="230.0" font-size="2.8">structural concrete is cast into them in lifts limited by</text>
-<text x="314" y="233.5" font-size="2.8">formwork pressure; the shell, wall and buttress faces are</text>
-<text x="314" y="237.0" font-size="2.8">the printed skin.</text>
-<text x="312" y="241.5" font-size="2.8">The paper fills the formwork with self-compacting</text>
-<text x="314" y="245.0" font-size="2.8">steel-fibre UHPC (about 180 N/mm2 compression, 8.8</text>
-<text x="314" y="248.5" font-size="2.8">tension) and needs no rebar in principle; if you use it,</text>
-<text x="314" y="252.0" font-size="2.8">the Ø16 bars in the ribs can be dropped or cut back, to be</text>
-<text x="314" y="255.5" font-size="2.8">confirmed with the engineer.</text>
-<text x="312" y="260.0" font-size="2.8">Rough quantities, four faces (hips counted twice, so</text>
-<text x="314" y="263.5" font-size="2.8">slightly high): ribs 330 m, 4 Ø16 each bars, steel 2085</text>
-<text x="314" y="267.0" font-size="2.8">kg, cast concrete 12.7 m3.</text>
-<text x="312" y="271.5" font-size="2.8">Rib size, bar count and the 160 x 240 channel are</text>
-<text x="314" y="275.0" font-size="2.8">assumptions for the engineer to check. Elevation shows the</text>
-<text x="314" y="278.5" font-size="2.8">face square on; true lengths are 1.25 x the drawn heights.</text>
+<text x="312" y="147.5" font-size="2.8">(11*) Poured core: the solid base (300, full concrete over the</text>
+<text x="316" y="151.0" font-size="2.8">whole 400) and the rib are poured together, in lifts of about 600</text>
+<text x="316" y="154.5" font-size="2.8">from the eave (assumed), with no joint between base and rib;</text>
+<text x="316" y="158.0" font-size="2.8">dashed lines = lift joints. Printed layer joints are every 10</text>
+<text x="316" y="161.5" font-size="2.8">(drawn every 20 here).</text>
+<text x="312" y="166.5" font-size="2.8">(12*) Build-up outside the printed shell, seen at the sides of the</text>
+<text x="316" y="170.0" font-size="2.8">roof: insulation 100 (type to be chosen), then the outer layer</text>
+<text x="316" y="173.5" font-size="2.8">(cladding 30). The 160 air zone inside the shell stays open</text>
+<text x="316" y="177.0" font-size="2.8">between the ribs.</text>
+<text x="312" y="183.0" font-size="2.8">* = assumed, to confirm</text>
+<text x="312" y="191.0" font-size="3.1" font-weight="bold">Notes</text>
+<text x="312" y="195.5" font-size="2.8">Every diagonal ends on a ring or on a hip, so no bar has a</text>
+<text x="314" y="199.0" font-size="2.8">free end in the shell.</text>
+<text x="312" y="203.5" font-size="2.8">Diagonals do not stop as the roof narrows: the diamonds</text>
+<text x="314" y="207.0" font-size="2.8">just get clipped by the hips.</text>
+<text x="312" y="211.5" font-size="2.8">Dashed lines = divisions between printed pieces on the</text>
+<text x="314" y="215.0" font-size="2.8">roof, in running bond (assumed about 1500 wide, 750 high).</text>
+<text x="314" y="218.5" font-size="2.8">Very faint lines = printed layer joints.</text>
+<text x="312" y="223.0" font-size="2.8">All 3D printed (after the Obayashi 3dpod paper, 2023):</text>
+<text x="314" y="226.5" font-size="2.8">mortar beads are printed as permanent formwork, in 10 mm</text>
+<text x="314" y="230.0" font-size="2.8">layers (joints drawn every 100 on the elevation), and the</text>
+<text x="314" y="233.5" font-size="2.8">structural concrete is cast into them in lifts limited by</text>
+<text x="314" y="237.0" font-size="2.8">formwork pressure; the shell, wall and buttress faces are</text>
+<text x="314" y="240.5" font-size="2.8">the printed skin.</text>
+<text x="312" y="245.0" font-size="2.8">The paper fills the formwork with self-compacting</text>
+<text x="314" y="248.5" font-size="2.8">steel-fibre UHPC (about 180 N/mm2 compression, 8.8</text>
+<text x="314" y="252.0" font-size="2.8">tension) and needs no rebar in principle; if you use it,</text>
+<text x="314" y="255.5" font-size="2.8">the Ø16 bars in the ribs can be dropped or cut back, to be</text>
+<text x="314" y="259.0" font-size="2.8">confirmed with the engineer.</text>
+<text x="312" y="263.5" font-size="2.8">Rough quantities, four faces (hips counted twice, so</text>
+<text x="314" y="267.0" font-size="2.8">slightly high): ribs 330 m, 4 Ø16 each bars, steel 2085</text>
+<text x="314" y="270.5" font-size="2.8">kg, cast concrete 12.7 m3.</text>
+<text x="312" y="275.0" font-size="2.8">Rib size, bar count and the 160 x 240 channel are</text>
+<text x="314" y="278.5" font-size="2.8">assumptions for the engineer to check. Elevation shows the</text>
+<text x="314" y="282.0" font-size="2.8">face square on; true lengths are 1.25 x the drawn heights.</text>
 <rect x="312.00" y="277" width="20.00" height="1.6" fill="#000" stroke="#000" stroke-width="0.2"/>
 <text x="312.00" y="276" font-size="2.5" text-anchor="middle">0</text>
 <rect x="332.00" y="277" width="20.00" height="1.6" fill="#fff" stroke="#000" stroke-width="0.2"/>

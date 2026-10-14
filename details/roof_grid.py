@@ -155,26 +155,26 @@ def section_long(sh, X0, Z0, F=2.5, H=800.0):
     def band(f0, f1, h0, h1):        # f0, f1 return the x offsets of the two edges at height h
         return [M(f0(h0), h0), M(f0(h1), h1), M(f1(h1), h1), M(f1(h0), h0)]
     e0 = lambda h: rx(h)[0]; e1 = lambda h: rx(h)[0] + off1; e2 = lambda h: rx(h)[1]; e3 = lambda h: rx(h)[2]; e4 = lambda h: rx(h)[3]
-    layer1 = band(e0, e1, 0, H)
-    skin = band(e3, e4, 0, H)
+    layer1 = band(e0, e1, SOL, H)                # printed above the base
+    skin = band(e3, e4, SOL, H)
     ins_b = band(e4, lambda h: rx(h)[3] + INS * SH, 0, H)
     cl_b = band(lambda h: rx(h)[3] + INS * SH, lambda h: rx(h)[3] + (INS + CLAD) * SH, 0, H)
-    base_l2 = band(e1, e2, 0, SOL)               # layer 2 stays printed in the base
-    base_cast = band(e2, e3, 0, SOL)             # the 160 zone is cast
+    base_cast = band(e0, e4, 0, SOL)             # the bottom 300 is full concrete over the whole 400, one pour with the rib
     rib_cast = band(e1, e3, SOL, H)              # above the base the channel cuts through layer 2: core = layer 2 + 160 zone
     z0 = Z0
-    for p in (layer1, skin, base_l2):
+    for p in (layer1, skin):
         sh.poly(p, "#000", 0.5)
     for p in (base_cast, rib_cast):
         sh.poly(p, "#000", 0.5)
-    for p in (layer1, skin, base_l2):
+    for p in (layer1, skin):
         sh.poly(p, "#fff", 0.0); sh.poly(p, "url(#conc)", 0.0); layers(sh, p, z0, 0.06, step=20 * F)
     for p in (base_cast, rib_cast):
         sh.poly(p, "#fff", 0.0); sh.poly(p, "url(#cast)", 0.0)
-    for p in (layer1, skin, base_l2, base_cast, rib_cast):
+    for p in (layer1, skin, base_cast, rib_cast):
         sh.poly(p, "none", 0.4)
+    sh.line([M(e1(SOL), SOL), M(e3(SOL), SOL)], 0.5, "#fff")                         # no joint between the base and the rib core
     # pour lifts across the core
-    for h in (SOL, 2 * SOL + 0.0):
+    for h in (600.0,):                                                                # first lift = the base and the first 300 of the rib together
         if h < H:
             sh.line([M(e1(h), h), M(e3(h), h)], 0.3, "#000", dash="2 1")
     # rebar: 2 of the 4 Ø16 are in the cut plane, stirrups Ø8 every 200
@@ -202,7 +202,7 @@ def common_legend(opt):
          (5, False, "Outer skin 80: continuous, covers the grid on the outside (cladding on it)."),
          (6, True, "Between the ribs the air zone stays open for thermal insulation (dotted)."),
          (10, False, "Printed channel walls, 80 each side of the rib: permanent formwork, printed in the same pass as the shell (layer 2 turns into them)."),
-         (11, True, "Poured core: the first lift is the solid base (300), then the rib is poured in lifts of about 600 (assumed), without a joint between base and rib; dashed lines = lift joints. Printed layer joints are every 10 (drawn every 20 here).")]
+         (11, True, "Poured core: the solid base (300, full concrete over the whole 400) and the rib are poured together, in lifts of about 600 from the eave (assumed), with no joint between base and rib; dashed lines = lift joints. Printed layer joints are every 10 (drawn every 20 here).")]
     return L
 
 def building(sh):

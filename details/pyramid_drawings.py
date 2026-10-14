@@ -685,10 +685,10 @@ def detail():
                 (2, False, "Zig-zag lattice 80 in a 160 zone; it touches the outer layer and layer 2 every @ 600; the cells between are open air pockets for ventilation."),
                 (3, False, "Layer 2, 80: printed bead; beside each rib it turns into the printed channel walls (see the plan cut)."),
                 (4, False, "Inner layer 1, 80, room side. Layers 1 and 2 together are the structural leaf: 160 at the base, 80 at the crown (layer 2 ends)."),
-                (5, True, "Rib (cast column): channel 160 wide x 240 deep through layer 2 and the 160 zone, filled with poured concrete; section cut along the rib. It continues into the solid base without a joint."),
+                (5, True, "Rib (cast column): channel 160 wide x 240 deep through layer 2 and the 160 zone, filled with poured concrete; section cut along the rib. It rises out of the solid base in the same pour, without a joint."),
                 (6, True, "Rib bars R, 4 Ø16 (2 in the cut), anchored in the solid base where they cross the hooks of the wall bars A (assumed; steel fibre in the concrete could replace them)."),
                 (7, True, "Stirrups Ø8 every 200 (assumed)."),
-                (8, False, "Solid base of the roof: over the first 300 (vertical) above the eave the 160 zone between the printed layers is filled with cast concrete instead of the open lattice; wall bars A hook into it. Replaces the ring beam."),
+                (8, False, "Solid base of the roof: the first 300 (vertical) above the eave is full cast concrete over the whole 400, no air zone, poured in one go with the rib above it; wall bars A hook into it. Replaces the ring beam."),
                 (9, False, "Buttress 400 wide, 1000 from the inner face (600 beyond the wall): printed formwork (80 end cap shown) filled with cast concrete; top flush with the roof base at +2.50."),
                 (10, True, "Wall 400 printed, same pattern as the roof; wall bars A Ø16 run from the footing up into the solid base and end in a 160 hook (assumed). The roof grid is A or B (see the roof-grid sheets); the detail is cut along a rib.")],
                [])
@@ -731,14 +731,16 @@ def detail():
     for p in (layer1, layer2, latp, skinp):
         sh.poly(p, "none", 0.45)
     # solid base: the first SOLID_H of the roof is one block of concrete over the full thickness, covering the layers drawn above
-    solid = [(rx(0)[1], ZH), (rx(SOLID_H)[1], ZH + SOLID_H), (rx(SOLID_H)[2], ZH + SOLID_H), (rx(0)[2], ZH)]
-    sh.poly(solid, "#fff", 0.0); sh.poly(solid, "url(#cast)", 0.0)      # air zone filled with cast concrete; layers 1, 2 and the outer layer stay printed
+    solid = [(rx(0)[0], ZH), (rx(SOLID_H)[0], ZH + SOLID_H), (rx(SOLID_H)[3], ZH + SOLID_H), (rx(0)[3], ZH)]
+    sh.poly(solid, "#fff", 0.0); sh.poly(solid, "url(#cast)", 0.0)      # the bottom 300 is full concrete over the whole 400, in one pour with the rib above it
     # rib: above the solid base the channel replaces layer 2 and the 160 zone, filled with poured concrete (no joint with the base)
     off1 = 80 * SH
     core = [(rx(SOLID_H)[0] + off1, ZH + SOLID_H), tip(0, off1), tip(2), (rx(SOLID_H)[2], ZH + SOLID_H)]
     sh.poly(core, "#fff", 0.0); sh.poly(core, "url(#cast)", 0.0)
     sh.line([(rx(SOLID_H)[0] + off1, ZH + SOLID_H), tip(0, off1), tip(2), (rx(SOLID_H)[2], ZH + SOLID_H)], 0.55)
-    sh.line([(rx(0)[1], ZH), (rx(SOLID_H)[1], ZH + SOLID_H)], 0.55); sh.line([(rx(0)[2], ZH), (rx(SOLID_H)[2], ZH + SOLID_H)], 0.55)
+    sh.line([(rx(SOLID_H)[0], ZH + SOLID_H), (rx(SOLID_H)[0] + off1, ZH + SOLID_H)], 0.55)            # layer 1 and the outer layer start (printed) on top of the block; no line across the rib core
+    sh.line([(rx(SOLID_H)[2], ZH + SOLID_H), (rx(SOLID_H)[3], ZH + SOLID_H)], 0.55)
+    sh.line([(rx(SOLID_H)[0], ZH + SOLID_H), (rx(0)[0], ZH), (rx(0)[3], ZH), (rx(SOLID_H)[3], ZH + SOLID_H)], 0.55)
     loops(sh, "lpd", li, li + ll, ZB, WALL_H, INS_LW)      # wall: loop symbol from the reference
     # insulation (dotted) and outer layer (dark) outside the printed shell, up to the cut line
     for a0, a1, kind in ((0.0, INS * SH, "ins"), (INS * SH, (INS + CLAD) * SH, "clad")):
