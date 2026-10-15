@@ -204,4 +204,4 @@ def sheet(opt, h_cut=CUT_H):
 
 if __name__ == "__main__":
     import make_set
-    make_set.main()          # the whole drawing set: details/set/*.pdf, the merged set PDF and details/set/cad/*.dxf
+    make_set.main()          # the whole drawing set, in a new version folder details/set/VV_date/ (PDFs, merged PDF, cad/*.dxf)

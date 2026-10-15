@@ -1,11 +1,13 @@
 """Builds the complete drawing set: one A3 PDF per sheet, the whole set as one PDF, and an editable DXF per sheet
 (model space 1:1 in mm, paper-space layout "A3 sheet" at the sheet scale, real DIMENSION entities).
 
-Run:  python details/make_set.py      ->  details/set/NN-name.pdf, details/set/pyramid-roof-drawing-set.pdf, details/set/cad/NN-name.dxf,
-                                          details/set/cad/pyramid-roof-drawing-set.dxf (all sheets in one file, one layout each)
+Run:  python details/make_set.py "what changed"
+Every run writes a NEW set folder details/set/VV_YYYY-MM-DD_what-changed/ (VV = next version number), so older sets are kept
+for comparison and never overwritten. In it: NN-name.pdf, pyramid-roof-drawing-set.pdf, cad/NN-name.dxf and
+cad/pyramid-roof-drawing-set.dxf (all sheets in one file, one layout each).
 Needs:  pip install cairosvg ezdxf shapely   (and pdfunite from poppler-utils, or pypdf, to merge the set)
         cairosvg needs the Cairo library; without it (Windows without the GTK runtime) the PDFs are printed with headless Microsoft Edge (or Chrome)."""
-import os, sys, subprocess
+import os, re, sys, subprocess, datetime
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import pyramid_drawings as pd
 import roof_grid as rg
@@ -49,11 +51,20 @@ def svg_to_pdf(sh, path):
         subprocess.run([browser, "--headless=new", "--disable-gpu", "--no-pdf-header-footer", "--print-to-pdf=" + os.path.abspath(path),
                         "file:///" + html.replace("\\", "/")], check=True, capture_output=True, timeout=120)
 
-def main(dxf_only=False):
+def new_set_dir(root, label=""):
+    """next version folder in root: VV_YYYY-MM-DD[_label], VV one more than the highest existing version"""
+    os.makedirs(root, exist_ok=True)
+    vs = [int(m.group(1)) for d in os.listdir(root) for m in [re.match(r"(\d+)_", d)] if m and os.path.isdir(os.path.join(root, d))]
+    slug = re.sub(r"[^a-z0-9]+", "-", label.lower()).strip("-")
+    name = "{:02d}_{}".format(max(vs, default=0) + 1, datetime.date.today().isoformat()) + ("_" + slug if slug else "")
+    return os.path.join(root, name)
+
+def main(dxf_only=False, label=""):
     import cad_export
     here = os.path.dirname(os.path.abspath(__file__))
-    out = os.path.join(here, "set"); cad = os.path.join(out, "cad")
-    os.makedirs(cad, exist_ok=True)
+    out = new_set_dir(os.path.join(here, "set"), label); cad = os.path.join(out, "cad")
+    os.makedirs(cad)
+    print("new drawing set:", out)
     pdfs, sheets = [], []
     for no, name, build, note in SHEETS:
         sh = build()
@@ -78,4 +89,4 @@ def main(dxf_only=False):
         print("wrote", merged)
 
 if __name__ == "__main__":
-    main()
+    main(label=" ".join(sys.argv[1:]))
