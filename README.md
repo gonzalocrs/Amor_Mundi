@@ -77,10 +77,12 @@ slider to it. Inputs you leave out keep the drawing value. They work the same fo
 | Group | Inputs (default) |
 |---|---|
 | Plan and heights | `clear` (10000), `wall` (400), `wall_h` (2500), `base_h` (300, solid roof base = ring beam depth), `rise` (6000), `slope` (deg; if connected it replaces `rise`), `opening` (1000) |
-| Roof thickness, square to the slope | `leaf_base` (160) → `leaf_crown` (80), `lattice` (160), `skin` (80), `fill` (0.35, solid share of the lattice zone) |
-| Ribs | `rib_w` (160), `rib_d` (240); grid A: `n_cols` (10, even), `min_pitch` (500); grid B: `n_diamonds` (8) |
+| Printed layers (roof square to the slope, and walls) | `bead` (30, print width of every printed layer), `outer_beads` (1), `lattice` (120, roof lattice + insulation zone), `fill` (0.25, solid share of the lattice zones), `all_layers` (False: only the skins carry load). Roof = inner bead + rib zone (`rib_d`) + middle bead + lattice + outer beads = 370; wall = inner bead + lattice + outer beads = `wall` |
+| Ribs | `rib_w` (160), `rib_d` (160, = depth of the rib zone); grid A: `n_cols` (10, even), `min_pitch` (500); grid B: `n_diamonds` (8) |
 | Crown ring | `crown_ring` (True), `crown_b` (200), `crown_h` (200) |
 | Buttresses | `but_spacing` (1500), `but_total` (1000 from the inner face), `but_w` (400) |
+| Walls, ring and caps | `ring` (True; False = no ring beam, the roof lands on the wall top or, without walls, on the buttresses at the rib feet), `but_on_ribs` (False; True = one buttress under every rib foot: grid A `n_cols` bays, grid B `n_diamonds` bays), `but_cap` (True: buttress tops cast into the ring beam), `walls` (True; False = no structural walls: the ring beam sits on the buttresses only, supports move under the buttresses, `wall_meshes` and `wind_walls` come out empty) |
+| Foundation | `footing` (False; True = strip footing on the wall line + a footing beam under each buttress, supports under it, output `foot_lines`), `foot_w` (800), `foot_h` (500), `foot_ext` (300 beyond the buttress) |
 | Mesh and loads | `mesh_size` (500), `wind_dir`, `qp`, `clad`, `gamma`, `fck`, `kf`, `fixed` |
 
 A slider combination that can't be built (for example an opening wider than the plan) gives empty outputs and the
@@ -90,13 +92,14 @@ reason in `info`, so an optimiser run doesn't stop on an error.
 
 | Output | Karamba component |
 |---|---|
-| `roof_meshes`, `wall_meshes`, `but_meshes` | one **Mesh to Shell** each. Shell cross-section height: `t_roof_elems` for the roof (one thickness per element, tapering like the drawings) if your Karamba version takes a list of heights per element, otherwise `t_roof` (the area-weighted average); `t_wall`, `t_but` for the others. Material from `material`, density `gamma_roof` / `gamma_wall` so the hollow printed layers weigh the right amount |
+| `roof_meshes`, `wall_meshes`, `but_meshes` | one **Mesh to Shell** each. Shell cross-section height `t_roof`, `t_wall` (the EQUIVALENT shells of the printed skins, not the 400 build-up) and `t_but`. Printed materials take `E_roof` / `G_roof` / `fc_roof` / `ft_roof` / `gamma_roof` (and the `_wall` set) from the script, so stiffness, strength and weight match the real hollow build-up; see `grasshopper/karamba-analysis-guide.md` |
 | `ring_lines` | **Line to Beam**, rectangular `ring_b` x `ring_h` (the solid roof base) |
 | `crown_lines` | **Line to Beam**, rectangular `crown_b` x `crown_h` |
+| `cap_lines` | **Line to Beam**, Id `cap`, the ring beam's section: the solid roof base cast over each buttress top (detail D1); `but_cap` = False leaves them out |
 | `rib_lines` | **Line to Beam** with `rib_ids` into its Id input; rectangular `rib_w` x `rib_d`, full concrete density. The ids (`col`, `hring`, `hip` for A; `diag`, `hip` for B) let you give the hips or the horizontal ribs their own section. Empty for `none`. |
 | `supports` | **Support** (fixed, or pinned with `fixed` = False) |
 | gravity | Karamba **Gravity** load |
-| `cladding` | **Mesh Load** on `roof_meshes` |
+| `cladding` | **Mesh Load** on `roof_meshes` (`clad`, default 0: bare structure) |
 | `wind_vecs`, `wind_walls` | **Mesh Load**, one per mesh, same order (4 load cases: rotate `wind_dir` 0 / 90 / 180 / 270) |
 
 Then **Assemble** all, **Analyze**, and read utilisation, reactions at `supports` and the displacement.

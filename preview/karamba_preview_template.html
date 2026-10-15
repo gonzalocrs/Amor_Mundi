@@ -133,9 +133,10 @@ code { font-family: var(--font-data); font-size: 0.92em; }
         <tr><td>wall_h · base_h</td><td>eave 2500, solid roof base 300</td></tr>
         <tr><td>rise or slope</td><td>6000, or an angle in degrees (53.1°)</td></tr>
         <tr><td>opening</td><td>crown opening 1000</td></tr>
-        <tr><td>leaf_base · leaf_crown</td><td>structural leaf 160 → 80</td></tr>
-        <tr><td>lattice · skin · fill</td><td>160 zone, 80 skin, 35 % solid</td></tr>
-        <tr><td>rib_w · rib_d</td><td>ribs 160 × 240</td></tr>
+        <tr><td>bead · outer_beads</td><td>print width 30, 2 outer beads</td></tr>
+        <tr><td>lattice · fill</td><td>120 lattice + insulation zone, 25 % solid</td></tr>
+        <tr><td>all_layers</td><td>False: only the skins carry load</td></tr>
+        <tr><td>rib_w · rib_d</td><td>ribs 160 × 160 (rib zone depth)</td></tr>
         <tr><td>n_cols · min_pitch</td><td>grid A: 10 bays, stop at 500 spacing</td></tr>
         <tr><td>n_diamonds</td><td>grid B: 8 diamonds</td></tr>
         <tr><td>crown_b · crown_h</td><td>crown ring 200 × 200</td></tr>
@@ -147,8 +148,8 @@ code { font-family: var(--font-data); font-size: 0.92em; }
       <h2>Wiring in Grasshopper</h2>
       <table class="wire">
         <tr><td>grid</td><td>"A", "B" or "none" (panel or value list)</td></tr>
-        <tr><td>roof_meshes</td><td>Mesh to Shell, t_roof_elems (400 → 320) or t_roof</td></tr>
-        <tr><td>wall_meshes</td><td>Mesh to Shell, 400</td></tr>
+        <tr><td>roof_meshes</td><td>Mesh to Shell, t_roof (equivalent shell of the skins)</td></tr>
+        <tr><td>wall_meshes</td><td>Mesh to Shell, t_wall (equivalent shell)</td></tr>
         <tr><td>but_meshes</td><td>Mesh to Shell, 400 (32 buttresses)</td></tr>
         <tr><td>ring_lines</td><td>Line to Beam, ring_b × ring_h (the solid roof base)</td></tr>
         <tr><td>crown_lines</td><td>Line to Beam, crown_b × crown_h</td></tr>
