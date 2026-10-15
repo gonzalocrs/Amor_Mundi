@@ -9,7 +9,6 @@ import pyramid_drawings as g
 from pyramid_drawings import Sheet, rect, layers
 
 # ================= PARAMETERS =================
-INS, CLAD = 100.0, 30.0       # insulation outside the printed shell, outer layer (cladding) on top of it (assumed)
 BUT_SPACING = 1500.0       # buttress spacing along the wall, about (7 equal bays on the 10400 centreline)
 RIB_W, RIB_D = g.RIB_W, g.RIB_D   # rib / column width in the face; depth = the rib zone between the inner and the middle bead
 MIN_PITCH = 500.0          # A: smallest column spacing allowed; below this every other column stops
@@ -125,10 +124,6 @@ def section_inset(sh, X0, Z0, F=5.0, callouts=True, W_=700.0):
     for q in beads:
         q = [M(*pt) for pt in q]
         sh.poly(q, "#fff", 0.4); sh.poly(q, "url(#conc)", 0.0)
-    q_ins = [M(0, -INS), M(W_, -INS), M(W_, 0), M(0, 0)]                                 # insulation outside the outer beads
-    q_cl = [M(0, -INS - CLAD), M(W_, -INS - CLAD), M(W_, -INS), M(0, -INS)]              # outer layer
-    sh.poly(q_ins, "#fff", 0.0); sh.poly(q_ins, "url(#dots)", 0.0); sh.poly(q_ins, "none", g.INS_LW)
-    sh.poly(q_cl, "#555", 0.3)
     rib = [M(u0, v_r0), M(u1, v_r0), M(u1, v_r1), M(u0, v_r1)]                          # poured core; the rest of the rib zone is an empty cavity
     sh.poly(rib, "#fff", 0.0); sh.poly(rib, "url(#cast)", 0.0); sh.poly(rib, "none", 0.5)
     sh.poly([M(0, 0), M(W_, 0), M(W_, T), M(0, T)], "none", 0.5)
@@ -140,10 +135,10 @@ def section_inset(sh, X0, Z0, F=5.0, callouts=True, W_=700.0):
     sh.text(*M(-20, 0.5 * v_l0), "outside", 2.4, "end"); sh.text(*M(-20, T - 0.5 * B), "inside", 2.4, "end")
     old_lf, sh.dimlfac = sh.dimlfac, 1.0 / F                                            # dimensions in the inset measure true sizes
     us_d = (0, u0 - B, u0, u1, u1 + B, W_)
-    sh.dim_h([X0 + F * u for u in us_d], Z0 - F * (INS + CLAD) - 150 * k, ext=Z0 - F * (INS + CLAD), labels=["{:g}".format(b_ - a_) for a_, b_ in zip(us_d, us_d[1:])])
-    vs_d = [-INS - CLAD, -INS, 0, v_l0, v_l1, v_r0, v_r1, T]
+    sh.dim_h([X0 + F * u for u in us_d], Z0 - 300 * k, ext=Z0 - 30 * k, labels=["{:g}".format(b_ - a_) for a_, b_ in zip(us_d, us_d[1:])])
+    vs_d = [0, v_l0, v_l1, v_r0, v_r1, T]
     lab_v = ["{:g}".format(b_ - a_) for a_, b_ in zip(vs_d, vs_d[1:])]
-    if g.OUTER_BEADS > 1: lab_v[2] = "{} x {:g}".format(g.OUTER_BEADS, B)            # the outer beads as one dimension
+    if g.OUTER_BEADS > 1: lab_v[0] = "{} x {:g}".format(g.OUTER_BEADS, B)            # the outer beads as one dimension
     sh.dim_v([Z0 + F * v for v in vs_d], X0 + F * W_ + 150 * k, ext=X0 + F * W_, labels=lab_v)
     sh.dimlfac = old_lf
     sh.text(X0, Z0 + F * T + 160 * k, "Plan cut through a rib at one layer, 1:{:g}".format(sh.scale / F), 3.2, "start", weight="bold")
@@ -152,10 +147,9 @@ def section_inset(sh, X0, Z0, F=5.0, callouts=True, W_=700.0):
         sh.callout(4, cx, Z0 + F * (T - B / 2), *M(550, T - B / 2))
         sh.callout(3, cx, Z0 + F * (v_r0 + v_r1) / 2, *M(u1 - 70, (v_r0 + v_r1) / 2))
         sh.callout(10, cx + 800, Z0 + F * (v_r0 + v_r1) / 2, *M(u1 + B / 2, (v_r0 + v_r1) / 2 - 40))
-        sh.callout(13, cx, Z0 + F * (v_l1 + v_r0) / 2 - 220, *M(550, (v_l1 + v_r0) / 2))
+        sh.callout(12, cx, Z0 + F * (v_l1 + v_r0) / 2 - 220, *M(550, (v_l1 + v_r0) / 2))
         sh.callout(6, cx, Z0 + F * (v_l0 + v_l1) / 2 - 150, *M(600, (v_l0 + v_l1) / 2))
         sh.callout(5, cx, Z0 + F * B / 2 - 60, *M(550, B / 2))
-        sh.callout(12, cx, Z0 - F * 70 - 100, *M(550, -70))
 
 def section_long(sh, X0, Z0, F=2.5, H=800.0):
     """section along the centre of a rib at the eave, 1:20, in the true roof geometry: the inner, middle and outer beads are printed (joints every 10,
@@ -169,8 +163,6 @@ def section_long(sh, X0, Z0, F=2.5, H=800.0):
     mid_b = band(e[2], e[3], SOL, H)
     lat_z = band(e[3], e[4], SOL, H)
     outer_b = band(e[4], e[5], SOL, H)
-    ins_b = band(e[5], lambda h: rx(h)[-1] + INS * SH, 0, H)
-    cl_b = band(lambda h: rx(h)[-1] + INS * SH, lambda h: rx(h)[-1] + (INS + CLAD) * SH, 0, H)
     base_cast = band(e[0], e[5], 0, SOL)             # the bottom 300 is full concrete over the whole 400, one pour with the rib
     rib_cast = band(e[1], e[2], SOL, H)              # above the base the rib fills the rib zone
     z0 = Z0
@@ -198,8 +190,6 @@ def section_long(sh, X0, Z0, F=2.5, H=800.0):
     for h in range(100, int(H), 200):
         sh.line([M(e[1](h) + 30 * SH, h), M(e[2](h) - 30 * SH, h)], 8 * F / sh.scale, g.BLUE, tw=8)
     sh.layer = None
-    sh.poly(ins_b, "#fff", 0.0); sh.poly(ins_b, "url(#dots)", 0.0); sh.poly(ins_b, "none", g.INS_LW)
-    sh.poly(cl_b, "#555", 0.3)
     sh.line([M(e[0](0) - 120, 0), M(e[5](0) + 260, 0)], 0.3)
     sh.text(X0 - 20 * F * 6, Z0 + F * H + 160, "Section along a rib at the eave, 1:20", 3.2, "start", weight="bold")
     xr_ = e[5](H * 0.5) + 520
@@ -208,19 +198,18 @@ def section_long(sh, X0, Z0, F=2.5, H=800.0):
     sh.callout(3, X0 + F * xr_, Z0 + F * 560, *mid(1, 560))
     sh.callout(6, X0 + F * xr_, Z0 + F * 400, *mid(3, 450))
     sh.callout(5, X0 + F * xr_, Z0 + F * 250, *mid(4, 380))
-    sh.callout(12, X0 + F * xr_, Z0 + F * 110, *M(rx(130)[-1] + (INS / 2) * SH, 130))
     sh.callout(4, X0 + F * (e[0](600) - 380), Z0 + F * 600, *mid(0, 600))
-    sh.callout(13, X0 + F * (e[0](600) - 380), Z0 + F * 380, *mid(2, 500))
+    sh.callout(12, X0 + F * (e[0](600) - 380), Z0 + F * 380, *mid(2, 500))
 
 def common_legend(opt):
     B = g.BEAD
     L = [(3, True, "Rib (column) {:g} wide x {:g} deep in the rib zone, between the inner and the middle bead: the printed channel stays as formwork, filled with cast concrete; 4 Ø16 + Ø8 stirrups every 200 (assumed), or fibre concrete (see notes).".format(RIB_W, RIB_D)),
          (4, False, "Inner bead {:g}: continuous, covers the grid on the room side.".format(B)),
-         (5, False, "{} outer beads {:g}: continuous, the outside of the printed shell (insulation and cladding on them).".format(g.OUTER_BEADS, B)),
+         (5, False, "{} outer beads {:g}: continuous, the outside of the printed shell, exposed concrete (no insulation or cladding outside).".format(g.OUTER_BEADS, B)),
          (6, True, "Lattice zone {:g}: wavy printed bead {:g} touching the middle and the outer beads in turn, insulation between (dotted).".format(g.LATTICE, B)),
          (10, False, "Printed channel walls {:g} each side of the rib, from the inner to the middle bead: permanent formwork. Between the ribs the rib zone is an empty cavity.".format(B)),
          (11, True, "Poured core: the solid base (300, full concrete over the whole {:g}) and the rib in one pour, lifts of about 600 from the eave (assumed, dashed), no joint between base and rib. Printed layer joints every 10 (drawn every 20).".format(g.T_ROOF)),
-         (13, False, "Middle bead {:g}: closes the rib zone outside; inner and middle bead are the structural skins, the ribs the webs (as in the Karamba model).".format(B))]
+         (12, False, "Middle bead {:g}: closes the rib zone outside; inner and middle bead are the structural skins, the ribs the webs (as in the Karamba model).".format(B))]
     return L
 
 def building(sh):
@@ -265,14 +254,6 @@ def building(sh):
     # shell silhouette (outer face) behind the grid
     xo = lambda h: g.HALF + g.rx(h)[-1]
     sh.poly([(-xo(0), 0), (xo(0), 0), (xo(RISE), RISE), (-xo(RISE), RISE)], "#fff", 0.35)
-    # insulation and outer layer outside the printed shell, seen at the two sides of the roof
-    for sgn in (-1, 1):
-        for t0, t1, kind in ((0.0, INS, "ins"), (INS, INS + CLAD, "clad")):
-            q = [(sgn * (xo(0) + t0 * g.SH), 0), (sgn * (xo(RISE) + t0 * g.SH), RISE), (sgn * (xo(RISE) + t1 * g.SH), RISE), (sgn * (xo(0) + t1 * g.SH), 0)]
-            if kind == "ins":
-                sh.poly(q, "#fff", 0.0); sh.poly(q, "url(#dots)", 0.0); sh.poly(q, "none", g.INS_LW)
-            else:
-                sh.poly(q, "#555", 0.2)
     # division between printed pieces, dashed: running bond, about 1500 wide, rows 750 high on the roof (assumed)
     dash = dict(color="#8c8c8c", dash="3 1.6")
     PW = 1500.0
@@ -316,7 +297,6 @@ def sheet(opt):
         notes = ["Every diagonal ends on a ring or on a hip, so no bar has a free end in the shell.",
                  "Diagonals do not stop as the roof narrows: the diamonds just get clipped by the hips."]
     legend = legend + common_legend(opt) + [(7, False, "Printed wall {:g}, to +2.50: inner bead {:g}, lattice zone {:g} (wavy bead + insulation), {} outer beads {:g}.".format(g.WALL, g.BEAD, g.WALL_LAYERS[1], g.OUTER_BEADS, g.BEAD)),
-                                             (12, True, "Outside the printed shell (seen at the sides of the roof): insulation {:g} (type to be chosen), then the outer layer (cladding {:g}).".format(INS, CLAD)),
                                              (8, False, "Buttresses 400 wide, 1000 from the inner face (600 outside), about every 1.5 m ({} bays of {:.0f} on the wall centreline, {} per side, corners included); every other bay is printed wall, the bays between are full-height curtain wall (door in the middle one).".format(round(2 * (g.HALF + g.WALL / 2) / BUT_SPACING), 2 * (g.HALF + g.WALL / 2) / round(2 * (g.HALF + g.WALL / 2) / BUT_SPACING), round(2 * (g.HALF + g.WALL / 2) / BUT_SPACING) + 1)),
                                              (9, True, "Strip footing 1800 x 250, underside at -1.00 (hidden, dashed): printed edge formwork, cast core.")]
     notes += ["Dashed lines = printed pieces in running bond (about 1500 x 750); very faint lines = printed layer joints (10 mm layers, drawn every 100).",

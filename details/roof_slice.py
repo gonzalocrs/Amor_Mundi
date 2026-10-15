@@ -1,5 +1,5 @@
 """Plan slices through the pyramid roof, one sheet per roof-grid option. The cut planes are horizontal, looking down: the shell is cut as a square ring
-(inner bead, rib zone with the cast ribs cut, middle bead, lattice zone, outer beads, insulation, cladding). One large slice near the eave (1:50) and two small ones higher up (1:100)
+(inner bead, rib zone with the cast ribs cut, middle bead, lattice zone, outer beads; exposed concrete outside). One large slice near the eave (1:50) and two small ones higher up (1:100)
 show how the grid thins out towards the crown.
 Run: python details/make_set.py"""
 import math, os, sys
@@ -16,11 +16,10 @@ def sq(h): return [(-h, -h), (h, -h), (h, h), (-h, h)]
 
 def offsets(h):
     """horizontal distances from the inner face of the shell at height h to the outside of: the inner bead, the rib zone, the middle bead,
-    the lattice zone, the outer beads (skin), the insulation and the cladding"""
+    the lattice zone and the outer beads (skin = the exposed outer face)"""
     r = g.rx(h)
     x0 = r[0]
-    return {"l1": r[1] - x0, "rib": r[2] - x0, "mid": r[3] - x0, "lat": r[4] - x0, "skin": r[5] - x0,
-            "ins": r[5] - x0 + g.INS * SH, "clad": r[5] - x0 + (g.INS + g.CLAD) * SH}
+    return {"l1": r[1] - x0, "rib": r[2] - x0, "mid": r[3] - x0, "lat": r[4] - x0, "skin": r[5] - x0}
 
 def cut_ribs(opt, h):
     """ribs cut by the plane at height h: list of dict(x centre at mid-depth along the face, width along the wall, shear per unit depth); hips and horizontal ring flags"""
@@ -60,9 +59,6 @@ def draw_slice(sh, opt, h, f, cx, cz, full, label=True):
     r = g.rx(h)
     hin = g.HALF + r[0]
     r_l1, r_rib, r_mid, r_lat, r_skin = (hin + o[k] for k in ("l1", "rib", "mid", "lat", "skin"))
-    r_ins, r_clad = hin + o["ins"], hin + o["clad"]
-    ring(r_clad, r_ins, "#555")
-    ring(r_ins, r_skin, "#fff", "url(#dots)")
     ring(r_skin, r_lat, "#fff", "url(#conc)")                      # outer beads
     ring(r_lat, r_mid, "#fff", "url(#dots)")                       # lattice zone (insulation, wavy bead drawn below)
     ring(r_mid, r_rib, "#fff", "url(#conc)")                       # middle bead
@@ -74,7 +70,7 @@ def draw_slice(sh, opt, h, f, cx, cz, full, label=True):
     sh.mute -= 1
     sh._rec("bead", TS(wv), g.BEAD * SH * f, False, "PRINTED-BEAD")
     joints = [r_lat + i * g.BEAD * SH for i in range(1, g.OUTER_BEADS)]
-    for r_, lw in [(r_clad, 0.3), (r_ins, g.INS_LW), (r_skin, 0.4), (r_lat, 0.2), (r_mid, 0.2), (r_rib, 0.25), (r_l1, 0.25), (hin, 0.6)] + [(j, 0.08) for j in joints]:
+    for r_, lw in [(r_skin, 0.5), (r_lat, 0.2), (r_mid, 0.2), (r_rib, 0.25), (r_l1, 0.25), (hin, 0.6)] + [(j, 0.08) for j in joints]:
         square(r_, lw)
     ribs, hips, ring_cut = cut_ribs(opt, h)
     core_t0, core_t1 = o["l1"], o["rib"]                            # rib core = the rib zone
@@ -99,8 +95,8 @@ def draw_slice(sh, opt, h, f, cx, cz, full, label=True):
                 pp = TS([(sx * a0, sy * a0), (sx * a1, sy * a0), (sx * a1, sy * a1), (sx * a0, sy * a1)])
                 sh.poly(pp, "#fff", 0.0); sh.poly(pp, "url(#cast)", 0.0); sh.poly(pp, "none", 0.45 if full else 0.3)
     lab = "+{:.2f}".format((g.WALL_H + h) / 1000)
-    if label: sh.text(*T((0, r_clad + 300 / f * 1.0)), "cut at {} (1:{:g})".format(lab, 50 / f), 3.0 if full else 2.6, weight="bold")
-    return dict(hin=hin, o=o, ribs=ribs, hips=hips, r=r, core=(core_t0, core_t1), tm=tm, r_clad=r_clad, r_skin=r_skin, r_lat=r_lat, r_mid=r_mid, r_rib=r_rib, r_l1=r_l1, r_ins=r_ins, T=T)
+    if label: sh.text(*T((0, r_skin + 300 / f * 1.0)), "cut at {} (1:{:g})".format(lab, 50 / f), 3.0 if full else 2.6, weight="bold")
+    return dict(hin=hin, o=o, ribs=ribs, hips=hips, r=r, core=(core_t0, core_t1), tm=tm, r_skin=r_skin, r_lat=r_lat, r_mid=r_mid, r_rib=r_rib, r_l1=r_l1, T=T)
 
 # cut plane above the eave: the round 100 just below the middle horizontal rib of grid A (+5.90 below the rib at +6.02 with the defaults)
 CUT_H = math.floor((rg.RING_H[1] - rg.TOP_RING / 2 - 20) / 100) * 100
@@ -122,18 +118,18 @@ def sheet(opt, h_cut=CUT_H):
     sub = "horizontal cut through the roof, looking down on the ribs"
     lvl = ["+{:.2f}".format((g.WALL_H + y) / 1000) for y in rg.RING_H]
     hr = ", ".join(lvl)
-    legend = [(1, False, "Cut at +{:.2f} ({:.0f} above the eave, just below the horizontal rib at {}), room side out: inner bead {:g}, rib zone {:g} with the cast ribs cut (crossed hatch; empty cavity between them), middle bead {:g}, lattice zone {:g} (wavy bead + insulation, dotted), {} outer beads {:g}, insulation {:g} and outer layer {:g}.".format(
-                  lv, h_cut, lvl[1], g.BEAD, g.RIB_D, g.BEAD, g.LATTICE, g.OUTER_BEADS, g.BEAD, g.INS, g.CLAD)),
+    legend = [(1, False, "Cut at +{:.2f} ({:.0f} above the eave, just below the horizontal rib at {}), room side out: inner bead {:g}, rib zone {:g} with the cast ribs cut (crossed hatch; empty cavity between them), middle bead {:g}, lattice zone {:g} (wavy bead + insulation, dotted), {} outer beads {:g} (exposed concrete).".format(
+                  lv, h_cut, lvl[1], g.BEAD, g.RIB_D, g.BEAD, g.LATTICE, g.OUTER_BEADS, g.BEAD)),
               (2, True, ("Ribs of grid A seen below the cut: all 11 columns per face run from the base ring at the eave up to the cut (every other one stops at {}, just above it).".format(lvl[1]) if opt == "A" else
                          "Ribs of grid B seen below the cut: the two families of diagonals from the base ring at the eave up to the cut and the hips.")),
               (3, False, "Base ring: the 300 solid base at the eave (+2.50 to +2.80)."),
               (4, True, ("Horizontal rib of grid A at {} (the next ones, at {} and {}, are above the cut).".format(*lvl) if opt == "A" else "No horizontal ribs in grid B between the base ring and the top ring.")),
               (5, False, "Hips: ribs from the corners of the eave up to the cut; dashed above it, up to the crown opening."),
-              (6, False, "Roof edge at the eave (outside of the 30 outer layer). Very faint squares = printed layer joints (real layers 10, drawn every 200 in height)."),
-              (7, False, "Above the cut (removed, dashed): hips and the crown opening at +8.50, {:.0f} clear inside ({:.0f} at the rib axis, {:.0f} outside the outer layer).".format(g.OPEN, 2 * rg.TOPB, 2 * (g.HALF + g.rx(g.RISE)[-1] + (g.INS + g.CLAD) * SH))),
+              (6, False, "Roof edge at the eave (outer face of the outer beads). Very faint squares = printed layer joints (real layers 10, drawn every 200 in height)."),
+              (7, False, "Above the cut (removed, dashed): hips and the crown opening at +8.50, {:.0f} clear inside ({:.0f} at the rib axis, {:.0f} outside the outer beads).".format(g.OPEN, 2 * rg.TOPB, 2 * (g.HALF + g.rx(g.RISE)[-1]))),
               (8, False, "Buttresses below the roof: their ends show beyond the roof edge; the wall under the roof is dashed.")]
     notes = ["Matches the roof-grid elevations: same rib geometry, same levels ({} for the horizontal ribs of grid A).".format(hr),
-             "The ribs lie in the rib zone of the shell, between the inner and the middle bead; here they are drawn as if the middle bead, the lattice zone, the outer beads, insulation and cladding were transparent."]
+             "The ribs lie in the rib zone of the shell, between the inner and the middle bead; here they are drawn as if the middle bead, the lattice zone and the outer beads were transparent."]
     sh = Sheet(50, 150, 148.5, title, sub, legend, notes)
     sh.plain_legend = False
     s = sh.s
@@ -142,7 +138,7 @@ def sheet(opt, h_cut=CUT_H):
     TS = lambda ps: [T(p) for p in ps]
     HALF, WALL, BUT_L, BUT_W = g.HALF, g.WALL, g.BUT_L, g.BUT_W
     b = HALF + WALL
-    out = lambda hh: g.HALF + g.rx(hh)[-1] + (g.INS + g.CLAD) * SH       # outside of the cladding at height hh
+    out = lambda hh: g.HALF + g.rx(hh)[-1]                               # outer face of the roof at height hh
     edge = out(0.0)
     for q in (sq(HALF), sq(b)):
         sh.line(TS(q + [q[0]]), 0.15, "#777", dash="3 1.5")
@@ -188,7 +184,7 @@ def sheet(opt, h_cut=CUT_H):
     sh.line(TS(sq(r_out_c) + [sq(r_out_c)[0]]), 0.15, "#555", dash="3 1.5")
     sh.text(*T((0, 120)), "crown opening above", 2.4, italic=True, color="#555"); sh.text(*T((0, -330)), "{:.0f} x {:.0f} clear, +8.50".format(g.OPEN, g.OPEN), 2.4, italic=True, color="#555")
     sh.dim_h([T((-edge, 0))[0], T((edge, 0))[0]], T((0, -6450))[1], ext=T((0, -edge - 60))[1], labels=["{:.0f} roof at the eave".format(2 * edge)])
-    sh.dim_h([T((-m["hin"], 0))[0], T((m["hin"], 0))[0]], T((0, m["r_clad"] + 350))[1], ext=T((0, m["hin"] + 40))[1], labels=["{:.0f} clear at the cut".format(2 * m["hin"])])
+    sh.dim_h([T((-m["hin"], 0))[0], T((m["hin"], 0))[0]], T((0, m["r_skin"] + 350))[1], ext=T((0, m["hin"] + 40))[1], labels=["{:.0f} clear at the cut".format(2 * m["hin"])])
     sh.dim_h([T((-r_in_c, 0))[0], T((r_in_c, 0))[0]], T((0, -1300))[1], ext=T((0, -r_in_c - 40))[1], labels=["{:.0f}".format(g.OPEN)])
     xcall = T((7000, 0))[0]
     def co(n, zc, tgt): sh.callout(n, xcall, T((0, zc))[1], *T(tgt))
