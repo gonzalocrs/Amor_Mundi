@@ -50,6 +50,16 @@ def svg_to_pdf(sh, path):
                     '<body>{2}</body></html>'.format(sh.w, sh.h, svg))
         subprocess.run([browser, "--headless=new", "--disable-gpu", "--no-pdf-header-footer", "--print-to-pdf=" + os.path.abspath(path),
                         "file:///" + html.replace("\\", "/")], check=True, capture_output=True, timeout=120)
+    compress_pdf(path)
+
+def compress_pdf(path):
+    """Edge / Chrome write the drawing streams uncompressed (a roof cut is ~30 MB); deflate them: same drawing, ~1 MB"""
+    from pypdf import PdfWriter
+    w = PdfWriter(clone_from=path)
+    for p in w.pages:
+        p.compress_content_streams(level=9)
+    w.compress_identical_objects()
+    w.write(path)
 
 def new_set_dir(root, label=""):
     """next version folder in root: VV_YYYY-MM-DD[_label], VV one more than the highest existing version"""
