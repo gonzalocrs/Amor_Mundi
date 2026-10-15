@@ -11,15 +11,14 @@ from pyramid_drawings import Sheet, rect, layers
 # ================= PARAMETERS =================
 INS, CLAD = 100.0, 30.0       # insulation outside the printed shell, outer layer (cladding) on top of it (assumed)
 BUT_SPACING = 1500.0       # buttress spacing along the wall, about (7 equal bays on the 10400 centreline)
-RIB_W = 160.0              # rib / column width in the face (assumed)
-RIB_D = 240.0              # rib depth: the 160 air zone + layer 2, between the 80 outer skin and the 80 inner layer 1 (assumed)
+RIB_W, RIB_D = g.RIB_W, g.RIB_D   # rib / column width in the face; depth = the rib zone between the inner and the middle bead
 MIN_PITCH = 500.0          # A: smallest column spacing allowed; below this every other column stops
 TOP_RING = 128.0           # top ring depth in elevation (= 160 square to the slope)
 BAR_KG_M = {16: 1.578, 12: 0.888}
 RISE = g.RISE              # 6000
-# the grid lies in the MID-surface of the shell (middle of the 400 thickness), so it lines up with the wall centreline
-HALFB = g.HALF + (g.rx(0)[0] + g.rx(0)[3]) / 2          # half width of the grid at the eave (5250)
-TOPB = g.HALF + (g.rx(RISE)[0] + g.rx(RISE)[3]) / 2     # half width at the crown (700)
+# the grid lies on the centre of the rib zone (= the shell surface of the Karamba model: the centroid of the inner and middle beads)
+HALFB = g.HALF + g.RIB_C * g.SH          # half width of the grid at the eave
+TOPB = g.OPEN / 2 + g.RIB_C * g.SH       # half width at the crown
 KX = (HALFB - TOPB) / RISE            # half-width loss per unit height
 VST = math.hypot(HALFB - TOPB, RISE) / RISE   # true length / elevation height (about 1.25)
 w = lambda h: HALFB - KX * h
@@ -86,7 +85,7 @@ def draw_face(sh, segs):
     for p in strips:
         sh.poly(p, "#fff", 0.0); sh.poly(p, "url(#cast)", 0.0)
     # centre lines of the bars (one Ø16 pair per rib, drawn as a single dash-dot centreline)
-    xo = lambda h: g.HALF + g.rx(h)[3]
+    xo = lambda h: g.HALF + g.rx(h)[-1]
     layers(sh, [(-xo(0), 0), (xo(0), 0), (xo(RISE), RISE), (-xo(RISE), RISE)], 0, 0.03, step=100, color="#c4c4c4")      # printed layer joints on the whole shell (every 100 drawn; real layers are 10)
     sh.layer = "REBAR"
     for kind, pts in segs:
@@ -103,108 +102,125 @@ def stats(segs):
 
 def section_inset(sh, X0, Z0, F=5.0, callouts=True, W_=700.0):
     """plan cut through one rib at one print layer, square to the slope, 1:10 (model = local * F). outside at the bottom, inside (room) at the top.
-    Printed beads (80, black rim, hatched body) form the layers and the channel walls; the channel is filled with poured concrete."""
+    Printed beads (30, black rim, hatched body) form the layers and the channel walls; the channel is filled with poured concrete."""
     k = F / 5.0                                                                          # layout offsets scale with the drawing scale (F = 5 at 1:10, 2 at 1:5 on the 1:10 sheet)
     M = lambda u, v: (X0 + F * u, Z0 + F * v)
+    B, T = g.BEAD, g.T_ROOF
     u0 = (W_ - RIB_W) / 2
     u1 = u0 + RIB_W
-    sh.poly([M(0, 0), M(W_, 0), M(W_, 400), M(0, 400)], "#fff", 0.0)
-    sh.poly([M(0, 80), M(W_, 80), M(W_, 240), M(0, 240)], "url(#dots)", 0.0)           # open air zone between the ribs = insulation
-    for k, (ua, ub) in enumerate(((0.0, u0 - 80), (u1 + 80, W_))):                      # zig-zag bead in the air zone, touching skin and layer 2
-        g.clip_begin(sh, "zz{}".format(k), *M(ua, 80), *M(ub, 240))
-        mid = (ua + ub) / 2
-        g.printed(sh, [M(ua - 40, 120), M(mid, 200), M(ub + 40, 120)], 80, F)
-        g.clip_end(sh)
-    beads = [rect(0, 0, W_, 80),                                                        # outer skin
-             rect(0, 320, W_, 400),                                                     # inner layer 1
-             [(0, 240), (u0 - 80, 240), (u0 - 80, 80), (u0, 80), (u0, 320), (0, 320)],  # layer 2 turns into the left channel wall
-             [(W_, 240), (u1 + 80, 240), (u1 + 80, 80), (u1, 80), (u1, 320), (W_, 320)]]
+    v_l0 = g.OUTER_BEADS * B                    # local v from the outside face: outer beads | lattice | middle bead | rib zone | inner bead
+    v_l1 = v_l0 + g.LATTICE
+    v_r0, v_r1 = v_l1 + B, v_l1 + B + RIB_D
+    sh.poly([M(0, 0), M(W_, 0), M(W_, T), M(0, T)], "#fff", 0.0)
+    sh.poly([M(0, v_l0), M(W_, v_l0), M(W_, v_l1), M(0, v_l1)], "url(#dots)", 0.0)    # lattice zone: insulation between the loops of the wavy bead
+    g.clip_begin(sh, "wv{:g}".format(F), *M(0, v_l0), *M(W_, v_l1))                    # wavy bead, touching the outer beads and the middle bead in turn
+    f = g.wavy(v_l0 + B / 2, v_l1 - B / 2, g.WAVE_ROOF)
+    us = [-B + (W_ + 2 * B) * i / 80 for i in range(81)]
+    g.printed(sh, [M(u, f(u - W_ / 2)) for u in us], B, F, rim=0.4)
+    g.clip_end(sh)
+    beads = [rect(0, i * B, W_, (i + 1) * B) for i in range(g.OUTER_BEADS)]            # outer beads
+    beads += [rect(0, v_l1, W_, v_r0),                                                  # middle bead
+              rect(0, v_r1, W_, T),                                                     # inner bead
+              rect(u0 - B, v_r0, u0, v_r1), rect(u1, v_r0, u1 + B, v_r1)]               # channel walls of the rib, across the rib zone
     for q in beads:
         q = [M(*pt) for pt in q]
         sh.poly(q, "#fff", 0.4); sh.poly(q, "url(#conc)", 0.0)
-    q_ins = [M(0, -INS), M(W_, -INS), M(W_, 0), M(0, 0)]                                 # insulation outside the skin
+    q_ins = [M(0, -INS), M(W_, -INS), M(W_, 0), M(0, 0)]                                 # insulation outside the outer beads
     q_cl = [M(0, -INS - CLAD), M(W_, -INS - CLAD), M(W_, -INS), M(0, -INS)]              # outer layer
     sh.poly(q_ins, "#fff", 0.0); sh.poly(q_ins, "url(#dots)", 0.0); sh.poly(q_ins, "none", g.INS_LW)
     sh.poly(q_cl, "#555", 0.3)
-    rib = [M(u0, 80), M(u1, 80), M(u1, 320), M(u0, 320)]                                # poured core
+    rib = [M(u0, v_r0), M(u1, v_r0), M(u1, v_r1), M(u0, v_r1)]                          # poured core; the rest of the rib zone is an empty cavity
     sh.poly(rib, "#fff", 0.0); sh.poly(rib, "url(#cast)", 0.0); sh.poly(rib, "none", 0.5)
-    sh.poly([M(0, 0), M(W_, 0), M(W_, 400), M(0, 400)], "none", 0.5)
+    sh.poly([M(0, 0), M(W_, 0), M(W_, T), M(0, T)], "none", 0.5)
     sh.layer = "REBAR"
-    sh.poly([M(u0 + 30, 110), M(u1 - 30, 110), M(u1 - 30, 290), M(u0 + 30, 290)], "none", 8 / sh.scale, g.BLUE, tw=8)    # stirrup Ø8
-    for u, v in ((u0 + 52, 140), (u1 - 52, 140), (u0 + 52, 260), (u1 - 52, 260)):
+    sh.poly([M(u0 + 30, v_r0 + 30), M(u1 - 30, v_r0 + 30), M(u1 - 30, v_r1 - 30), M(u0 + 30, v_r1 - 30)], "none", 8 / sh.scale, g.BLUE, tw=8)    # stirrup Ø8
+    for u, v in ((u0 + 45, v_r0 + 45), (u1 - 45, v_r0 + 45), (u0 + 45, v_r1 - 45), (u1 - 45, v_r1 - 45)):
         sh.dot(*M(u, v), 8)                                                                                              # 4 Ø16
     sh.layer = None
-    sh.text(*M(-20, 40), "outside", 2.4, "end"); sh.text(*M(-20, 360), "inside", 2.4, "end")
+    sh.text(*M(-20, 0.5 * v_l0), "outside", 2.4, "end"); sh.text(*M(-20, T - 0.5 * B), "inside", 2.4, "end")
     old_lf, sh.dimlfac = sh.dimlfac, 1.0 / F                                            # dimensions in the inset measure true sizes
-    sh.dim_h([X0 + F * v for v in (0, u0, u1, W_)], Z0 - F * (INS + CLAD) - 150 * k, ext=Z0 - F * (INS + CLAD), labels=["{:g}".format(u0), "{:g}".format(RIB_W), "{:g}".format(W_ - u1)])
-    sh.dim_v([Z0 + F * v for v in (-INS - CLAD, -INS, 0, 80, 240, 320, 400)], X0 + F * W_ + 150 * k, ext=X0 + F * W_, labels=["30", "100", "80", "160", "80", "80"])
+    us_d = (0, u0 - B, u0, u1, u1 + B, W_)
+    sh.dim_h([X0 + F * u for u in us_d], Z0 - F * (INS + CLAD) - 150 * k, ext=Z0 - F * (INS + CLAD), labels=["{:g}".format(b_ - a_) for a_, b_ in zip(us_d, us_d[1:])])
+    vs_d = [-INS - CLAD, -INS, 0, v_l0, v_l1, v_r0, v_r1, T]
+    lab_v = ["{:g}".format(b_ - a_) for a_, b_ in zip(vs_d, vs_d[1:])]
+    if g.OUTER_BEADS > 1: lab_v[2] = "{} x {:g}".format(g.OUTER_BEADS, B)            # the outer beads as one dimension
+    sh.dim_v([Z0 + F * v for v in vs_d], X0 + F * W_ + 150 * k, ext=X0 + F * W_, labels=lab_v)
     sh.dimlfac = old_lf
-    sh.text(X0, Z0 + F * 400 + 160 * k, "Plan cut through a rib at one layer, 1:{:g}".format(sh.scale / F), 3.2, "start", weight="bold")
+    sh.text(X0, Z0 + F * T + 160 * k, "Plan cut through a rib at one layer, 1:{:g}".format(sh.scale / F), 3.2, "start", weight="bold")
     if callouts:
-        sh.callout(3, X0 + F * W_ + 650, Z0 + F * 160, *M(u1 - 60, 200))
-        sh.callout(4, X0 + F * W_ + 650, Z0 + F * 360, *M(550, 360))
-        sh.callout(5, X0 + F * W_ + 650, Z0 + F * 40, *M(550, 40))
-        sh.callout(6, X0 + F * W_ + 650, Z0 + F * 260, *M(550, 160))
-        sh.callout(10, X0 + F * W_ + 1450, Z0 + F * 160, *M(u1 + 40, 160))
-        sh.callout(12, X0 + F * W_ + 650, Z0 - F * 70, *M(550, -70))
+        cx = X0 + F * W_ + 650
+        sh.callout(4, cx, Z0 + F * (T - B / 2), *M(550, T - B / 2))
+        sh.callout(3, cx, Z0 + F * (v_r0 + v_r1) / 2, *M(u1 - 70, (v_r0 + v_r1) / 2))
+        sh.callout(10, cx + 800, Z0 + F * (v_r0 + v_r1) / 2, *M(u1 + B / 2, (v_r0 + v_r1) / 2 - 40))
+        sh.callout(13, cx, Z0 + F * (v_l1 + v_r0) / 2 - 220, *M(550, (v_l1 + v_r0) / 2))
+        sh.callout(6, cx, Z0 + F * (v_l0 + v_l1) / 2 - 150, *M(600, (v_l0 + v_l1) / 2))
+        sh.callout(5, cx, Z0 + F * B / 2 - 60, *M(550, B / 2))
+        sh.callout(12, cx, Z0 - F * 70 - 100, *M(550, -70))
 
 def section_long(sh, X0, Z0, F=2.5, H=800.0):
-    """section along the centre of a rib at the eave, 1:20, in the true roof geometry: layers 1 and the outer skin are printed (joints every 10, drawn every 20),
-    the core is poured: the first lift is the solid base, then the rib in lifts."""
+    """section along the centre of a rib at the eave, 1:20, in the true roof geometry: the inner, middle and outer beads are printed (joints every 10,
+    drawn every 20), the lattice zone holds the insulation, the core is poured: the first lift is the solid base, then the rib in lifts."""
     SH, rx, SOL = g.SH, g.rx, SOLID
     M = lambda x, h: (X0 + F * x, Z0 + F * h)
-    off1 = 80 * SH
     def band(f0, f1, h0, h1):        # f0, f1 return the x offsets of the two edges at height h
         return [M(f0(h0), h0), M(f0(h1), h1), M(f1(h1), h1), M(f1(h0), h0)]
-    e0 = lambda h: rx(h)[0]; e1 = lambda h: rx(h)[0] + off1; e2 = lambda h: rx(h)[1]; e3 = lambda h: rx(h)[2]; e4 = lambda h: rx(h)[3]
-    layer1 = band(e0, e1, SOL, H)                # printed above the base
-    skin = band(e3, e4, SOL, H)
-    ins_b = band(e4, lambda h: rx(h)[3] + INS * SH, 0, H)
-    cl_b = band(lambda h: rx(h)[3] + INS * SH, lambda h: rx(h)[3] + (INS + CLAD) * SH, 0, H)
-    base_cast = band(e0, e4, 0, SOL)             # the bottom 300 is full concrete over the whole 400, one pour with the rib
-    rib_cast = band(e1, e3, SOL, H)              # above the base the channel cuts through layer 2: core = layer 2 + 160 zone
+    e = [lambda h, i=i: rx(h)[i] for i in range(6)]         # layer faces, room side out: inner bead | rib zone | middle bead | lattice | outer beads
+    inner_b = band(e[0], e[1], SOL, H)               # printed above the base
+    mid_b = band(e[2], e[3], SOL, H)
+    lat_z = band(e[3], e[4], SOL, H)
+    outer_b = band(e[4], e[5], SOL, H)
+    ins_b = band(e[5], lambda h: rx(h)[-1] + INS * SH, 0, H)
+    cl_b = band(lambda h: rx(h)[-1] + INS * SH, lambda h: rx(h)[-1] + (INS + CLAD) * SH, 0, H)
+    base_cast = band(e[0], e[5], 0, SOL)             # the bottom 300 is full concrete over the whole 400, one pour with the rib
+    rib_cast = band(e[1], e[2], SOL, H)              # above the base the rib fills the rib zone
     z0 = Z0
-    for p in (layer1, skin):
+    printed_ = (inner_b, mid_b, outer_b)
+    for p in printed_ + (base_cast, rib_cast):
         sh.poly(p, "#000", 0.5)
-    for p in (base_cast, rib_cast):
-        sh.poly(p, "#000", 0.5)
-    for p in (layer1, skin):
+    for p in printed_:
         sh.poly(p, "#fff", 0.0); sh.poly(p, "url(#conc)", 0.0); layers(sh, p, z0, 0.06, step=20 * F)
+    sh.poly(lat_z, "#fff", 0.0); sh.poly(lat_z, "url(#dots)", 0.0)
     for p in (base_cast, rib_cast):
         sh.poly(p, "#fff", 0.0); sh.poly(p, "url(#cast)", 0.0)
-    for p in (layer1, skin, base_cast, rib_cast):
+    for p in printed_ + (lat_z, base_cast, rib_cast):
         sh.poly(p, "none", 0.4)
-    sh.line([M(e1(SOL), SOL), M(e3(SOL), SOL)], 0.5, "#fff")                         # no joint between the base and the rib core
+    for i in range(1, g.OUTER_BEADS):                                                 # joints between the outer beads
+        sh.line([M(e[4](SOL) + i * g.BEAD * SH, SOL), M(e[4](H) + i * g.BEAD * SH, H)], 0.15)
+    sh.line([M(e[1](SOL), SOL), M(e[2](SOL), SOL)], 0.5, "#fff")                       # no joint between the base and the rib core
     # pour lifts across the core
     for h in (600.0,):                                                                # first lift = the base and the first 300 of the rib together
         if h < H:
-            sh.line([M(e1(h), h), M(e3(h), h)], 0.3, "#000", dash="2 1")
-    # rebar: 2 of the 4 Ø16 are in the cut plane, stirrups Ø8 every 200
+            sh.line([M(e[1](h), h), M(e[2](h), h)], 0.3, "#000", dash="2 1")
+    # rebar: 2 of the 4 Ø16 are in the cut plane (45 from the faces of the core), stirrups Ø8 every 200
     sh.layer = "REBAR"
-    for dx in (-40, 40):
-        xc0 = (e1(0) + e3(0)) / 2 + dx; xc1 = (e1(H) + e3(H)) / 2 + dx
-        sh.line([M(xc0, 0), M(xc1, H)], 16 * F / sh.scale, g.BLUE, tw=16)
+    for dd in (45, RIB_D - 45):
+        sh.line([M(e[1](0) + dd * SH, 0), M(e[1](H) + dd * SH, H)], 16 * F / sh.scale, g.BLUE, tw=16)
     for h in range(100, int(H), 200):
-        sh.line([M(e1(h) + 30, h), M(e3(h) - 30, h)], 8 * F / sh.scale, g.BLUE, tw=8)
+        sh.line([M(e[1](h) + 30 * SH, h), M(e[2](h) - 30 * SH, h)], 8 * F / sh.scale, g.BLUE, tw=8)
     sh.layer = None
     sh.poly(ins_b, "#fff", 0.0); sh.poly(ins_b, "url(#dots)", 0.0); sh.poly(ins_b, "none", g.INS_LW)
     sh.poly(cl_b, "#555", 0.3)
-    sh.line([M(e0(0) - 120, 0), M(e4(0) + 260, 0)], 0.3)
+    sh.line([M(e[0](0) - 120, 0), M(e[5](0) + 260, 0)], 0.3)
     sh.text(X0 - 20 * F * 6, Z0 + F * H + 160, "Section along a rib at the eave, 1:20", 3.2, "start", weight="bold")
-    xr_ = e4(H * 0.5) + 520
-    sh.callout(3, X0 + F * xr_, Z0 + F * 560, *M((e1(560) + e3(560)) / 2, 560))
-    sh.callout(5, X0 + F * xr_, Z0 + F * 250, *M((e3(250) + e4(250)) / 2 + 20, 250))
-    sh.callout(11, X0 + F * xr_, Z0 + F * 700, *M((e1(300) + e3(300)) / 2, 300))
-    sh.callout(12, X0 + F * xr_, Z0 + F * 130, *M(rx(130)[3] + (INS / 2) * SH, 130))
-    sh.callout(4, X0 + F * (e0(600) - 380), Z0 + F * 600, *M((e0(600) + e1(600)) / 2, 600))
+    xr_ = e[5](H * 0.5) + 520
+    mid = lambda i, h: M((e[i](h) + e[i + 1](h)) / 2, h)
+    sh.callout(11, X0 + F * xr_, Z0 + F * 700, *mid(1, 300))
+    sh.callout(3, X0 + F * xr_, Z0 + F * 560, *mid(1, 560))
+    sh.callout(6, X0 + F * xr_, Z0 + F * 400, *mid(3, 450))
+    sh.callout(5, X0 + F * xr_, Z0 + F * 250, *mid(4, 380))
+    sh.callout(12, X0 + F * xr_, Z0 + F * 110, *M(rx(130)[-1] + (INS / 2) * SH, 130))
+    sh.callout(4, X0 + F * (e[0](600) - 380), Z0 + F * 600, *mid(0, 600))
+    sh.callout(13, X0 + F * (e[0](600) - 380), Z0 + F * 380, *mid(2, 500))
 
 def common_legend(opt):
-    L = [(3, True, "Rib (column): a channel {:g} wide x {:g} deep, printed in the 160 air zone + layer 2 stays in place as formwork and is filled with cast concrete, 4 Ø16 + Ø8 stirrups every 200 (assumed). Fibre concrete could replace the bars (see notes).".format(RIB_W, RIB_D)),
-         (4, False, "Inner layer 1, 80: continuous, covers the grid on the room side."),
-         (5, False, "Outer skin 80: continuous, covers the grid on the outside (cladding on it)."),
-         (6, True, "Between the ribs the air zone stays open for thermal insulation (dotted)."),
-         (10, False, "Printed channel walls, 80 each side of the rib: permanent formwork, printed in the same pass as the shell (layer 2 turns into them)."),
-         (11, True, "Poured core: the solid base (300, full concrete over the whole 400) and the rib are poured together, in lifts of about 600 from the eave (assumed), with no joint between base and rib; dashed lines = lift joints. Printed layer joints are every 10 (drawn every 20 here).")]
+    B = g.BEAD
+    L = [(3, True, "Rib (column) {:g} wide x {:g} deep in the rib zone, between the inner and the middle bead: the printed channel stays as formwork, filled with cast concrete; 4 Ø16 + Ø8 stirrups every 200 (assumed), or fibre concrete (see notes).".format(RIB_W, RIB_D)),
+         (4, False, "Inner bead {:g}: continuous, covers the grid on the room side.".format(B)),
+         (5, False, "{} outer beads {:g}: continuous, the outside of the printed shell (insulation and cladding on them).".format(g.OUTER_BEADS, B)),
+         (6, True, "Lattice zone {:g}: wavy printed bead {:g} touching the middle and the outer beads in turn, insulation between (dotted).".format(g.LATTICE, B)),
+         (10, False, "Printed channel walls {:g} each side of the rib, from the inner to the middle bead: permanent formwork. Between the ribs the rib zone is an empty cavity.".format(B)),
+         (11, True, "Poured core: the solid base (300, full concrete over the whole {:g}) and the rib in one pour, lifts of about 600 from the eave (assumed, dashed), no joint between base and rib. Printed layer joints every 10 (drawn every 20).".format(g.T_ROOF)),
+         (13, False, "Middle bead {:g}: closes the rib zone outside; inner and middle bead are the structural skins, the ribs the webs (as in the Karamba model).".format(B))]
     return L
 
 def building(sh):
@@ -247,7 +263,7 @@ def building(sh):
     sh.line([(-HALF - WALL - BUT_L, ft), (-HALF - WALL - BUT_L, zg)], 0.25, dash="3 1"); sh.line([(HALF + WALL + BUT_L, ft), (HALF + WALL + BUT_L, zg)], 0.25, dash="3 1")
     sh.line([(-7300, zg), (7300, zg)], 0.5)
     # shell silhouette (outer face) behind the grid
-    xo = lambda h: g.HALF + g.rx(h)[3]
+    xo = lambda h: g.HALF + g.rx(h)[-1]
     sh.poly([(-xo(0), 0), (xo(0), 0), (xo(RISE), RISE), (-xo(RISE), RISE)], "#fff", 0.35)
     # insulation and outer layer outside the printed shell, seen at the two sides of the roof
     for sgn in (-1, 1):
@@ -289,18 +305,18 @@ def sheet(opt):
     if opt == "A":
         h1, h2 = extra
         title, sub = "Roof grid A: ruled-surface columns", "one roof face seen square on"
-        legend = [(1, False, "Columns run in straight lines from the base edge (every {:g}) towards the crown edge, so they converge like the ruled surface of the sketch.".format(COL_PITCH)),
+        legend = [(1, False, "Columns run in straight lines from the base edge (every {:.0f}) towards the crown edge, so they converge like the ruled surface of the sketch.".format(COL_PITCH)),
                   (2, False, "When the spacing drops to {:g} (about +{:.2f}) every other column stops; at about +{:.2f} only the four hip columns go on to the crown ring.".format(MIN_PITCH, (g.WALL_H + h1) / 1000, (g.WALL_H + h2) / 1000))]
         notes = ["Columns stop on a horizontal rib (at {:.0f} and {:.0f} above the eave); bars are lapped / hooked into it.".format(H1, H2),
                  "Horizontal ribs at {:.0f}, {:.0f}, {:.0f}, plus the 300 solid base (bottom ring) and the top ring at the crown.".format(*RING_H)]
     else:
         title, sub = "Roof grid B: diamond lattice", "one roof face seen square on"
-        legend = [(1, False, "Diagonals parallel to the two hips (same inclination as the roof edges, {:.1f}° in the face), every {:g} along the base: equal diamonds {:g} wide.".format(math.degrees(math.atan2(RISE * VST, HALFB - TOPB)), DIAG_P, DIAG_P)),
+        legend = [(1, False, "Diagonals parallel to the two hips (same inclination as the roof edges, {:.1f}° in the face), every {:.0f} along the base: equal diamonds {:.0f} wide.".format(math.degrees(math.atan2(RISE * VST, HALFB - TOPB)), DIAG_P, DIAG_P)),
                   (2, False, "Bottom ring = the 300 solid base; top ring at the crown. The hips are two of the diagonals. No other horizontal ribs.")]
         notes = ["Every diagonal ends on a ring or on a hip, so no bar has a free end in the shell.",
                  "Diagonals do not stop as the roof narrows: the diamonds just get clipped by the hips."]
-    legend = legend + common_legend(opt) + [(7, False, "Printed wall 400 (same layers as the roof), to +2.50."),
-                                             (12, True, "Build-up outside the printed shell, seen at the sides of the roof: insulation 100 (type to be chosen), then the outer layer (cladding 30). The 160 air zone inside the shell stays open between the ribs."),
+    legend = legend + common_legend(opt) + [(7, False, "Printed wall {:g}, to +2.50: inner bead {:g}, lattice zone {:g} (wavy bead + insulation), {} outer beads {:g}.".format(g.WALL, g.BEAD, g.WALL_LAYERS[1], g.OUTER_BEADS, g.BEAD)),
+                                             (12, True, "Outside the printed shell (seen at the sides of the roof): insulation {:g} (type to be chosen), then the outer layer (cladding {:g}).".format(INS, CLAD)),
                                              (8, False, "Buttresses 400 wide, 1000 from the inner face (600 outside), about every 1.5 m ({} bays of {:.0f} on the wall centreline, {} per side, corners included); every other bay is printed wall, the bays between are full-height curtain wall (door in the middle one).".format(round(2 * (g.HALF + g.WALL / 2) / BUT_SPACING), 2 * (g.HALF + g.WALL / 2) / round(2 * (g.HALF + g.WALL / 2) / BUT_SPACING), round(2 * (g.HALF + g.WALL / 2) / BUT_SPACING) + 1)),
                                              (9, True, "Strip footing 1800 x 250, underside at -1.00 (hidden, dashed): printed edge formwork, cast core.")]
     notes += ["Dashed lines = printed pieces in running bond (about 1500 x 750); very faint lines = printed layer joints (10 mm layers, drawn every 100).",
