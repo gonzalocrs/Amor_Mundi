@@ -401,11 +401,15 @@ Compare MaxDisp (SLS), the shell colours at the eave between the rib feet, and t
 ## 10c. Foundation (footing) and tipping
 
 Add an input **`footing`** (bool, Boolean Toggle = True) and sliders **`foot_w`** (width, 800), **`foot_h`** (depth,
-500) and **`foot_ext`** (how far the buttress footing reaches beyond the buttress, 300). Add the outputs
+500), **`foot_ext`** (how far the buttress footing reaches beyond the buttress, 300) and **`foot_in`** (how far it
+reaches inward from the wall line, under the room, 0). Add the outputs
 **`foot_lines`**, **`foot_b`**, **`foot_h`**.
 
 - The script adds a **strip footing on the wall line** at z = 0 joining every buttress foot, and a **footing beam
-  under each buttress**, `foot_ext` longer than it. The supports move under the footing (every footing node).
+  under each buttress**, from `foot_in` inside the wall line to `foot_ext` past the buttress. The case-B pad from the
+  hand calculation (0.4 × 2.4 × 0.3 m, 0.8 m on each side of the 0.8 m buttress) is `foot_w` 400, `foot_h` 300,
+  `foot_in` 800, `foot_ext` 800, **`foot_strip` False** (add a bool input with a Boolean Toggle): pads only, no
+  perimeter strip, exactly as in the hand calculation. Leave `foot_strip` True to keep the strip joining the pads. The supports move under the footing (every footing node).
 - Karamba: one more **Cross Sections** (Trapezoid: Height ← `foot_h` ÷ 10, both widths ← `foot_b` ÷ 10, Mat ← `cast`)
   and one more **Line to Beam** (Line ← `foot_lines`, Id `footing`, CroSec ← that section) into Assemble's Elem.
 - Support: **Tx Ty Tz only** (pinned) for the tipping check.

@@ -82,7 +82,7 @@ slider to it. Inputs you leave out keep the drawing value. They work the same fo
 | Crown ring | `crown_ring` (True), `crown_b` (200), `crown_h` (200) |
 | Buttresses | `but_spacing` (1500), `but_total` (1000 from the inner face), `but_w` (400) |
 | Walls, ring and caps | `ring` (True; False = no ring beam, the roof lands on the wall top or, without walls, on the buttresses at the rib feet), `but_on_ribs` (False; True = one buttress under every rib foot: grid A `n_cols` bays, grid B `n_diamonds` bays), `but_cap` (True: buttress tops cast into the ring beam), `walls` (True; False = no structural walls: the ring beam sits on the buttresses only, supports move under the buttresses, `wall_meshes` and `wind_walls` come out empty) |
-| Foundation | `footing` (False; True = strip footing on the wall line + a footing beam under each buttress, supports under it, output `foot_lines`), `foot_w` (800), `foot_h` (500), `foot_ext` (300 beyond the buttress) |
+| Foundation | `footing` (False; True = strip footing on the wall line + a footing beam under each buttress, supports under it, output `foot_lines`), `foot_w` (800), `foot_h` (500), `foot_ext` (300 beyond the buttress), `foot_in` (0, inward from the wall line), `foot_strip` (True; False = separate pads under the buttresses only) |
 | Mesh and loads | `mesh_size` (500), `wind_dir`, `qp`, `clad`, `gamma`, `fck`, `kf`, `fixed` |
 
 A slider combination that can't be built (for example an opening wider than the plan) gives empty outputs and the

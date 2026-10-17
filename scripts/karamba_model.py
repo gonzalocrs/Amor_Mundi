@@ -66,6 +66,10 @@ PARAMETERS (inputs, all optional; defaults = the drawing set). Lengths in mm.
                foot_w       footing width                                              800
                foot_h       footing depth                                              500
                foot_ext     how far the buttress footing reaches beyond the buttress   300
+               foot_in      how far the buttress footing reaches inward, from the      0
+                            wall line (under the room)
+               foot_strip   True: strip on the wall line joining the pads; False:      True
+                            separate pads under the buttresses only
   checks       skin_check   True: the roof shell becomes ONE bead-thick skin with the real    False
                             printed E and the whole roof weight, for Buckling Modes:
                             BLFacs = local skin buckling between the ribs (safe side)
@@ -146,7 +150,7 @@ DEFAULTS = dict(
     rib_w=160.0, rib_d=160.0, n_cols=10, min_pitch=500.0, n_diamonds=8,
     crown_ring=True, crown_b=200.0, crown_h=200.0, but_spacing=1500.0, but_total=1000.0, but_w=400.0, walls=True,
     but_cap=True, ring=True, but_on_ribs=False, roof_only=False, ring_w=None, skin_check=False,
-    footing=False, foot_w=800.0, foot_h=500.0, foot_ext=300.0,
+    footing=False, foot_w=800.0, foot_h=500.0, foot_ext=300.0, foot_in=0.0, foot_strip=True,
 )
 
 
@@ -406,14 +410,17 @@ def build_model(**kw):
                 top_row = bv[n_w * (n_f + 1):]
                 out["cap"] += list(zip(top_row, top_row[1:]))
         if p["footing"]:                                # strip footing on the wall line + a footing beam under every
-            fx = [P(d_b, x, 0.0) for x in wxs]          # buttress, foot_ext longer than it; supported at every node
-            out["foot"] += list(zip(fx, fx[1:]))
-            out["supports"] += fx
-            ext = max(0.0, float(p["foot_ext"]))
+            if p["foot_strip"]:                         # buttress, reaching foot_in inward from the wall line and
+                fx = [P(d_b, x, 0.0) for x in wxs]      # foot_ext beyond the buttress; supported at every node.
+                out["foot"] += list(zip(fx, fx[1:]))    # foot_strip = False: pads under the buttresses only
+                out["supports"] += fx
+            ext, fin_in = max(0.0, float(p["foot_ext"])), max(0.0, float(p["foot_in"]))
+            n_ext, n_in = int(math.ceil(ext / ms)), int(math.ceil(fin_in / ms))
             for xb in but_x:
-                fp = [P(d_b + fin_len * i / n_f, xb, 0.0) for i in range(n_f + 1)]
+                fp = [P(d_b - fin_in * (1 - i / n_in), xb, 0.0) for i in range(n_in)] if fin_in > 1.0 else []
+                fp += [P(d_b + fin_len * i / n_f, xb, 0.0) for i in range(n_f + 1)]
                 if ext > 1.0:
-                    fp.append(P(d_b + fin_len + ext, xb, 0.0))
+                    fp += [P(d_b + fin_len + ext * i / n_ext, xb, 0.0) for i in range(1, n_ext + 1)]
                 out["foot"] += list(zip(fp, fp[1:]))
                 out["supports"] += fp
     out["supports"] = sorted(set(out["supports"]))
@@ -512,8 +519,12 @@ def summary(m, gamma=24.0, clad=0.0):
         lines.append("NO structural walls: the ring beam sits on the {} buttresses only (wall_meshes and wind_walls are "
                      "empty, supports under the buttresses)".format(g["n_but"]))
     if m["foot"]:
-        lines.append("footing {:.0f} x {:.0f}: strip on the wall line + {:.0f} mm beyond each buttress, {} beams, "
-                     "supports under the footing (foot_lines)".format(p["foot_w"], p["foot_h"], p["foot_ext"], len(m["foot"])))
+        lines.append("footing {:.0f} x {:.0f}: {}under each buttress from {:.0f} inside the wall "
+                     "line to {:.0f} beyond the buttress (footing length {:.0f}), {} beams, supports under the footing "
+                     "(foot_lines)".format(p["foot_w"], p["foot_h"],
+                                           "strip on the wall line + " if p["foot_strip"] else "PADS ONLY, ",
+                                           p["foot_in"], p["foot_ext"],
+                                           p["foot_in"] + g["fin_len"] + p["foot_ext"], len(m["foot"])))
     if m["cap"]:
         lines.append("buttress caps: {} beams, ring section {:.0f} x {:.0f} (cap_lines)".format(
             len(m["cap"]), p["ring_w"], p["base_h"]))
