@@ -99,6 +99,21 @@ PARAMETERS (inputs, all optional; defaults = the drawing set). Lengths in mm.
                roof_only    True: only the roof, ribs and crown ring, supported on     False
                             every eave node; Reaction Forces = what the roof puts on
                             the ring (vertical + outward push)
+               hring_z      grid A: heights (mm above the floor) of the horizontal    min_pitch
+                            rib rings, one value or a list (input set to List Access);    levels
+                            empty = the min_pitch levels, 0 = no rings at all (every
+                            column then runs to the crown). info prints the face centroid
+                            height for reference. The secondary (odd) columns run up
+                            to the highest ring and stop there
+               cols_full    grid A: True = every column runs from the eave to the crown   False
+                            (none stops at a ring)
+               ring_test    True: roof, ribs, crown ring and ring beam only, the ring   False
+                            on sliding bearings at the buttress positions (support
+                            points `supports`, Tz only) + one tangential pin at each
+                            side's midpoint (`sup_x` Tx only, `sup_y` Ty only) so the
+                            model can't spin or slide. The ring is free to grow
+                            outward: ALL the roof's push goes into the ring, the
+                            buttresses get vertical load only
                but_on_ribs  one buttress under every rib foot (grid A: n_cols bays,     False
                             grid B: n_diamonds bays) instead of but_spacing
                but_cap      cast cap along each buttress top, tying it to the ring     True
@@ -149,7 +164,7 @@ DEFAULTS = dict(
     opening=1000.0, bead=30.0, outer_beads=1, lattice=120.0, fill=0.25, all_layers=False,
     rib_w=160.0, rib_d=160.0, n_cols=10, min_pitch=500.0, n_diamonds=8,
     crown_ring=True, crown_b=200.0, crown_h=200.0, but_spacing=1500.0, but_total=1000.0, but_w=400.0, walls=True,
-    but_cap=True, ring=True, but_on_ribs=False, roof_only=False, ring_w=None, skin_check=False,
+    but_cap=True, ring=True, but_on_ribs=False, roof_only=False, ring_test=False, hring_z=None, cols_full=False, ring_w=None, skin_check=False,
     footing=False, foot_w=800.0, foot_h=500.0, foot_ext=300.0, foot_in=0.0, foot_strip=True,
 )
 
@@ -199,7 +214,9 @@ def build_model(**kw):
     if p["ring_w"] <= 0 or p["base_h"] <= 0:
         raise ValueError("ring_w and base_h must be positive")
     roof_only = bool(p["roof_only"])                    # the roof alone, pinned along the eave: its reactions are
-    walls, ring = bool(p["walls"]) and not roof_only, bool(p["ring"]) and not roof_only   # what it puts on the ring
+    ring_test = bool(p["ring_test"]) and not roof_only  # roof + ring only, the ring on sliding bearings
+    walls = bool(p["walls"]) and not roof_only and not ring_test
+    ring = (bool(p["ring"]) or ring_test) and not roof_only
     if bead <= 0 or n_out < 1 or min(p["lattice"], p["rib_d"]) < 0 or not 0 <= fill <= 1:
         raise ValueError("bead and outer_beads must be positive, lattice and rib_d not negative, fill between 0 and 1")
     wall_lat = p["wall"] - (1 + n_out) * bead
@@ -243,7 +260,7 @@ def build_model(**kw):
         return zs + [b]
 
     # ---- grid A: stop levels (drawings' terms: heights above the eave, roof_grid.H1 / H2) and roof rows
-    levels_a, stops = [], (z_c, z_c)
+    levels_a, rib_levels, stops = [], [], (z_c, z_c)
     if grid == "A":
         n_cols = int(p["n_cols"])
         if n_cols % 2 or n_cols < 2:
@@ -260,6 +277,33 @@ def build_model(**kw):
             warn.append("grid A: {} of the 3 rib levels fall outside the roof; those columns run to the crown".format(3 - len(levels_a)))
         L1 = cand[1] if cand[1] in levels_a else None
         L2 = cand[2] if cand[2] in levels_a else None
+        rib_levels = levels_a
+        hz = p["hring_z"]
+        hz = [] if hz is None else [hz] if isinstance(hz, (int, float)) else list(hz)
+        no_rings = bool(hz) and all(z is not None and float(z) <= 0 for z in hz)
+        hz = [float(z) for z in hz if z is not None and float(z) > 0]
+        if no_rings:                                    # hring_z = 0: no horizontal rings, every column runs
+            rib_levels, levels_a, L1, L2 = [], [], None, None   # eave to crown
+        if hz:                                          # horizontal rib rings where the user puts them
+            rib_levels = []
+            for z in sorted(set(hz)):
+                if z_b + ms / 4 < z < z_c - ms / 4:
+                    rib_levels.append(z)
+                else:
+                    warn.append("hring_z {:.0f} is outside the roof (+{:.2f} to +{:.2f}): skipped".format(z, z_b / 1000, z_c / 1000))
+            if not rib_levels:
+                warn.append("no hring_z inside the roof: using the min_pitch levels")
+                rib_levels = levels_a
+            # the secondary (odd) columns run up to the HIGHEST ring and stop on it, so no rib end is loose;
+            # the even columns and the hips run to the crown
+            L1, L2 = max(rib_levels), None
+            pitch = 2 * W(L1) / n_cols
+            if pitch < p["min_pitch"]:
+                warn.append("at the top ring (+{:.2f}) the columns are {:.0f} apart, closer than min_pitch {:.0f}".format(
+                    L1 / 1000, pitch, p["min_pitch"]))
+            levels_a = rib_levels
+        if p["cols_full"]:                              # every column runs eave to crown (the rings stay)
+            L1, L2 = None, None
         stops = (L1 or z_c, L2 or z_c)                  # odd columns stop at L1, even ones at L2
         m_a = max(1, int(round(2 * d_b / n_cols / ms)))
         n0 = n_cols * m_a
@@ -298,7 +342,7 @@ def build_model(**kw):
     n_f = max(1, int(math.ceil(fin_len / ms)))
 
     out = {"grid": grid, "roof": [], "t_elems": [], "wall": [], "but": [], "ring": [], "crown": [], "ribs": [], "cap": [], "foot": [],
-           "supports": [], "warn": warn}
+           "supports": [], "sup_x": [], "sup_y": [], "warn": warn}
     for k in range(4):
         th = math.radians(90 * k)
         n = (math.cos(th), math.sin(th)); t = (-math.sin(th), math.cos(th))
@@ -340,7 +384,7 @@ def build_model(**kw):
                         break
                     keys.append((r, int(round((xi + 1) / 2 * nr))))
                 chain(keys, "hip" if c == 0 else "col")
-            for zl in levels_a:                         # horizontal ribs
+            for zl in rib_levels:                       # horizontal ribs
                 r = min(range(len(rows)), key=lambda rr: abs(rows[rr][0] - zl))
                 chain([(r, i) for i in range(rows[r][1] + 1)], "hring")
         else:                                           # grid B and the plain shell: diamond mesh, i / j = steps along the two diagonal families
@@ -378,7 +422,7 @@ def build_model(**kw):
 
         # every wall-top node and every roof-eave node along this side
         eave_x = [round(pt[0] * t[0] + pt[1] * t[1], 3) for pt in base]
-        xs = sorted(set([round(x, 3) for x in wall_x] + eave_x))
+        xs = sorted(set([round(x, 3) for x in wall_x] + eave_x + ([0.0] if ring_test else [])))
         xs = [x for i, x in enumerate(xs) if i == 0 or x - xs[i - 1] > 1.0]
         if not roof_only and not ring and not walls and any(min(abs(x - xb) for x in eave_x) > 1.0 for xb in but_x):
             raise ValueError("without ring and walls each buttress must sit under a rib foot: set but_on_ribs = True "
@@ -398,6 +442,10 @@ def build_model(**kw):
             out["crown"] += list(zip(top, top[1:]))
         if roof_only:                                   # supports on every eave node instead of walls / buttresses
             out["supports"] += base
+            continue
+        if ring_test:                                   # sliding bearings under the ring at the buttress positions
+            out["supports"] += [P(d_b, xb, z_b) for xb in but_x if abs(xb) > 1.0]   # a bearing at mid-side is
+            out["sup_y" if k % 2 == 0 else "sup_x"].append(P(d_b, 0.0, z_b))   # in the pin (Tz ticked there too)
             continue
         # buttresses
         for xb in but_x:
@@ -434,13 +482,13 @@ def build_model(**kw):
                ring=8 * d_b * p["ring_w"] * p["base_h"] / 1e9 if ring else 0.0,
                crown=sum(_dist(a, b) for a, b in out["crown"]) * p["crown_b"] * p["crown_h"] / 1e9,
                walls=wall_area * wall_sec["solid"] / 1e9,
-               buttresses=0.0 if roof_only else 4 * len(but_x) * fin_len * z_b * p["but_w"] / 1e9,
+               buttresses=0.0 if roof_only or ring_test else 4 * len(but_x) * fin_len * z_b * p["but_w"] / 1e9,
                caps=sum(_dist(a, b) for a, b in out["cap"]) * p["ring_w"] * p["base_h"] / 1e9,
                footing=sum(_dist(a, b) for a, b in out["foot"]) * p["foot_w"] * p["foot_h"] / 1e9)
     out["p"] = p
     out["geom"] = dict(d_b=d_b, d_c=d_c, z_b=z_b, z_c=z_c, rise=rise, slope=slope, slant=slant, fin_len=fin_len,
-                       n_but=4 * len(but_x), but_bay=2 * d_b / nb, roof_area=roof_area,
-                       wall_area=wall_area, rib_len=rib_len, levels_a=levels_a, roof_sec=roof_sec, wall_sec=wall_sec,
+                       n_but=4 * len(but_x), mid_but=any(abs(xb) < 1.0 for xb in but_x), but_bay=2 * d_b / nb, roof_area=roof_area,
+                       wall_area=wall_area, rib_len=rib_len, levels_a=rib_levels, z_g=z_b + (z_c - z_b) * (d_b + 2 * d_c) / (3 * (d_b + d_c)), roof_sec=roof_sec, wall_sec=wall_sec,
                        vol=vol, gamma_ratio_roof=roof_sec["solid"] / roof_sec["t"],
                        gamma_ratio_wall=wall_sec["solid"] / wall_sec["t"])
     lean = 90 - slope
@@ -507,6 +555,12 @@ def summary(m, gamma=24.0, clad=0.0):
     if p["skin_check"]:
         lines.append("SKIN CHECK: roof shell = one {:.0f} mm skin, real printed E, full roof weight. Use only with "
                      "Buckling Modes (BLFacs = local skin buckling between ribs, on the safe side)".format(p["bead"]))
+    if p["ring_test"] and not p["roof_only"]:
+        z = " + Tz" if g["mid_but"] else " only"
+        lines.append("RING TEST: roof + ring only, the ring on {} sliding bearings under the buttress positions (Support "
+                     "on `supports`: Tz only) + mid-side pins (`sup_x`: Tx{z}, `sup_y`: Ty{z}). Horizontal reactions "
+                     "should be ~0: the ring carries the whole push. Read the ring's N (tension) and bending, and the "
+                     "eave Disp (how much the ring grows)".format(len(m["supports"]) + (4 if g["mid_but"] else 0), z=z))
     if p["roof_only"]:
         lines.append("ROOF ONLY: supported on every eave node (set Support to pinned: Tx Ty Tz only). The reactions are "
                      "what the roof puts on the ring: Z = down, horizontal = outward push")
@@ -515,7 +569,7 @@ def summary(m, gamma=24.0, clad=0.0):
     if p["but_on_ribs"] and m["grid"] != "none":
         lines.append("buttresses under the rib feet: {} bays per side ({} buttresses with both corners), {:.0f} apart".format(
             g["n_but"] // 4 - 1, g["n_but"] // 4, g["but_bay"]))
-    if not m["wall"] and not p["roof_only"]:
+    if not m["wall"] and not p["roof_only"] and not p["ring_test"]:
         lines.append("NO structural walls: the ring beam sits on the {} buttresses only (wall_meshes and wind_walls are "
                      "empty, supports under the buttresses)".format(g["n_but"]))
     if m["foot"]:
@@ -530,8 +584,9 @@ def summary(m, gamma=24.0, clad=0.0):
             len(m["cap"]), p["ring_w"], p["base_h"]))
     if m["ribs"]:
         lines.append("ribs {:.0f} x {:.0f}: {:.0f} m ({} beams)".format(p["rib_w"], p["rib_d"], g["rib_len"] / 1000, len(m["ribs"])))
-    if g["levels_a"]:
-        lines.append("grid A horizontal ribs at " + ", ".join("+{:.2f}".format(z / 1000) for z in g["levels_a"]))
+    if m["grid"] == "A":
+        lines.append("grid A horizontal ribs at " + (", ".join("+{:.2f}".format(z / 1000) for z in g["levels_a"]) or "none") +
+                     " (face centroid at +{:.2f})".format(g["z_g"] / 1000))
     lines.append("concrete m3: " + ", ".join("{} {:.1f}".format(k, v) for k, v in vol.items()) +
                  "; total {:.1f} m3 = {:.0f} kN (+ cladding {:.0f} kN)".format(sum(vol.values()), sum(vol.values()) * gamma,
                                                                              g["roof_area"] / 1e6 * clad))
@@ -590,7 +645,7 @@ def _gh_main():
     wd, qp, clad = get("wind_dir", 0.0), get("qp", 0.9), get("clad", 0.0)
     gam, fck, kf, fixed = get("gamma", 24.0), get("fck", 30.0), get("kf", 0.7), get("fixed", True)
     out = dict(roof_meshes=[], wall_meshes=[], but_meshes=[], ring_lines=[], crown_lines=[], cap_lines=[], foot_lines=[], rib_lines=[], rib_ids=[],
-               supports=[], wind_vecs=[], wind_walls=[], t_roof_elems=DataTree[object]())
+               supports=[], sup_x=[], sup_y=[], wind_vecs=[], wind_walls=[], t_roof_elems=DataTree[object]())
     try:
         m = build_model(**{k: G.get(k) for k in DEFAULTS})
     except ValueError as e:                             # bad slider combination: empty model + the reason, no crash
@@ -620,6 +675,8 @@ def _gh_main():
     out["rib_lines"] = [line(a, b) for a, b, _ in m["ribs"]]
     out["rib_ids"] = [rid for _, _, rid in m["ribs"]]
     out["supports"] = [rg.Point3d(*pt) for pt in m["supports"]]
+    out["sup_x"] = [rg.Point3d(*pt) for pt in m["sup_x"]]
+    out["sup_y"] = [rg.Point3d(*pt) for pt in m["sup_y"]]
     for i, ts in enumerate(m["t_elems"]):
         out["t_roof_elems"].AddRange(ts, GH_Path(i))
     out["cladding"] = rg.Vector3d(0, 0, -clad)

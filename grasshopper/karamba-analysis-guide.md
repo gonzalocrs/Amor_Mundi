@@ -420,6 +420,25 @@ The lowest value is the worst support: **negative = the ground would have to pul
 most a single point presses on the soil. With walls off, every support is under the buttresses / footing.
 ULS1 governs here: the roof's own weight makes the push that tips the buttresses.
 
+## 10d. Ring test, horizontal ring heights, caps
+
+- **`ring_test`** (bool): roof, ribs, crown ring and ring beam only, the ring on sliding bearings at the buttress
+  positions. Outputs `sup_x` and `sup_y` (mid-side pins). Three Supports: `supports` **Tz only**, `sup_x` **Tx**,
+  `sup_y` **Ty** (add Tz on both when `info` says "+ Tz"). Read with LCase `G`: horizontal reactions ≈ 0 means the
+  ring closes the whole push. Set it back to False (and `supports` to **Tx Ty Tz**) for the real building, or the
+  model is unstable.
+- **`hring_z`** (float, **List Access**): heights in mm above the floor of the horizontal rib rings, one Number
+  Slider per ring (Shift-drag them all into the input). No wire = the min_pitch levels, 0 = no rings. The secondary
+  columns run up to the highest ring; keep it below about +7.40 so the columns stay `min_pitch` apart (`info` warns).
+  `info` prints the face centroid height.
+- **`cols_full`** (bool): every column runs to the crown. What-if only: the crown is too narrow to build it.
+- **`rib_ids`** must feed the ribs' Line to Beam **Id**, so Beam Forces can read `col`, `hip` and `hring` separately.
+  Add those names (plus `cap`, `footing`) to ModelView's **View** list, or they are not drawn.
+- **Caps:** output `cap_lines` → a copy of the ring's Line to Beam, Id `cap`, into Assemble. Input `but_cap`
+  (bool) turns them off. Caps = ring cast solid over the buttresses; no caps = ring on pads.
+- The roof shell is an equivalent plate (E × 0.150): the real stress in a printed skin is about the shell value
+  ÷ 0.150 (stretching) or × 4.3 (bending).
+
 ## 10. Compare A, B and none
 
 Switch the `grid` value list and read the same results each time. Keep this table; it is the argument for the
