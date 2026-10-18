@@ -9,6 +9,7 @@ hollow, lapped pieces for **3D concrete printing**, sliced to printer programs w
 | Path | What it is |
 |---|---|
 | `scripts/cork_house_roof.py` | Main script: roof pieces, print paths, bead preview, printability check |
+| `scripts/rib_pieces.py` | Roof pieces with open channels for the cast ribs of the Karamba model (courses square to the slope, print paths, printability check, Revit-ready solids); see `grasshopper/rib-pieces-guide.md` |
 | `scripts/concrete_slicer.py` | General slicer: turns any closed geometry into printed-bead geometry (visual only) |
 | `grasshopper/Pyramide 10_1_2026.gh` | The Grasshopper definition (scripts pasted into Py3 components + SaladSlicer chain) |
 | `rhino/10_1_2026.3dm` | The Rhino model (stored with Git LFS) |
