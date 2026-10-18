@@ -434,8 +434,14 @@ ULS1 governs here: the roof's own weight makes the push that tips the buttresses
 - **`cols_full`** (bool): every column runs to the crown. What-if only: the crown is too narrow to build it.
 - **`rib_ids`** must feed the ribs' Line to Beam **Id**, so Beam Forces can read `col`, `hip` and `hring` separately.
   Add those names (plus `cap`, `footing`) to ModelView's **View** list, or they are not drawn.
-- **Caps:** output `cap_lines` → a copy of the ring's Line to Beam, Id `cap`, into Assemble. Input `but_cap`
-  (bool) turns them off. Caps = ring cast solid over the buttresses; no caps = ring on pads.
+- **Caps:** output `cap_lines` → a copy of the ring's Line to Beam, Id `cap`, into Assemble. `but_cap` True = the
+  ring cast solid over the whole buttress top; False = **seat**: the ring tied to the buttress top only over its own
+  width (`ring_w`), the contact of a notch. A sliding pad is `ring_test` True.
+- **`no_corner`** (text in a Panel, e.g. `1,3`): removes the corner buttresses (both fins) at those plan corners:
+  1 = +x+y, 2 = −x+y, 3 = −x−y, 4 = +x−y. Their footing pads and ring-test bearings go too.
+- **Japanese load cases** (Load-Case-Combinator): `LONG = 1.0 * G` and `SHORT = 1.0 * G + 1.0 * W`, checked against
+  allowable stresses (concrete 1/3 Fc long-term, 2/3 short-term). Wind `qp` ≈ 2.6 kN/m² for Ishigaki assuming
+  V₀ = 46 m/s, terrain II (q = 0.6 E V₀², Notification 1454; V₀ still to confirm).
 - The roof shell is an equivalent plate (E × 0.150): the real stress in a printed skin is about the shell value
   ÷ 0.150 (stretching) or × 4.3 (bending).
 

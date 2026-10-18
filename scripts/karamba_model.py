@@ -116,7 +116,11 @@ PARAMETERS (inputs, all optional; defaults = the drawing set). Lengths in mm.
                             buttresses get vertical load only
                but_on_ribs  one buttress under every rib foot (grid A: n_cols bays,     False
                             grid B: n_diamonds bays) instead of but_spacing
-               but_cap      cast cap along each buttress top, tying it to the ring     True
+               no_corner    corners WITHOUT buttresses: 1 (+x+y), 2 (-x+y), 3 (-x-y),    none
+                            4 (+x-y); a number, a list, or text "1,3" in a Panel
+               but_cap      True: cast cap along each buttress top, tying it to the    True
+                            ring; False: SEAT, the ring tied to the buttress top only
+                            over its own width (ring_w), the contact of a notch
                             beam over its full depth (detail D1: the solid roof base
                             cast over the buttress, hooked bars into it)
   loads        wind_dir     direction the wind blows TOWARD, degrees from +X, ccw      0
@@ -164,7 +168,7 @@ DEFAULTS = dict(
     opening=1000.0, bead=30.0, outer_beads=1, lattice=120.0, fill=0.25, all_layers=False,
     rib_w=160.0, rib_d=160.0, n_cols=10, min_pitch=500.0, n_diamonds=8,
     crown_ring=True, crown_b=200.0, crown_h=200.0, but_spacing=1500.0, but_total=1000.0, but_w=400.0, walls=True,
-    but_cap=True, ring=True, but_on_ribs=False, roof_only=False, ring_test=False, hring_z=None, cols_full=False, ring_w=None, skin_check=False,
+    but_cap=True, no_corner=None, ring=True, but_on_ribs=False, roof_only=False, ring_test=False, hring_z=None, cols_full=False, ring_w=None, skin_check=False,
     footing=False, foot_w=800.0, foot_h=500.0, foot_ext=300.0, foot_in=0.0, foot_strip=True,
 )
 
@@ -341,6 +345,23 @@ def build_model(**kw):
         raise ValueError("but_total must be larger than half the wall thickness")
     n_f = max(1, int(math.ceil(fin_len / ms)))
 
+    nc = p["no_corner"]                                 # corners without buttresses: 1 (+x+y), 2 (-x+y), 3 (-x-y),
+    if nc is None:                                      # 4 (+x-y); an int, a list, or text like "1,3"
+        nc = []
+    elif isinstance(nc, str):
+        nc = [c for c in nc.replace(";", ",").replace(" ", ",").split(",") if c.strip()]
+    elif isinstance(nc, (int, float)):
+        nc = [nc]
+    no_corner = set(int(float(c)) for c in nc if str(c).strip() not in ("", "0"))
+    if no_corner - {1, 2, 3, 4}:
+        raise ValueError("no_corner takes corner numbers 1 to 4 (1 = +x+y, 2 = -x+y, 3 = -x-y, 4 = +x-y)")
+
+    def corner_of(pt):                                  # 1-4 if pt is a plan corner of the wall line, else 0
+        if abs(abs(pt[0]) - d_b) > 1.0 or abs(abs(pt[1]) - d_b) > 1.0:
+            return 0
+        return {(1, 1): 1, (-1, 1): 2, (-1, -1): 3, (1, -1): 4}[(1 if pt[0] > 0 else -1, 1 if pt[1] > 0 else -1)]
+    n_but_real = 0
+
     out = {"grid": grid, "roof": [], "t_elems": [], "wall": [], "but": [], "ring": [], "crown": [], "ribs": [], "cap": [], "foot": [],
            "supports": [], "sup_x": [], "sup_y": [], "warn": warn}
     for k in range(4):
@@ -443,20 +464,30 @@ def build_model(**kw):
         if roof_only:                                   # supports on every eave node instead of walls / buttresses
             out["supports"] += base
             continue
+        bx_k = [xb for xb in but_x if corner_of(P(d_b, xb, 0.0)) not in no_corner]   # this face's buttresses
+        n_but_real += len(bx_k)
         if ring_test:                                   # sliding bearings under the ring at the buttress positions
-            out["supports"] += [P(d_b, xb, z_b) for xb in but_x if abs(xb) > 1.0]   # a bearing at mid-side is
+            out["supports"] += [P(d_b, xb, z_b) for xb in bx_k if abs(xb) > 1.0]   # a bearing at mid-side is
             out["sup_y" if k % 2 == 0 else "sup_x"].append(P(d_b, 0.0, z_b))   # in the pin (Tz ticked there too)
             continue
-        # buttresses
-        for xb in but_x:
-            bv = [P(d_b + fin_len * i / n_f, xb, z) for z in wall_z for i in range(n_f + 1)]
-            bf = [(j * (n_f + 1) + i, j * (n_f + 1) + i + 1, (j + 1) * (n_f + 1) + i + 1, (j + 1) * (n_f + 1) + i)
-                  for j in range(n_w) for i in range(n_f)]
+        # buttresses. Stations along the fin: the mesh columns plus the end of the seat (the ring's width), so the
+        # seat can be connected over exactly its contact length
+        seat = min(fin_len, float(p["ring_w"]))
+        fst = sorted(set([round(fin_len * i / n_f, 3) for i in range(n_f + 1)] + [round(seat, 3)]))
+        fst = [x for i, x in enumerate(fst) if i == 0 or x - fst[i - 1] > 1.0]
+        nfs = len(fst)
+        for xb in bx_k:
+            bv = [P(d_b + u, xb, z) for z in wall_z for u in fst]
+            bf = [(j * nfs + i, j * nfs + i + 1, (j + 1) * nfs + i + 1, (j + 1) * nfs + i)
+                  for j in range(n_w) for i in range(nfs - 1)]
             out["but"].append((bv, bf))
-            out["supports"] += bv[0 if not walls else 1:n_f + 1]
-            if p["but_cap"]:                            # the solid roof base cast over the buttress top (detail D1)
-                top_row = bv[n_w * (n_f + 1):]
+            out["supports"] += bv[0 if not walls else 1:nfs]
+            top_row = bv[n_w * nfs:]
+            if p["but_cap"]:                            # the solid roof base cast over the whole buttress top (D1)
                 out["cap"] += list(zip(top_row, top_row[1:]))
+            else:                                       # SEAT: the ring rests on the buttress top over its own width
+                on = [v for v, u in zip(top_row, fst) if u <= seat + 1.0]   # only, cast separately
+                out["cap"] += list(zip(on, on[1:]))
         if p["footing"]:                                # strip footing on the wall line + a footing beam under every
             if p["foot_strip"]:                         # buttress, reaching foot_in inward from the wall line and
                 fx = [P(d_b, x, 0.0) for x in wxs]      # foot_ext beyond the buttress; supported at every node.
@@ -464,9 +495,10 @@ def build_model(**kw):
                 out["supports"] += fx
             ext, fin_in = max(0.0, float(p["foot_ext"])), max(0.0, float(p["foot_in"]))
             n_ext, n_in = int(math.ceil(ext / ms)), int(math.ceil(fin_in / ms))
-            for xb in but_x:
+
+            for xb in bx_k:
                 fp = [P(d_b - fin_in * (1 - i / n_in), xb, 0.0) for i in range(n_in)] if fin_in > 1.0 else []
-                fp += [P(d_b + fin_len * i / n_f, xb, 0.0) for i in range(n_f + 1)]
+                fp += [P(d_b + u, xb, 0.0) for u in fst]
                 if ext > 1.0:
                     fp += [P(d_b + fin_len + ext * i / n_ext, xb, 0.0) for i in range(1, n_ext + 1)]
                 out["foot"] += list(zip(fp, fp[1:]))
@@ -482,12 +514,12 @@ def build_model(**kw):
                ring=8 * d_b * p["ring_w"] * p["base_h"] / 1e9 if ring else 0.0,
                crown=sum(_dist(a, b) for a, b in out["crown"]) * p["crown_b"] * p["crown_h"] / 1e9,
                walls=wall_area * wall_sec["solid"] / 1e9,
-               buttresses=0.0 if roof_only or ring_test else 4 * len(but_x) * fin_len * z_b * p["but_w"] / 1e9,
+               buttresses=0.0 if roof_only or ring_test else n_but_real * fin_len * z_b * p["but_w"] / 1e9,
                caps=sum(_dist(a, b) for a, b in out["cap"]) * p["ring_w"] * p["base_h"] / 1e9,
                footing=sum(_dist(a, b) for a, b in out["foot"]) * p["foot_w"] * p["foot_h"] / 1e9)
     out["p"] = p
     out["geom"] = dict(d_b=d_b, d_c=d_c, z_b=z_b, z_c=z_c, rise=rise, slope=slope, slant=slant, fin_len=fin_len,
-                       n_but=4 * len(but_x), mid_but=any(abs(xb) < 1.0 for xb in but_x), but_bay=2 * d_b / nb, roof_area=roof_area,
+                       n_but=n_but_real if not roof_only else 4 * len(but_x), no_corner=sorted(no_corner), nb=nb, mid_but=any(abs(xb) < 1.0 for xb in but_x), but_bay=2 * d_b / nb, roof_area=roof_area,
                        wall_area=wall_area, rib_len=rib_len, levels_a=rib_levels, z_g=z_b + (z_c - z_b) * (d_b + 2 * d_c) / (3 * (d_b + d_c)), roof_sec=roof_sec, wall_sec=wall_sec,
                        vol=vol, gamma_ratio_roof=roof_sec["solid"] / roof_sec["t"],
                        gamma_ratio_wall=wall_sec["solid"] / wall_sec["t"])
@@ -547,9 +579,9 @@ def summary(m, gamma=24.0, clad=0.0):
     lines = ["grid {}: plan {:.0f} clear, eave +{:.2f}, rise {:.0f}, slope {:.1f} deg, crown opening {:.0f}".format(
                  m["grid"], p["clear"], p["wall_h"] / 1000, g["rise"], g["slope"], p["opening"]),
              "roof {:.0f} thick ({:.0f} bead, rib zone {:.0f}, lattice {:.0f}, {} outer beads), {} elements, {:.0f} m2; "
-             "{} buttresses ({} per side, bays {:.0f})".format(
+             "{} buttresses ({}, bays {:.0f})".format(
                  rs["total"], p["bead"], p["rib_d"], p["lattice"], int(p["outer_beads"]), n_roof, g["roof_area"] / 1e6,
-                 g["n_but"], g["n_but"] // 4, g["but_bay"]),
+                 g["n_but"], "some corners removed" if g["no_corner"] else "{} per side".format(g["n_but"] // 4), g["but_bay"]),
              "Karamba equivalent shells ({}): roof t {:.0f}, E x {:.3f}; wall t {:.0f}, E x {:.3f}".format(
                  "all printed layers" if p["all_layers"] else "skins only", rs["t"], rs["ratio"], ws["t"], ws["ratio"])]
     if p["skin_check"]:
@@ -568,7 +600,7 @@ def summary(m, gamma=24.0, clad=0.0):
         lines.append("NO ring beam: the roof lands on the {} directly".format("wall top" if m["wall"] else "buttresses at the rib feet"))
     if p["but_on_ribs"] and m["grid"] != "none":
         lines.append("buttresses under the rib feet: {} bays per side ({} buttresses with both corners), {:.0f} apart".format(
-            g["n_but"] // 4 - 1, g["n_but"] // 4, g["but_bay"]))
+            g["nb"], g["nb"] + 1, g["but_bay"]))
     if not m["wall"] and not p["roof_only"] and not p["ring_test"]:
         lines.append("NO structural walls: the ring beam sits on the {} buttresses only (wall_meshes and wind_walls are "
                      "empty, supports under the buttresses)".format(g["n_but"]))
@@ -579,9 +611,14 @@ def summary(m, gamma=24.0, clad=0.0):
                                            "strip on the wall line + " if p["foot_strip"] else "PADS ONLY, ",
                                            p["foot_in"], p["foot_ext"],
                                            p["foot_in"] + g["fin_len"] + p["foot_ext"], len(m["foot"])))
+    if g["no_corner"]:
+        lines.append("NO corner buttresses at corner(s) {} (1 = +x+y, 2 = -x+y, 3 = -x-y, 4 = +x-y)".format(
+            ", ".join(str(c) for c in g["no_corner"])))
     if m["cap"]:
-        lines.append("buttress caps: {} beams, ring section {:.0f} x {:.0f} (cap_lines)".format(
-            len(m["cap"]), p["ring_w"], p["base_h"]))
+        lines.append("buttress {}: {} beams, ring section {:.0f} x {:.0f} (cap_lines)".format(
+            "caps over the whole top (cast solid)" if p["but_cap"] else
+            "SEAT: ring tied to the buttress top over {:.0f} only (its width; cast separately)".format(
+                min(g["fin_len"], p["ring_w"])), len(m["cap"]), p["ring_w"], p["base_h"]))
     if m["ribs"]:
         lines.append("ribs {:.0f} x {:.0f}: {:.0f} m ({} beams)".format(p["rib_w"], p["rib_d"], g["rib_len"] / 1000, len(m["ribs"])))
     if m["grid"] == "A":
