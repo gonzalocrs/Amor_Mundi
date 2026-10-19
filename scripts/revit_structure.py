@@ -220,6 +220,12 @@ def build_revit(m, rib_top=None, piece_max=2000.0):
                         out["shell_names"].append("{} {}".format(name, lname))
     d_eave = float(p["rib_d_eave"] or p["rib_d"])
     d_top = float(p["rib_d_top"] or p["rib_d"])
+    z_seat = float(p["wall_h"])                         # ribs run down into the ring to its underside
+    d_seat = rib_top - (half - W(z_seat)) / q           # eave depth that puts the room-side bottom edge of a column
+    if d_eave < d_seat - 0.5:                           # rib on the ring's inner bottom edge (flush with the wall)
+        out["warn"].append("column ribs made {:.0f} deep at the eave (analysed {:.0f}) so their room-side edge meets "
+                           "the ring's inner bottom edge".format(d_seat, d_eave))
+        d_eave = d_seat
 
     def depth(z, rid):
         if rid == "hring":
@@ -245,6 +251,11 @@ def build_revit(m, rib_top=None, piece_max=2000.0):
         a, b = clip(a, b, z_ring_top, z_crown_bot)
         if _dot(_sub(b, a), _sub(b, a)) < 1.0:
             continue
+        if rid != "hring":                              # foot: on into the ring, down to its underside
+            if b[2] < a[2]:
+                a, b = b, a
+            if abs(a[2] - z_ring_top) < 1.0:
+                a = _add(a, _sub(b, a), (z_seat - a[2]) / (b[2] - a[2]))
         mid = _add(a, _sub(b, a), 0.5)
         k = max(range(4), key=lambda kk: _dot(frame(kk)[0], mid))   # the face the rib is on
         n, t = frame(k)
@@ -268,7 +279,7 @@ def build_revit(m, rib_top=None, piece_max=2000.0):
         ax = _unit(_sub(b, a))
         if abs(ax[2]) > 1e-6:                            # cut the rib ends level: the foot sits flat on the ring
             for e, idx in ((a, (0, 3, 4, 7)), (b, (1, 2, 5, 6))):   # top, the head flat under the crown ring
-                zt = z_ring_top if abs(e[2] - z_ring_top) < 1.0 else z_crown_bot if abs(e[2] - z_crown_bot) < 1.0 else None
+                zt = z_seat if abs(e[2] - z_seat) < 1.0 else z_crown_bot if abs(e[2] - z_crown_bot) < 1.0 else None
                 if zt is not None:
                     for i in idx:
                         pts[i] = _add(pts[i], ax, (zt - pts[i][2]) / ax[2])
