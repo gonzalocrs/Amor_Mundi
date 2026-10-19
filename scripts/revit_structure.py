@@ -401,6 +401,15 @@ def _gh_main():
             return
     except Exception as e:
         out["setup_note"] = "WARNING: could not set up the inputs and outputs ({}); add them by hand".format(e)
+    def inp(name):                                      # an input's value: the script variable, else read straight
+        if G.get(name) is not None:                     # from the input (in case its variable name didn't take)
+            return G[name]
+        for prm in ghenv.Component.Params.Input:        # noqa: F821
+            if prm.NickName == name and not prm.VolatileData.IsEmpty:
+                goo = list(prm.VolatileData.AllData(True))[0]
+                val = goo.ScriptVariable() if hasattr(goo, "ScriptVariable") else getattr(goo, "Value", goo)
+                return val
+        return None
     if not here:
         out["info"] = "ERROR: save this .gh first (next to the Karamba .gh, in the repo's grasshopper folder)"
         G.update(out)
@@ -413,7 +422,7 @@ def _gh_main():
     importlib.reload(karamba_model)                     # pick up edits to karamba_model.py
     names = list(karamba_model.DEFAULTS)
     p, src = dict(FINAL), {k: "script FINAL" for k in FINAL}
-    kgh = G.get("karamba_gh") or os.path.join(here, "Pyramide Karamba 10_14_2026.gh")
+    kgh = inp("karamba_gh") or os.path.join(here, "Pyramide Karamba 10_14_2026.gh")
     try:
         vals = _read_karamba_gh(kgh, names)
         for k, v in vals.items():
@@ -423,15 +432,15 @@ def _gh_main():
     except Exception as e:
         note = "WARNING: could not read the Karamba .gh ({}); using the values analysed on 18-19 Oct".format(e)
     for k in names:                                     # wired inputs win
-        if G.get(k) is not None:
-            p[k] = G[k]
+        if inp(k) is not None:
+            p[k] = inp(k)
             src[k] = "input here"
     if isinstance(p.get("hring_z"), (list, tuple)) and len(p["hring_z"]) == 1:
         p["hring_z"] = p["hring_z"][0]
     out["params"] = note + "\n" + "\n".join("{} = {} ({})".format(k, p[k], src[k]) for k in sorted(p))
     try:
         m = karamba_model.build_model(**{k: p.get(k) for k in names})
-        r = build_revit(m, G.get("rib_top"))
+        r = build_revit(m, inp("rib_top"))
     except ValueError as e:
         out["info"] = "ERROR: {}".format(e)
         G.update(out)
@@ -439,7 +448,7 @@ def _gh_main():
 
     doc = Rhino.RhinoDoc.ActiveDoc
     tol = doc.ModelAbsoluteTolerance if doc else 0.01
-    pl = G.get("origin")
+    pl = inp("origin")
     if isinstance(pl, (list, tuple)):
         pl = pl[0] if pl else None
     if pl is not None and not isinstance(pl, rg.Plane):
