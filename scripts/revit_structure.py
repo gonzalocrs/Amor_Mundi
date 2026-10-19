@@ -297,7 +297,7 @@ def build_revit(m, rib_top=None, piece_max=2000.0):
         for k in range(4):
             out["rings"].append(_hexa([P(k, d, x * d, z) for z in (z0, z1) for d, x in ((ri, -1), (ri, 1), (ro, 1), (ro, -1))]))
             out["ring_names"].append("M-{}-{}".format(tag, FACE[k]))
-    out.update(rings=[], ring_names=[])
+    out.update(rings=[], ring_names=[], rib_clip=half + p["ring_w"], z_seat=float(p["wall_h"]))
     frame_ring(half, half + p["ring_w"], p["wall_h"], z_ring_top, "ring")
     if p["crown_ring"]:
         frame_ring(d_c - p["crown_b"] / 2, d_c + p["crown_b"] / 2, z_crown_bot, z_crown_bot + p["crown_h"], "crown")
@@ -705,6 +705,14 @@ def _gh_main():
         ln.Transform(xf)
         return ln
     out["ribs"] = [brep(x) for x in r["ribs"]]
+    c = r["rib_clip"]                                   # trim the rib feet to the ring's outer face (the hips poked
+    keep = rg.Box(rg.BoundingBox(-c, -c, r["z_seat"] - 1.0, c, c, 1e5)).ToBrep()   # out at the corners)
+    keep.Transform(xf)
+    for i, rid in enumerate(r["rib_ids"]):
+        if rid in ("col", "hip"):
+            res = rg.Brep.CreateBooleanIntersection(out["ribs"][i], keep, tol)
+            if res:
+                out["ribs"][i] = res[0]
     out["shell"] = [brep(x) for x in r["shell"]]
     cut_fail = 0
     rib_box = [rb.GetBoundingBox(True) for rb in out["ribs"]]
