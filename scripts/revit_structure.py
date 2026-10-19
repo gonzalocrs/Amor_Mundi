@@ -722,20 +722,26 @@ def _gh_main():
             comp.ExpireSolution(False)
         comp.OnPingDocument().ScheduleSolution(1, go)
     comp = ghenv.Component                              # noqa: F821
-    filled = [k for k in OUTPUTS if k in out and out[k] not in ("", [], None)]
+    filled = dict((k, out[k]) for k in OUTPUTS if k in out and out[k] not in ("", [], None))
 
-    def check(gh_doc):                                  # after this solution: which outputs got only nulls although
-        dead = [prm.NickName for prm in comp.Params.Output   # the script filled them (Grasshopper didn't bind them)
-                if prm.NickName in filled and not any(x is not None for x in prm.VolatileData.AllData(False))]
-        if dead != sticky.get("revit_structure_dead", []):
-            sticky["revit_structure_dead"] = dead
-            comp.ExpireSolution(False)                  # run once more to show it in info
-    comp.OnPingDocument().ScheduleSolution(1, check)
-    dead = sticky.get("revit_structure_dead", [])
-    if dead:
-        info = ("WARNING: these outputs get no data from the script: {0}. Fix each one by hand: zoom in on the "
-                "component, right-click the output > Remove, then click the + under the outputs and name the new one "
-                "exactly as before ({0}). Rewire it.\n".format(", ".join(dead))) + info
+    def refill(gh_doc):                                 # outputs the script filled but Grasshopper left null (its
+        import Grasshopper                              # variable binding didn't take): put the data in directly
+        fixed = []                                      # and recompute what they feed
+        for prm in comp.Params.Output:
+            val = filled.get(prm.NickName)
+            if val is None or any(x is not None for x in prm.VolatileData.AllData(False)):
+                continue
+            prm.ClearData()
+            prm.AddVolatileDataList(Grasshopper.Kernel.Data.GH_Path(0), val if isinstance(val, list) else [val])
+            for rec in prm.Recipients:
+                rec.Attributes.GetTopLevel.DocObject.ExpireSolution(False)
+            fixed.append(prm.NickName)
+        if fixed:
+            sticky["revit_structure_refilled"] = fixed
+    comp.OnPingDocument().ScheduleSolution(1, refill)
+    if sticky.get("revit_structure_refilled"):
+        info += "\n(outputs passed on directly because Grasshopper didn't bind them: {})".format(
+            ", ".join(sticky["revit_structure_refilled"]))
     out["info"] = (out.pop("setup_note", "") + "\n" + sticky.get("revit_structure_wire", "") + "\n" + placed + "\n" + info).strip()
     G.update(out)
 
