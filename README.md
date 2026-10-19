@@ -13,8 +13,7 @@ hollow, lapped pieces for **3D concrete printing**, sliced to printer programs w
 | `scripts/concrete_slicer.py` | General slicer: turns any closed geometry into printed-bead geometry (visual only) |
 | `grasshopper/Pyramide 10_1_2026.gh` | The Grasshopper definition (scripts pasted into Py3 components + SaladSlicer chain) |
 | `rhino/10_1_2026.3dm` | The Rhino model (stored with Git LFS) |
-| `scripts/karamba_model.py` | Parametric Karamba3D model, roof grid A, B or none: roof/wall/buttress shells, rib beams, solid roof-base ring, crown ring, supports, wind and cladding loads (see "Karamba model" below) |
-| `preview/karamba-preview.html` | Interactive 3D view of the Karamba model (plain shell, grid A, grid B), open in a browser. Rebuild it with `python preview/build_preview.py` after changing the script |
+| `scripts/karamba_model.py` | Parametric Karamba3D model, roof grid A: roof/wall/buttress shells, rib beams, solid roof-base ring, crown ring, supports, wind and cladding loads (see "Karamba model" below) |
 | `details/set/VV_date_label/` | **The drawing sets, one folder per version** (`01_…_80mm-layers`, `02_…_30mm-beads`, `03_…_no-outside-insulation`, …; the highest number is the latest). Older sets are kept, never overwritten, so changes can be compared. |
 | `details/set/VV_…/pyramid-roof-drawing-set.pdf` | **The drawing set**, 10 A3 sheets: 01 floor plan, 02/03 floor plan with roof grid A/B, 04/05 section A-A grid A/B, 06/07 roof plan cut grid A/B, 08/09 roof-grid elevations A/B, 10 eave detail D1. One PDF per sheet next to it. |
 | `details/set/VV_…/cad/pyramid-roof-drawing-set.dxf` | **The whole set in one CAD file**: the 10 sheets side by side in model space (1:1 in mm, labelled), and one A3 layout per sheet (`01 floor-plan` … `10 detail-D1-eave`), each with its viewport at the sheet scale. |
@@ -64,25 +63,24 @@ Deetman, Bos, Ferguson, Versteege, *Salad Slicer: An open-source slicer toolkit 
 
 ## Karamba model
 
-`scripts/karamba_model.py` (Py3 Script component, millimetres). The `grid` input picks the roof:
-**A** (ruled-surface columns, sheet 08), **B** (diamond lattice, sheet 09) or **none** (plain shell, the baseline).
-All three share the same shell, walls and buttresses, so the results compare like for like. The roof mesh follows
-the ribs, so each rib is a chain of beams on shell nodes.
-Run `python scripts/karamba_model.py` to print the three variants and check that everything connects.
+`scripts/karamba_model.py` (Py3 Script component, millimetres). Roof grid **A** only (ruled-surface columns,
+sheet 08); grid B and the plain shell were dropped on 18 Oct 2026. The roof mesh follows the ribs, so each rib is a
+chain of beams on shell nodes. The printed shell is a casing by default (`shell_structural` False: weight only).
+Run `python scripts/karamba_model.py` to print the model and check that everything connects.
 
 ### Parameters
 
 Every dimension is an optional input: add an input to the component named exactly like the parameter and wire a
-slider to it. Inputs you leave out keep the drawing value. They work the same for A, B and none.
+slider to it. Inputs you leave out keep the drawing value.
 
 | Group | Inputs (default) |
 |---|---|
 | Plan and heights | `clear` (10000), `wall` (400), `wall_h` (2500), `base_h` (300, solid roof base = ring beam depth), `rise` (6000), `slope` (deg; if connected it replaces `rise`), `opening` (1000) |
 | Printed layers (roof square to the slope, and walls) | `bead` (30, print width of every printed layer), `outer_beads` (1), `lattice` (120, roof lattice + insulation zone), `fill` (0.25, solid share of the lattice zones), `all_layers` (False: only the skins carry load). Roof = inner bead + rib zone (`rib_d`) + middle bead + lattice + outer beads = 370; wall = inner bead + lattice + outer beads = `wall` |
-| Ribs | `rib_w` (160), `rib_d` (160, = depth of the rib zone); grid A: `n_cols` (10, even), `min_pitch` (500); grid B: `n_diamonds` (8) |
+| Ribs | `rib_w` (160), `rib_d` (160, = depth of the rib zone); `n_cols` (10, even), `min_pitch` (500), `rib_d_eave` (tapered columns and hips, depth at the eave; output `rib_h`) |
 | Crown ring | `crown_ring` (True), `crown_b` (200), `crown_h` (200) |
 | Buttresses | `but_spacing` (1500), `but_total` (1000 from the inner face), `but_w` (400) |
-| Walls, ring and caps | `ring` (True; False = no ring beam, the roof lands on the wall top or, without walls, on the buttresses at the rib feet), `but_on_ribs` (False; True = one buttress under every rib foot: grid A `n_cols` bays, grid B `n_diamonds` bays), `but_cap` (True: buttress tops cast into the ring beam), `walls` (True; False = no structural walls: the ring beam sits on the buttresses only, supports move under the buttresses, `wall_meshes` and `wind_walls` come out empty) |
+| Walls, ring and caps | `ring` (True; False = no ring beam, the roof lands on the wall top or, without walls, on the buttresses at the rib feet), `but_on_ribs` (False; True = one buttress under every rib foot, `n_cols` bays), `but_cap` (True: buttress tops cast into the ring beam), `walls` (True; False = no structural walls: the ring beam sits on the buttresses only, supports move under the buttresses, `wall_meshes` and `wind_walls` come out empty) |
 | Foundation | `footing` (False; True = strip footing on the wall line + a footing beam under each buttress, supports under it, output `foot_lines`), `foot_w` (800), `foot_h` (500), `foot_ext` (300 beyond the buttress), `foot_in` (0, inward from the wall line), `foot_strip` (True; False = separate pads under the buttresses only) |
 | Mesh and loads | `mesh_size` (500), `wind_dir`, `qp`, `clad`, `gamma`, `fck`, `kf`, `fixed` |
 
@@ -97,7 +95,7 @@ reason in `info`, so an optimiser run doesn't stop on an error.
 | `ring_lines` | **Line to Beam**, rectangular `ring_b` x `ring_h` (the solid roof base) |
 | `crown_lines` | **Line to Beam**, rectangular `crown_b` x `crown_h` |
 | `cap_lines` | **Line to Beam**, Id `cap`, the ring beam's section: the solid roof base cast over each buttress top (detail D1); `but_cap` = False leaves them out |
-| `rib_lines` | **Line to Beam** with `rib_ids` into its Id input; rectangular `rib_w` x `rib_d`, full concrete density. The ids (`col`, `hring`, `hip` for A; `diag`, `hip` for B) let you give the hips or the horizontal ribs their own section. Empty for `none`. |
+| `rib_lines` | **Line to Beam** with `rib_ids` into its Id input; rectangular `rib_w` x `rib_d`, full concrete density. The ids (`col`, `hring`, `hip`) let you give the hips or the horizontal ribs their own section. |
 | `supports` | **Support** (fixed, or pinned with `fixed` = False) |
 | gravity | Karamba **Gravity** load |
 | `cladding` | **Mesh Load** on `roof_meshes` (`clad`, default 0: bare structure) |

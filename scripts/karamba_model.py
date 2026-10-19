@@ -1,25 +1,19 @@
 """Karamba3D model of the buttressed pyramid roof: roof shell, walls, buttresses, ring beams, the cast rib grid
-(option A or B from the roof-grid sheets 08 / 09), supports and loads. Fully parametric: every dimension below is an
-optional input, so sliders (and Galapagos / Octopus) can drive the shape, the thicknesses and the heights of all
-three options.
+(grid A from the roof-grid sheet 08), supports and loads. Fully parametric: every dimension below is an
+optional input, so sliders (and Galapagos / Octopus) can drive the shape, the thicknesses and the heights.
 
 Paste into a Python 3 Script component (Rhino 8) or GhPython (Rhino 7). Add an input for each parameter you want to
 change, named exactly as in PARAMETERS; inputs you leave out (or unconnected) use the default. The geometry core
-(`build_model`) is pure Python: `python scripts/karamba_model.py` prints the three variants and checks that
+(`build_model`) is pure Python: `python scripts/karamba_model.py` prints the model and checks that
 everything shares nodes. Units: millimetres. Karamba does NOT follow the Rhino document units (its default is
 metres): set Karamba3D menu > Physical Units > Geometry Input Units to mm in the .gh.
 
-Roof grid (`grid` input), as on the drawing set:
-  A   ruled-surface columns: `n_cols` bays along the eave, columns converge to the crown; every other column stops on
-      a horizontal rib where the spacing reaches `min_pitch`, the rest stop on the next one, only the hips go on to the
-      crown ring. Horizontal ribs at half the first stop level and at the two stop levels (+4.31, +6.13, +7.77 with
-      the defaults, computed exactly as in details/roof_grid.py).
-  B   diamond lattice: two families of diagonals parallel to the hips, `n_diamonds` diamonds along the eave, every
-      diagonal ends on a hip; only the bottom ring (solid base) and the crown ring.
-  none  plain shell, no ribs: the baseline.
-The roof mesh follows the ribs (grid A: rows at the rib levels, columns on the rib lines, the mesh halves where
-columns stop; grid B: a diamond mesh on the two diagonal families), so every rib is a chain of beams on shell nodes.
-The plain shell uses the grid B mesh without ribs (even element sizes up to the crown).
+Roof grid A (the only option kept; grid B and the plain shell were dropped on 18 Oct 2026):
+  ruled-surface columns: `n_cols` bays along the eave, columns converge to the crown; every other column stops on
+  a horizontal rib (`hring_z`, or where the spacing reaches `min_pitch`); the middle column of each side and the
+  hips run to the crown ring.
+The roof mesh follows the ribs (rows at the rib levels, columns on the rib lines, the mesh halves where columns
+stop), so every rib is a chain of beams on shell nodes.
 
 Idealisation (state it in your report):
   - Everything is modelled on mid-surfaces / centrelines. The ring beam = the solid roof base (wall x base_h), at its
@@ -53,7 +47,6 @@ Idealisation (state it in your report):
   - Footing not modelled: supports are fixed (or pinned) at z = 0. Add the soil/footing as springs if you need it.
 
 PARAMETERS (inputs, all optional; defaults = the drawing set). Lengths in mm.
-  variant      grid         "A", "B" or "none"                                         "A"
   mesh         mesh_size    target element size                                        500
   plan         clear        clear inside dimension of the square plan                  10000
                wall         wall thickness (= ring beam width)                         400
@@ -83,9 +76,19 @@ PARAMETERS (inputs, all optional; defaults = the drawing set). Lengths in mm.
                all_layers   False: only the skins carry load; True: every layer        False
   ribs         rib_w        rib width                                                  160
                rib_d        rib depth = depth of the rib zone in the roof              160
+               rib_d_eave   tapered ribs: column and hip depth at the eave; it changes  = rib_d
+                            linearly to rib_d_top at the crown (the rib protrudes into
+                            the room). Output rib_h = one depth per rib line
+               rib_d_top    column and hip depth at the crown                          = rib_d
+                            (the horizontal ribs keep rib_d)
+               hring_w      width of the horizontal (middle) ribs                      = rib_w
+                            Output rib_b = one width per rib line
                n_cols       grid A: column bays along the eave (even)                  10
                min_pitch    grid A: column spacing where every other column stops      500
-               n_diamonds   grid B: diamonds along the eave                            8
+  shell        shell_structural  False: the printed roof shell is a casing that only     False
+                            weighs: its stiffness is set near zero so the ribs, rings
+                            and buttresses carry everything. True: the two printed
+                            skins act as an equivalent sandwich shell (old behaviour)
   crown        crown_ring   add a crown compression ring                               True
                crown_b      crown ring width                                           200
                crown_h      crown ring depth                                           200
@@ -105,6 +108,7 @@ PARAMETERS (inputs, all optional; defaults = the drawing set). Lengths in mm.
                             column then runs to the crown). info prints the face centroid
                             height for reference. The secondary (odd) columns run up
                             to the highest ring and stop there
+               (grid A: the column in the middle of each side always runs to the crown)
                cols_full    grid A: True = every column runs from the eave to the crown   False
                             (none stops at a ring)
                ring_test    True: roof, ribs, crown ring and ring beam only, the ring   False
@@ -114,8 +118,8 @@ PARAMETERS (inputs, all optional; defaults = the drawing set). Lengths in mm.
                             model can't spin or slide. The ring is free to grow
                             outward: ALL the roof's push goes into the ring, the
                             buttresses get vertical load only
-               but_on_ribs  one buttress under every rib foot (grid A: n_cols bays,     False
-                            grid B: n_diamonds bays) instead of but_spacing
+               but_on_ribs  one buttress under every rib foot (n_cols bays) instead     False
+                            of but_spacing
                no_corner    corners WITHOUT buttresses: 1 (+x+y), 2 (-x+y), 3 (-x-y),    none
                             4 (+x-y); a number, a list, or text "1,3" in a Panel
                but_cap      True: cast cap along each buttress top, tying it to the    True
@@ -141,8 +145,8 @@ OUTPUTS - wire as in the README ("Karamba model" section)
     cap_lines      list Line    buttress caps     -> Line to Beam, Id "cap", same section as the ring beam
     foot_lines     list Line    footing (footing = True) -> Line to Beam, Id "footing", foot_b x foot_h, cast
     foot_b, foot_h item float   footing section, mm
-    rib_lines      list Line    rib grid (empty for "none") -> Line to Beam, Id = rib_ids
-    rib_ids        list str     "col" / "hring" / "hip" (A) or "diag" / "hip" (B), one per rib_lines item
+    rib_lines      list Line    rib grid -> Line to Beam, Id = rib_ids
+    rib_ids        list str     "col" / "hring" / "hip", one per rib_lines item
     supports       list Point   base nodes        -> Support
     cladding       item Vector  kN/m2 on roof_meshes (Mesh Load, Z down)
     wind_vecs      list Vector  kN/m2 per roof face   (Mesh Load, one per roof_meshes item, same order)
@@ -164,11 +168,11 @@ OUTPUTS - wire as in the README ("Karamba model" section)
 import math
 
 DEFAULTS = dict(
-    grid="A", mesh_size=500.0, clear=10000.0, wall=400.0, wall_h=2500.0, base_h=300.0, rise=6000.0, slope=None,
+    mesh_size=500.0, clear=10000.0, wall=400.0, wall_h=2500.0, base_h=300.0, rise=6000.0, slope=None,
     opening=1000.0, bead=30.0, outer_beads=1, lattice=120.0, fill=0.25, all_layers=False,
-    rib_w=160.0, rib_d=160.0, n_cols=10, min_pitch=500.0, n_diamonds=8,
+    rib_w=160.0, rib_d=160.0, n_cols=10, min_pitch=500.0,
     crown_ring=True, crown_b=200.0, crown_h=200.0, but_spacing=1500.0, but_total=1000.0, but_w=400.0, walls=True,
-    but_cap=True, no_corner=None, ring=True, but_on_ribs=False, roof_only=False, ring_test=False, hring_z=None, cols_full=False, ring_w=None, skin_check=False,
+    but_cap=True, no_corner=None, ring=True, but_on_ribs=False, roof_only=False, ring_test=False, hring_z=None, cols_full=False, ring_w=None, skin_check=False, shell_structural=False, rib_d_eave=None, rib_d_top=None, hring_w=None,
     footing=False, foot_w=800.0, foot_h=500.0, foot_ext=300.0, foot_in=0.0, foot_strip=True,
 )
 
@@ -193,8 +197,7 @@ def build_model(**kw):
     p = dict(DEFAULTS)
     p.update({k: v for k, v in kw.items() if v is not None})
     warn = []
-    grid = str(p["grid"] or "").strip().upper()
-    grid = grid if grid in ("A", "B") else "none"
+    grid = "A"                                          # grid A only (B and the plain shell were dropped)
     ms = float(p["mesh_size"])
     half = p["clear"] / 2
     d_b = half + p["wall"] / 2                         # wall centreline = ring beam, half side
@@ -265,76 +268,64 @@ def build_model(**kw):
 
     # ---- grid A: stop levels (drawings' terms: heights above the eave, roof_grid.H1 / H2) and roof rows
     levels_a, rib_levels, stops = [], [], (z_c, z_c)
-    if grid == "A":
-        n_cols = int(p["n_cols"])
-        if n_cols % 2 or n_cols < 2:
-            n_cols = max(2, n_cols + n_cols % 2)
-            warn.append("n_cols must be even: using {}".format(n_cols))
-        col_pitch = 2 * halfb / n_cols
-        if p["min_pitch"] >= col_pitch:
-            raise ValueError("min_pitch ({:.0f}) must be smaller than the column spacing at the eave ({:.0f})".format(p["min_pitch"], col_pitch))
-        h1 = (1 - p["min_pitch"] / col_pitch) * halfb / kx
-        h2 = (1 - p["min_pitch"] / (2 * col_pitch)) * halfb / kx
-        cand = [p["wall_h"] + h for h in (h1 / 2, h1, h2)]
-        levels_a = [z for z in cand if z_b + ms / 4 < z < z_c - ms / 4]
-        if len(levels_a) < 3:
-            warn.append("grid A: {} of the 3 rib levels fall outside the roof; those columns run to the crown".format(3 - len(levels_a)))
-        L1 = cand[1] if cand[1] in levels_a else None
-        L2 = cand[2] if cand[2] in levels_a else None
-        rib_levels = levels_a
-        hz = p["hring_z"]
-        hz = [] if hz is None else [hz] if isinstance(hz, (int, float)) else list(hz)
-        no_rings = bool(hz) and all(z is not None and float(z) <= 0 for z in hz)
-        hz = [float(z) for z in hz if z is not None and float(z) > 0]
-        if no_rings:                                    # hring_z = 0: no horizontal rings, every column runs
-            rib_levels, levels_a, L1, L2 = [], [], None, None   # eave to crown
-        if hz:                                          # horizontal rib rings where the user puts them
-            rib_levels = []
-            for z in sorted(set(hz)):
-                if z_b + ms / 4 < z < z_c - ms / 4:
-                    rib_levels.append(z)
-                else:
-                    warn.append("hring_z {:.0f} is outside the roof (+{:.2f} to +{:.2f}): skipped".format(z, z_b / 1000, z_c / 1000))
-            if not rib_levels:
-                warn.append("no hring_z inside the roof: using the min_pitch levels")
-                rib_levels = levels_a
-            # the secondary (odd) columns run up to the HIGHEST ring and stop on it, so no rib end is loose;
-            # the even columns and the hips run to the crown
-            L1, L2 = max(rib_levels), None
-            pitch = 2 * W(L1) / n_cols
-            if pitch < p["min_pitch"]:
-                warn.append("at the top ring (+{:.2f}) the columns are {:.0f} apart, closer than min_pitch {:.0f}".format(
-                    L1 / 1000, pitch, p["min_pitch"]))
-            levels_a = rib_levels
-        if p["cols_full"]:                              # every column runs eave to crown (the rings stay)
-            L1, L2 = None, None
-        stops = (L1 or z_c, L2 or z_c)                  # odd columns stop at L1, even ones at L2
-        m_a = max(1, int(round(2 * d_b / n_cols / ms)))
-        n0 = n_cols * m_a
-        n1 = n0 // 2 if L1 else n0
-        n2 = n1 // 2 if (L2 and n1 % 2 == 0) else n1
-        n_at = lambda z: n0 if (L1 is None or z <= L1 + 1e-6) else n1 if (L2 is None or z <= L2 + 1e-6) else n2
-        breaks = [z_b] + levels_a + [z_c]
-        rows = [(z_b, n0)]
-        for a, b in zip(breaks, breaks[1:]):
-            rows += [(z, n_at(z)) for z in band_rows(a, b, n_at((a + b) / 2), n_at(a))]
-    else:
-        n_d = max(2, int(p["n_diamonds"]))
-        m_b = max(1, int(round(2 * d_b / n_d / ms)))
-        s_b = 2 * d_b / n_d / m_b
-        N = n_d * m_b
-        t_top = min(N - 1, max(1, int(round(2 * d_c / s_b))))     # mesh row nearest the crown; moved onto it below
+    n_cols = int(p["n_cols"])
+    if n_cols % 2 or n_cols < 2:
+        n_cols = max(2, n_cols + n_cols % 2)
+        warn.append("n_cols must be even: using {}".format(n_cols))
+    col_pitch = 2 * halfb / n_cols
+    if p["min_pitch"] >= col_pitch:
+        raise ValueError("min_pitch ({:.0f}) must be smaller than the column spacing at the eave ({:.0f})".format(p["min_pitch"], col_pitch))
+    h1 = (1 - p["min_pitch"] / col_pitch) * halfb / kx
+    h2 = (1 - p["min_pitch"] / (2 * col_pitch)) * halfb / kx
+    cand = [p["wall_h"] + h for h in (h1 / 2, h1, h2)]
+    levels_a = [z for z in cand if z_b + ms / 4 < z < z_c - ms / 4]
+    if len(levels_a) < 3 and p["hring_z"] is None:      # only matters when the min_pitch levels are used
+        warn.append("grid A: {} of the 3 rib levels fall outside the roof; those columns run to the crown".format(3 - len(levels_a)))
+    L1 = cand[1] if cand[1] in levels_a else None
+    L2 = cand[2] if cand[2] in levels_a else None
+    rib_levels = levels_a
+    hz = p["hring_z"]
+    hz = [] if hz is None else [hz] if isinstance(hz, (int, float)) else list(hz)
+    no_rings = bool(hz) and all(z is not None and float(z) <= 0 for z in hz)
+    hz = [float(z) for z in hz if z is not None and float(z) > 0]
+    if no_rings:                                    # hring_z = 0: no horizontal rings, every column runs
+        rib_levels, levels_a, L1, L2 = [], [], None, None   # eave to crown
+    if hz:                                          # horizontal rib rings where the user puts them
+        rib_levels = []
+        for z in sorted(set(hz)):
+            if z_b + ms / 4 < z < z_c - ms / 4:
+                rib_levels.append(z)
+            else:
+                warn.append("hring_z {:.0f} is outside the roof (+{:.2f} to +{:.2f}): skipped".format(z, z_b / 1000, z_c / 1000))
+        if not rib_levels:
+            warn.append("no hring_z inside the roof: using the min_pitch levels")
+            rib_levels = levels_a
+        # the secondary (odd) columns run up to the HIGHEST ring and stop on it, so no rib end is loose;
+        # the even columns and the hips run to the crown
+        L1, L2 = max(rib_levels), None
+        pitch = 2 * W(L1) / n_cols
+        if pitch < p["min_pitch"]:
+            warn.append("at the top ring (+{:.2f}) the columns are {:.0f} apart, closer than min_pitch {:.0f}".format(
+                L1 / 1000, pitch, p["min_pitch"]))
+        levels_a = rib_levels
+    if p["cols_full"]:                              # every column runs eave to crown (the rings stay)
+        L1, L2 = None, None
+    stops = (L1 or z_c, L2 or z_c)                  # odd columns stop at L1, even ones at L2
+    m_a = max(1, int(round(2 * d_b / n_cols / ms)))
+    n0 = n_cols * m_a
+    n1 = n0 // 2 if (L1 and (n0 // 2) % 2 == 0) else n0   # keep a mesh node on the centre column
+    n2 = n1 // 2 if (L2 and n1 % 2 == 0 and (n1 // 2) % 2 == 0) else n1
+    n_at = lambda z: n0 if (L1 is None or z <= L1 + 1e-6) else n1 if (L2 is None or z <= L2 + 1e-6) else n2
+    breaks = [z_b] + levels_a + [z_c]
+    rows = [(z_b, n0)]
+    for a, b in zip(breaks, breaks[1:]):
+        rows += [(z, n_at(z)) for z in band_rows(a, b, n_at((a + b) / 2), n_at(a))]
 
     # buttress axes along each side (as pyramid_drawings.but_pos): equal bays on the wall centreline, corners included.
-    # but_on_ribs: one buttress under every rib foot instead (grid A: every column, grid B: every diagonal pair)
+    # but_on_ribs: one buttress under every rib foot (every column) instead
     nb = max(1, int(round(2 * d_b / p["but_spacing"])))
     if p["but_on_ribs"]:
-        if grid == "A":
-            nb = n_cols
-        elif grid == "B":
-            nb = n_d
-        else:
-            warn.append("but_on_ribs: the plain shell has no ribs, buttresses keep but_spacing")
+        nb = n_cols
     but_x = [-d_b + 2 * d_b * k / nb for k in range(nb + 1)]
     q = max(1, int(round(2 * d_b / nb / ms)))
     wall_x = [-d_b + 2 * d_b * k / (nb * q) for k in range(nb * q + 1)]
@@ -381,61 +372,37 @@ def build_model(**kw):
         def chain(keys, rid):
             ribs.extend((V[idx[a]], V[idx[b]], rid) for a, b in zip(keys, keys[1:]))
 
-        if grid == "A":
+        for r, (z, nr) in enumerate(rows):
+            for i in range(nr + 1):
+                vid((r, i), P(W(z), (-1 + 2.0 * i / nr) * W(z), z))
+        for r in range(len(rows) - 1):
+            na, nb_ = rows[r][1], rows[r + 1][1]
+            if na == nb_:
+                F += [(idx[r, i], idx[r, i + 1], idx[r + 1, i + 1], idx[r + 1, i]) for i in range(na)]
+            else:                                   # the mesh halves above a rib level: 3 triangles per upper element
+                for i in range(nb_):
+                    b0, b1, b2 = idx[r, 2 * i], idx[r, 2 * i + 1], idx[r, 2 * i + 2]
+                    t0, t1 = idx[r + 1, i], idx[r + 1, i + 1]
+                    F += [(b0, b1, t0), (b1, b2, t1), (b1, t1, t0)]
+        base = [V[idx[0, i]] for i in range(rows[0][1] + 1)]
+        top = [V[idx[len(rows) - 1, i]] for i in range(rows[-1][1] + 1)]
+        for c in range(n_cols):                     # column c (0 = left hip); the right hip is the next face's left hip
+            stop = z_c if c == 0 else stops[0] if c % 2 else stops[1]
+            if 2 * c == n_cols:                     # the column in the middle of the side always reaches the crown
+                stop = z_c
+            elif c > 0 and stop >= z_c - 1.0 and stops[0] < z_c and                         min(abs(1.0 - 2.0 * c / n_cols), 2.0 * c / n_cols) * d_c < p["min_pitch"]:
+                stop = stops[0]                     # it would reach the crown closer than min_pitch to the centre
+                                                    # column or the hip: it stops at the top ring instead
+            xi = -1 + 2.0 * c / n_cols
+            keys = []
             for r, (z, nr) in enumerate(rows):
-                for i in range(nr + 1):
-                    vid((r, i), P(W(z), (-1 + 2.0 * i / nr) * W(z), z))
-            for r in range(len(rows) - 1):
-                na, nb_ = rows[r][1], rows[r + 1][1]
-                if na == nb_:
-                    F += [(idx[r, i], idx[r, i + 1], idx[r + 1, i + 1], idx[r + 1, i]) for i in range(na)]
-                else:                                   # the mesh halves above a rib level: 3 triangles per upper element
-                    for i in range(nb_):
-                        b0, b1, b2 = idx[r, 2 * i], idx[r, 2 * i + 1], idx[r, 2 * i + 2]
-                        t0, t1 = idx[r + 1, i], idx[r + 1, i + 1]
-                        F += [(b0, b1, t0), (b1, b2, t1), (b1, t1, t0)]
-            base = [V[idx[0, i]] for i in range(rows[0][1] + 1)]
-            top = [V[idx[len(rows) - 1, i]] for i in range(rows[-1][1] + 1)]
-            for c in range(n_cols):                     # column c (0 = left hip); the right hip is the next face's left hip
-                stop = z_c if c == 0 else stops[0] if c % 2 else stops[1]
-                xi = -1 + 2.0 * c / n_cols
-                keys = []
-                for r, (z, nr) in enumerate(rows):
-                    if z > stop + 1e-6:
-                        break
-                    keys.append((r, int(round((xi + 1) / 2 * nr))))
-                chain(keys, "hip" if c == 0 else "col")
-            for zl in rib_levels:                       # horizontal ribs
-                r = min(range(len(rows)), key=lambda rr: abs(rows[rr][0] - zl))
-                chain([(r, i) for i in range(rows[r][1] + 1)], "hring")
-        else:                                           # grid B and the plain shell: diamond mesh, i / j = steps along the two diagonal families
-            def node(i, j):
-                if i + j == t_top:                      # the top row is moved onto the crown
-                    w, x = d_c, (i - j) / float(t_top) * d_c
-                else:
-                    w, x = (i + j) * s_b / 2, (i - j) * s_b / 2
-                return vid((i, j), P(w, x, z_of(w)))
-            for i in range(N + 1):
-                for j in range(N + 1 - i):
-                    if i + j >= t_top:
-                        node(i, j)
-            for i in range(N):
-                for j in range(N - i):
-                    s0 = i + j
-                    if s0 >= t_top and s0 + 2 <= N:
-                        F.append((idx[i, j], idx[i + 1, j], idx[i + 1, j + 1], idx[i, j + 1]))
-                    elif s0 + 1 == N and s0 >= t_top:              # along the eave
-                        F.append((idx[i, j], idx[i + 1, j], idx[i, j + 1]))
-                    elif s0 + 1 == t_top:                         # along the crown
-                        F.append((idx[i + 1, j], idx[i + 1, j + 1], idx[i, j + 1]))
-            base = [V[idx[i, N - i]] for i in range(N + 1)]
-            top = [V[idx[i, t_top - i]] for i in range(t_top + 1)]
-            if grid == "B":
-                chain([(0, j) for j in range(N, t_top - 1, -1)], "hip")
-                for d in range(1, n_d):
-                    a = d * m_b
-                    chain([(a, j) for j in range(N - a, max(0, t_top - a) - 1, -1)], "diag")
-                    chain([(i, a) for i in range(N - a, max(0, t_top - a) - 1, -1)], "diag")
+                if z > stop + 1e-6:
+                    break
+                keys.append((r, int(round((xi + 1) / 2 * nr))))
+            chain(keys, "hip" if c == 0 else "col")
+        for zl in rib_levels:                       # horizontal ribs
+            r = min(range(len(rows)), key=lambda rr: abs(rows[rr][0] - zl))
+            chain([(r, i) for i in range(rows[r][1] + 1)], "hring")
         F = _orient(V, F, out_roof)
         out["roof"].append((V, F))
         out["t_elems"].append([roof_sec["t"]] * len(F))
@@ -446,8 +413,7 @@ def build_model(**kw):
         xs = sorted(set([round(x, 3) for x in wall_x] + eave_x + ([0.0] if ring_test else [])))
         xs = [x for i, x in enumerate(xs) if i == 0 or x - xs[i - 1] > 1.0]
         if not roof_only and not ring and not walls and any(min(abs(x - xb) for x in eave_x) > 1.0 for xb in but_x):
-            raise ValueError("without ring and walls each buttress must sit under a rib foot: set but_on_ribs = True "
-                             "(grid A or B)")
+            raise ValueError("without ring and walls each buttress must sit under a rib foot: set but_on_ribs = True")
         # wall: columns on the buttress bays; without a ring beam also on every roof-eave node, so the roof sits on it
         wxs = wall_x if ring else xs
         wv = [P(d_b, x, z) for z in wall_z for x in wxs]
@@ -509,8 +475,18 @@ def build_model(**kw):
     areas = [[_area(V, [f]) for f in F] for V, F in out["roof"]]
     roof_area = sum(sum(a) for a in areas)
     rib_len = sum(_dist(a, b) for a, b, _ in out["ribs"])
+    # tapered columns and hips: depth rib_d_eave at the eave, changing linearly with height to rib_d at the crown
+    d_top, d_eave = float(p["rib_d_top"] or p["rib_d"]), float(p["rib_d_eave"] or p["rib_d"])
+    def rib_depth(a, b, rid):
+        if rid not in ("col", "hip"):
+            return float(p["rib_d"])
+        t = min(1.0, max(0.0, ((a[2] + b[2]) / 2 - z_b) / (z_c - z_b)))
+        return d_eave + (d_top - d_eave) * t
+    out["rib_h"] = [rib_depth(a, b, rid) for a, b, rid in out["ribs"]]
+    out["rib_b"] = [float(p["hring_w"] or p["rib_w"]) if rid == "hring" else float(p["rib_w"]) for _, _, rid in out["ribs"]]
+    rib_area = sum(_dist(a, b) * h * w / p["rib_w"] for (a, b, _), h, w in zip(out["ribs"], out["rib_h"], out["rib_b"]))
     wall_area = 4 * 2 * d_b * z_b if walls else 0.0
-    vol = dict(shell=roof_area * roof_sec["solid"] / 1e9, ribs=rib_len * p["rib_w"] * p["rib_d"] / 1e9,
+    vol = dict(shell=roof_area * roof_sec["solid"] / 1e9, ribs=rib_area * p["rib_w"] / 1e9,
                ring=8 * d_b * p["ring_w"] * p["base_h"] / 1e9 if ring else 0.0,
                crown=sum(_dist(a, b) for a, b in out["crown"]) * p["crown_b"] * p["crown_h"] / 1e9,
                walls=wall_area * wall_sec["solid"] / 1e9,
@@ -583,7 +559,12 @@ def summary(m, gamma=24.0, clad=0.0):
                  rs["total"], p["bead"], p["rib_d"], p["lattice"], int(p["outer_beads"]), n_roof, g["roof_area"] / 1e6,
                  g["n_but"], "some corners removed" if g["no_corner"] else "{} per side".format(g["n_but"] // 4), g["but_bay"]),
              "Karamba equivalent shells ({}): roof t {:.0f}, E x {:.3f}; wall t {:.0f}, E x {:.3f}".format(
-                 "all printed layers" if p["all_layers"] else "skins only", rs["t"], rs["ratio"], ws["t"], ws["ratio"])]
+                 "all printed layers" if p["all_layers"] else "skins only", rs["t"], rs["ratio"], ws["t"], ws["ratio"]),
+             "ROOF SHELL = STRUCTURAL sandwich (shell_structural True)" if p["shell_structural"] else
+             "ROOF SHELL = CASING ONLY: weight kept, stiffness / 1000, so ribs + rings + buttresses carry everything"]
+    if not p["shell_structural"]:
+        lines.append("note: with a casing-only shell, ignore the shell's own deflection and buckling modes; read the "
+                     "ribs, rings, buttresses and reactions")
     if p["skin_check"]:
         lines.append("SKIN CHECK: roof shell = one {:.0f} mm skin, real printed E, full roof weight. Use only with "
                      "Buckling Modes (BLFacs = local skin buckling between ribs, on the safe side)".format(p["bead"]))
@@ -598,7 +579,7 @@ def summary(m, gamma=24.0, clad=0.0):
                      "what the roof puts on the ring: Z = down, horizontal = outward push")
     elif not m["ring"]:
         lines.append("NO ring beam: the roof lands on the {} directly".format("wall top" if m["wall"] else "buttresses at the rib feet"))
-    if p["but_on_ribs"] and m["grid"] != "none":
+    if p["but_on_ribs"]:
         lines.append("buttresses under the rib feet: {} bays per side ({} buttresses with both corners), {:.0f} apart".format(
             g["nb"], g["nb"] + 1, g["but_bay"]))
     if not m["wall"] and not p["roof_only"] and not p["ring_test"]:
@@ -621,8 +602,13 @@ def summary(m, gamma=24.0, clad=0.0):
                 min(g["fin_len"], p["ring_w"])), len(m["cap"]), p["ring_w"], p["base_h"]))
     if m["ribs"]:
         lines.append("ribs {:.0f} x {:.0f}: {:.0f} m ({} beams)".format(p["rib_w"], p["rib_d"], g["rib_len"] / 1000, len(m["ribs"])))
-    if m["grid"] == "A":
-        lines.append("grid A horizontal ribs at " + (", ".join("+{:.2f}".format(z / 1000) for z in g["levels_a"]) or "none") +
+        d_e, d_t = float(p["rib_d_eave"] or p["rib_d"]), float(p["rib_d_top"] or p["rib_d"])
+        if abs(d_e - p["rib_d"]) > 1.0 or abs(d_t - p["rib_d"]) > 1.0:
+            lines.append("TAPERED columns and hips: {:.0f} deep at the eave -> {:.0f} at the top, width {:.0f}; horizontal ribs "
+                         "{:.0f} x {:.0f} (wire rib_h / 10 into the rib Cross Sections Height, rib_b / 10 into both "
+                         "widths)".format(d_e, d_t, p["rib_w"], p["hring_w"] or p["rib_w"], p["rib_d"]))
+    if True:
+        lines.append("horizontal ribs at " + (", ".join("+{:.2f}".format(z / 1000) for z in g["levels_a"]) or "none") +
                      " (face centroid at +{:.2f})".format(g["z_g"] / 1000))
     lines.append("concrete m3: " + ", ".join("{} {:.1f}".format(k, v) for k, v in vol.items()) +
                  "; total {:.1f} m3 = {:.0f} kN (+ cladding {:.0f} kN)".format(sum(vol.values()), sum(vol.values()) * gamma,
@@ -681,7 +667,7 @@ def _gh_main():
     get = lambda k, d: G[k] if G.get(k) is not None else d
     wd, qp, clad = get("wind_dir", 0.0), get("qp", 0.9), get("clad", 0.0)
     gam, fck, kf, fixed = get("gamma", 24.0), get("fck", 30.0), get("kf", 0.7), get("fixed", True)
-    out = dict(roof_meshes=[], wall_meshes=[], but_meshes=[], ring_lines=[], crown_lines=[], cap_lines=[], foot_lines=[], rib_lines=[], rib_ids=[],
+    out = dict(roof_meshes=[], wall_meshes=[], but_meshes=[], ring_lines=[], crown_lines=[], cap_lines=[], foot_lines=[], rib_lines=[], rib_ids=[], rib_h=[], rib_b=[],
                supports=[], sup_x=[], sup_y=[], wind_vecs=[], wind_walls=[], t_roof_elems=DataTree[object]())
     try:
         m = build_model(**{k: G.get(k) for k in DEFAULTS})
@@ -711,6 +697,8 @@ def _gh_main():
     out["foot_b"], out["foot_h"] = p["foot_w"], p["foot_h"]
     out["rib_lines"] = [line(a, b) for a, b, _ in m["ribs"]]
     out["rib_ids"] = [rid for _, _, rid in m["ribs"]]
+    out["rib_h"] = list(m["rib_h"])                    # one depth (mm) per rib line, same order
+    out["rib_b"] = list(m["rib_b"])                    # one width (mm) per rib line, same order
     out["supports"] = [rg.Point3d(*pt) for pt in m["supports"]]
     out["sup_x"] = [rg.Point3d(*pt) for pt in m["sup_x"]]
     out["sup_y"] = [rg.Point3d(*pt) for pt in m["sup_y"]]
@@ -740,6 +728,8 @@ def _gh_main():
         out["G_" + key] = E * sec["ratio"] / 2.4
         out["fc_" + key] = -fc * sec["ratio"]                     # Karamba wants fc negative
         out["ft_" + key] = 0.0                                    # printed layers: take no tension
+    if not p["shell_structural"] and not p["skin_check"]:          # casing only: keeps its weight, gives no strength
+        out["E_roof"], out["G_roof"] = E * rs["ratio"] / 1000.0, E * rs["ratio"] / 2400.0
     if p["skin_check"]:                                           # buckling check: the roof shell = ONE real skin
         out["t_roof"] = p["bead"]                                 # (full printed E), carrying the whole roof weight
         out["E_roof"], out["G_roof"], out["fc_roof"] = E, E / 2.4, -fc
@@ -763,8 +753,8 @@ try:
     _gh_main()
 except ImportError:
     if __name__ == "__main__":
-        for gname in ("none", "A", "B"):
-            mm = build_model(grid=gname)
+        for gname in ("A",):
+            mm = build_model()
             print(summary(mm))
             errs = check(mm)
             print("connectivity: " + ("OK" if not errs else "{} problems, e.g. {}".format(len(errs), errs[:3])))

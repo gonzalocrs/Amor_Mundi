@@ -199,7 +199,7 @@ In Karamba 3.1 these are multi-components, not separate entries in the `0.Model`
 |---|---|---|---|
 | Line to Beam 1 | `ring_lines` | `ring` | `ring` cross section |
 | Line to Beam 2 | `crown_lines` | `crown` | `crown` cross section |
-| Line to Beam 3 | `rib_lines` | wire **`rib_ids`** (gives `col` / `hring` / `hip` for A, `diag` / `hip` for B) | `rib` cross section |
+| Line to Beam 3 | `rib_lines` | wire **`rib_ids`** (gives `col` / `hring` / `hip`) | `rib` cross section |
 | Line to Beam 4 | `cap_lines` | `cap` | the **same** `ring` cross section (one cross section can feed two Line to Beams) |
 
 **Buttress caps (`cap_lines`)** are the eave detail D1 in the model: the solid roof base is cast over each buttress
@@ -350,7 +350,7 @@ Analyse, or their meshes cover the colours. Leave preview on only for the view c
     gives its colour bar.
   - **Section Forces** submenu → **Nx** draws axial-force diagrams. Lower *Scale [kN] to [m]* to about
     0.01 first: at the default 0.5 the diagrams float metres away from the beams as loose dashes.
-- **Beam Forces**: Model ← Analyze, **Beams|Ids** ← `ring` (then `crown`, `col`, `hring`, `hip`, `diag`),
+- **Beam Forces**: Model ← Analyze, **Beams|Ids** ← `ring` (then `crown`, `col`, `hring`, `hip`),
   LCase ← `ULS1`. Outputs **N** (axial, kN; positive = tension), **V**, **M**.
   - `ring`: the tension the solid roof base carries.
   - `crown`: should be in compression.
@@ -381,9 +381,8 @@ Two more toggles (add inputs `ring` and `but_on_ribs`, type hint **bool**, each 
 - **`ring` = False**: no ring beam, so no solid roof base. `ring_lines` comes out empty, and its Line to Beam turns
   orange, which is harmless. With walls the roof sits straight on the wall top; without walls it lands only where
   ribs meet buttresses. The buttress caps stay, so each rib foot is still cast into its buttress.
-- **`but_on_ribs` = True**: one buttress under every rib foot instead of every ~1.5 m. Grid A: `n_cols` bays per
-  side (set `n_cols` = **6** for ribs about every 1.7 m). Grid B: `n_diamonds` bays. The plain shell has no ribs
-  and keeps `but_spacing`. Every corner gets two buttresses, one per face, like an L. So 6 bays gives 4 × 7 = 28
+- **`but_on_ribs` = True**: one buttress under every rib foot instead of every ~1.5 m. `n_cols` bays per
+  side (set `n_cols` = **6** for ribs about every 1.7 m). Every corner gets two buttresses, one per face, like an L. So 6 bays gives 4 × 7 = 28
   buttresses: 20 under the ribs and 8 at the corners.
 - **`ring` = False with `walls` = False** only works with `but_on_ribs` = True. Otherwise the buttresses wouldn't
   touch the roof, and `info` says so.
@@ -445,13 +444,13 @@ ULS1 governs here: the roof's own weight makes the push that tips the buttresses
 - The roof shell is an equivalent plate (E × 0.150): the real stress in a printed skin is about the shell value
   ÷ 0.150 (stretching) or × 4.3 (bending).
 
-## 10. Compare A, B and none
+## 10. Grid A only
 
-Switch the `grid` value list and read the same results each time. Keep this table; it is the argument for the
-grid you choose:
+Grid B and the plain shell were dropped on 18 Oct 2026; the script builds grid A only (a `grid` input is ignored).
+The printed shell is a casing by default (`shell_structural` False), so the ribs, rings and buttresses carry
+everything; size them from the section forces (see `findings-2026-10-18.md`).
 
-| grid | concrete m³ | SumRF Z under G (kN) | max displ. SLS (cm) | max compression (MPa) | max tension in printed shell (MPa) | ring N (kN) |
-|---|---|---|---|---|---|---|
+---|---|---|---|---|---|---|
 | none | | | | | | |
 | A | | | | | | |
 | B | | | | | | |
