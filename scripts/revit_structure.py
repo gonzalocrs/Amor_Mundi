@@ -31,6 +31,11 @@ INPUTS (all optional)
     origin       Plane   where the module sits in Revit: the Module Origin marker's plane (default World XY)
     rib_top      float   outer face of the ribs from the Karamba shell surface, mm, + = outwards (default: top of
                          the rib zone = bead + rib_d - centroid of the skins)
+    wire_up      bool    Button: places the Rhino.Inside components to the right of this one, wired to the outputs
+                         (Add DirectShape for shell / ribs / buttresses / footing, Add Structural Beam + its type chain
+                         for ring + caps and for the crown), in a group "revit_structure wire_up". Only the canvas
+                         changes; Revit changes when those components run. Pressing again does nothing while the
+                         group exists (delete the group and its components to redo it)
     any input of karamba_model.py (foot_w, n_cols, ...)  overrides the Karamba .gh value
 
 OUTPUTS
@@ -329,7 +334,7 @@ def _read_karamba_gh(path, names):
     return vals
 
 
-INPUTS = ["karamba_gh", "origin", "rib_top", "foot_w"]
+INPUTS = ["karamba_gh", "origin", "rib_top", "foot_w", "wire_up"]
 OUTPUTS = ["info", "params", "shell", "ribs", "rib_names", "buttresses", "footing", "ring_lines", "cap_lines",
            "crown_lines", "but_lines", "ring_b", "ring_h", "crown_b", "crown_h", "but_w", "foot_h", "wall_h"]
 
@@ -380,6 +385,128 @@ def _setup_params(comp):
         comp.ExpireSolution(False)
     comp.OnPingDocument().ScheduleSolution(1, fix)
     return False
+
+
+WIRE_GROUP = "revit_structure wire_up"
+BEAM_FAMILY = "M_Concrete-Rectangular Beam"
+# (output, element name, Revit category) for each Add DirectShape
+DIRECT_SHAPES = [("shell", "GH - Roof shell", "Roofs"), ("ribs", "GH - Ribs", "Structural Framing"),
+                 ("buttresses", "GH - Buttresses", "Walls"), ("footing", "GH - Footing", "Structural Foundations")]
+# (line outputs, new type name, width output, depth output) for each Add Structural Beam
+BEAMS = [(["ring_lines", "cap_lines"], "Ring beam - GH", "ring_b", "ring_h"),
+         (["crown_lines"], "Crown ring - GH", "crown_b", "crown_h")]
+
+
+def _wire_up(comp):
+    """place and wire the Rhino.Inside components for this script's outputs (canvas only). Returns a report."""
+    import System
+    import Grasshopper
+    from Grasshopper.Kernel.Special import GH_Panel, GH_Group
+    doc = comp.OnPingDocument()
+    for obj in doc.Objects:
+        if isinstance(obj, GH_Group) and obj.NickName == WIRE_GROUP:
+            return "wire_up: already done (group '{}' exists). Delete the group and its components to redo".format(WIRE_GROUP)
+    made, miss = [], []
+
+    def proxy(name):
+        best = None
+        for pr in Grasshopper.Instances.ComponentServer.ObjectProxies:
+            if pr.Desc.Name == name and not pr.Obsolete:
+                if pr.Desc.Category == "Revit":
+                    return pr
+                best = best or pr
+        return best
+
+    def place(name, x, y):
+        pr = proxy(name)
+        if pr is None:
+            miss.append("component '{}' not found".format(name))
+            return None
+        obj = pr.CreateInstance()
+        obj.CreateAttributes()
+        obj.Attributes.Pivot = System.Drawing.PointF(x, y)
+        doc.AddObject(obj, False)
+        made.append(obj)
+        return obj
+
+    def panel(text, x, y):
+        pn = GH_Panel()
+        pn.CreateAttributes()
+        pn.UserText = str(text)
+        pn.NickName = str(text)
+        pn.Attributes.Pivot = System.Drawing.PointF(x, y)
+        pn.Attributes.Bounds = System.Drawing.RectangleF(x, y, 160, 20)
+        doc.AddObject(pn, False)
+        made.append(pn)
+        return pn
+
+    def prm(obj, side, *names):                         # a component's input / output by nick name or name
+        if obj is None:
+            return None
+        if not hasattr(obj, "Params"):                  # a panel or a parameter is its own input and output
+            return obj
+        params = list(obj.Params.Input if side == "in" else obj.Params.Output)
+        low = [n.lower() for n in names]
+        for test in (lambda q, n: q.NickName.lower() == n, lambda q, n: q.Name.lower() == n,
+                     lambda q, n: q.Name.lower().startswith(n)):
+            for n in low:
+                for q in params:
+                    if test(q, n):
+                        return q
+        miss.append("{} '{}' has no {} named {}".format("input of" if side == "in" else "output of",
+                                                         obj.Name, side, "/".join(names)))
+        return None
+
+    def wire(src, src_names, dst, dst_names):
+        a, b = prm(src, "out", *src_names), prm(dst, "in", *dst_names)
+        if a is not None and b is not None:
+            b.AddSource(a)
+
+    x0 = comp.Attributes.Bounds.Right + 400
+    y = comp.Attributes.Bounds.Top
+    skipped = []
+    for key, name, cat in DIRECT_SHAPES:
+        o = prm(comp, "out", key)
+        if o is not None and o.Recipients.Count > 0:    # already wired by hand: don't make a second element
+            skipped.append(key)
+            continue
+        ds = place("Add DirectShape", x0 + 250, y)
+        wire(comp, [key], ds, ["Geometry", "G"])
+        wire(panel(name, x0, y), [], ds, ["Name", "N"])
+        qc = place("Query Categories", x0 - 30, y + 40)
+        wire(panel(cat, x0 - 230, y + 50), [], qc, ["Name", "N"])
+        wire(qc, ["Categories", "Category", "C"], ds, ["Category", "C"])
+        y += 140
+    for keys, tname, kb, kh in BEAMS:
+        qt = place("Query Types", x0 - 30, y)
+        wire(panel(BEAM_FAMILY, x0 - 230, y), [], qt, ["Family Name", "FN"])
+        li = place("List Item", x0 + 120, y)
+        wire(qt, ["Types", "T"], li, ["List", "L"])
+        wire(panel("0", x0, y + 50), [], li, ["Index", "i"])
+        dt = place("Duplicate Type", x0 + 250, y)
+        wire(li, ["Item", "i"], dt, ["Type", "T"])
+        wire(panel(tname, x0 + 60, y + 90), [], dt, ["Name", "N"])
+        last = dt
+        for k, (pname, out_key) in enumerate((("b", kb), ("h", kh))):
+            ep = place("Element Parameter", x0 + 420 + 170 * k, y)
+            wire(last, ["Type", "T", "Element", "E"], ep, ["Element", "E"])
+            wire(panel(pname, x0 + 300 + 170 * k, y + 70), [], ep, ["Parameter", "P"])
+            wire(comp, [out_key], ep, ["Value", "V"])
+            last = ep
+        bm = place("Add Structural Beam", x0 + 800, y)
+        for key in keys:
+            wire(comp, [key], bm, ["Curve", "C"])
+        wire(last, ["Element", "E"], bm, ["Type", "T"])
+        y += 180
+    grp = GH_Group()
+    grp.CreateAttributes()
+    grp.NickName = WIRE_GROUP
+    for obj in made:
+        grp.AddObject(obj.InstanceGuid)
+    doc.AddObject(grp, False)
+    doc.NewSolution(False)
+    return "wire_up: placed {} components and panels{}{}".format(
+        len(made), "; skipped (already wired): " + ", ".join(skipped) if skipped else "", "" if not miss else "; NOT done (wire these by hand): " + "; ".join(miss))
 
 
 def _gh_main():
@@ -497,7 +624,16 @@ def _gh_main():
     info = summary(r, m)
     if parts and len(out["footing"]) != 1:
         info += "\nWARNING: the footing pieces did not join into one solid ({} pieces)".format(len(out["footing"]))
-    out["info"] = (out.pop("setup_note", "") + "\n" + placed + "\n" + info).strip()
+    import scriptcontext
+    sticky = scriptcontext.sticky
+    if inp("wire_up"):                                  # canvas changes must wait for the end of this solution
+        comp = ghenv.Component                          # noqa: F821
+
+        def go(gh_doc):
+            sticky["revit_structure_wire"] = _wire_up(comp)
+            comp.ExpireSolution(False)
+        comp.OnPingDocument().ScheduleSolution(1, go)
+    out["info"] = (out.pop("setup_note", "") + "\n" + sticky.get("revit_structure_wire", "") + "\n" + placed + "\n" + info).strip()
     G.update(out)
 
 
