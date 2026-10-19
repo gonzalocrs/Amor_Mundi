@@ -225,13 +225,14 @@ def build_revit(m, rib_top=None, piece_max=2000.0):
     if d_eave < d_seat - 0.5:                           # rib on the ring's inner bottom edge (flush with the wall)
         out["warn"].append("column ribs made {:.0f} deep at the eave (analysed {:.0f}) so their room-side edge meets "
                            "the ring's inner bottom edge".format(d_seat, d_eave))
-        d_eave = d_seat
+    d_col = max(d_eave, d_seat)                         # hips keep the analysed eave depth
 
     def depth(z, rid):
         if rid == "hring":
             return float(p["rib_d"])
         t = min(1.0, max(0.0, (z - z_b) / (z_c - z_b)))
-        return d_eave + (d_top - d_eave) * t
+        d0 = d_col if rid == "col" else d_eave
+        return d0 + (d_top - d0) * t
 
     def clip(a, b, z0, z1):                             # the part of a -> b between heights z0 and z1
         def at(z):
