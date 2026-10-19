@@ -724,9 +724,9 @@ def _gh_main():
     comp = ghenv.Component                              # noqa: F821
     filled = [k for k in OUTPUTS if k in out and out[k] not in ("", [], None)]
 
-    def check(gh_doc):                                  # after this solution: which outputs got no data although
+    def check(gh_doc):                                  # after this solution: which outputs got only nulls although
         dead = [prm.NickName for prm in comp.Params.Output   # the script filled them (Grasshopper didn't bind them)
-                if prm.NickName in filled and prm.VolatileData.IsEmpty]
+                if prm.NickName in filled and not any(x is not None for x in prm.VolatileData.AllData(False))]
         if dead != sticky.get("revit_structure_dead", []):
             sticky["revit_structure_dead"] = dead
             comp.ExpireSolution(False)                  # run once more to show it in info
