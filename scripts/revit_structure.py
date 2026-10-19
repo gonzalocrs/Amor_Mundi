@@ -39,7 +39,10 @@ INPUTS (all optional)
     any input of karamba_model.py (foot_w, n_cols, ...)  overrides the Karamba .gh value
 
 OUTPUTS
-    shell        list Brep   4 roof faces (printed casing)           -> Add DirectShape, category Roofs
+    shell        list Brep   printed beads: inner, middle, outer x 4 faces (the casing; the inner bead is cut where
+                             the ribs pass, the rib zone between inner and middle bead is left open for the ribs and
+                             rings)                                  -> Add DirectShape, category Roofs
+    insulation   list Brep   lattice zone (wavy bead + insulation), 4 faces -> Add DirectShape, category Roofs
     ribs         list Brep   one per rib                             -> Add DirectShape, category Structural Framing
     rib_names    list str    "M-col-E-03" style name per rib (same order)
     buttresses   list Brep   one per buttress                        -> Add DirectShape, category Walls
@@ -140,13 +143,32 @@ def build_revit(m, rib_top=None):
         n, t = frame(k)
         return (dist * n[0] + x * t[0], dist * n[1] + x * t[1], z)
 
-    # ---- roof shell: 4 faces, mitred on the hips (vertical diagonal planes)
-    for k in range(4):
+    # ---- roof shell as its layers, room side out, each face mitred on the hips (vertical diagonal planes):
+    # inner bead | rib zone (open: the cast ribs and rings sit here) | middle bead | lattice zone (insulation) | outer
+    # beads. The printed beads go to `shell`, the lattice zone to `insulation`
+    bead, n_out = p["bead"], int(p["outer_beads"])
+    cuts = [s_in]
+    for t in (bead, p["rib_d"], bead, p["lattice"], n_out * bead):
+        cuts.append(cuts[-1] + t)
+    layers = [("inner", 0), ("middle", 2), ("outer", 4), ("insulation", 3)]
+    out["shell_names"], out["inner_idx"], out["insulation"] = [], [], []
+
+    def layer(k, s0, s1):
         pts = []
         for z in (z_ring_top, z_crown_bot):
-            a_in, a_out = W(z, s_in), W(z, s_out)
-            pts += [P(k, a_in, -a_in, z), P(k, a_in, a_in, z), P(k, a_out, a_out, z), P(k, a_out, -a_out, z)]
-        out["shell"].append(_hexa(pts))
+            a0, a1 = W(z, s0), W(z, s1)
+            pts += [P(k, a0, -a0, z), P(k, a0, a0, z), P(k, a1, a1, z), P(k, a1, -a1, z)]
+        return _hexa(pts)
+    for name, i in layers:
+        for k in range(4):
+            piece = layer(k, cuts[i], cuts[i + 1])
+            if name == "insulation":
+                out["insulation"].append(piece)
+                continue
+            if name == "inner":
+                out["inner_idx"].append(len(out["shell"]))
+            out["shell"].append(piece)
+            out["shell_names"].append("{} bead {}".format(name, FACE[k]))
 
     # ---- ribs: merge Karamba's split segments back into one straight rib each
     chains = []
@@ -256,7 +278,7 @@ def build_revit(m, rib_top=None):
     lap = max(0.0, min(d_b + g["fin_len"] + p["foot_ext"], d_b + fw / 2) - max(d_b - p["foot_in"], d_b - fw / 2)) \
         if p["foot_strip"] else 0.0                     # pad length inside the strip
     pads = len(out["but_lines"]) * (pad_len - lap) * fw * fh if p["footing"] else 0.0
-    out["vol"] = dict(shell_gross=vol(out["shell"]), ribs=vol(out["ribs"]), buttresses=vol(out["buttresses"]),
+    out["vol"] = dict(skins=vol(out["shell"]), insulation=vol(out["insulation"]), ribs=vol(out["ribs"]), buttresses=vol(out["buttresses"]),
                       footing=(strip + pads) / 1e9,
                       ring=8 * d_b * p["ring_w"] * p["base_h"] / 1e9,
                       caps=sum(math.dist(a, b) for a, b in out["cap"]) * p["ring_w"] * p["base_h"] / 1e9,
@@ -274,9 +296,11 @@ def summary(r, m):
     for rid in r["rib_ids"]:
         n[rid] = n.get(rid, 0) + 1
     lines = [
-        "shell: 4 faces, {:.0f} thick (room face {:.0f}, outer face +{:.0f} from the Karamba surface), +{:.2f} (ring top) "
-        "to +{:.2f} (crown ring underside)".format(lv["t_build"], lv["s_in"], lv["s_out"], lv["ring_top"] / 1000,
-                                                    lv["crown_bot"] / 1000),
+        "shell: {:.0f} build-up (room face {:.0f}, outer face +{:.0f} from the Karamba surface), +{:.2f} (ring top) to "
+        "+{:.2f} (crown ring underside), as layers: inner, middle and outer beads ({:.0f}) in `shell` (inner bead cut "
+        "where the ribs pass), rib zone {:.0f} left open for the ribs and rings, lattice zone {:.0f} in `insulation`".format(
+            lv["t_build"], lv["s_in"], lv["s_out"], lv["ring_top"] / 1000, lv["crown_bot"] / 1000, p["bead"],
+            p["rib_d"], p["lattice"]),
         "ribs: {} ({}), outer face {:+.0f} from the Karamba surface; columns and hips {:.0f} -> {:.0f} deep, {:.0f} wide; "
         "middle rings {:.0f} x {:.0f}".format(len(r["ribs"]), ", ".join("{} {}".format(c, k) for k, c in sorted(n.items())),
                                               lv["rib_top"], float(p["rib_d_eave"] or p["rib_d"]),
@@ -288,10 +312,10 @@ def summary(r, m):
         "footing: {:.0f} wide x {:.0f} deep below z = 0, {} pieces joined into one".format(
             p["foot_w"], p["foot_h"], len(r["footing"])) if r["footing"] else "footing: none (footing = False)",
         "volumes m3 (Revit solids | Karamba): ribs {:.1f} | {:.1f}, buttresses {:.1f} | {:.1f}, ring {:.1f} | {:.1f}, "
-        "caps {:.1f} | {:.1f}, crown {:.1f} | {:.1f}, footing {:.1f} | {:.1f}; shell gross {:.1f} (Karamba counts the "
-        "printed concrete only: {:.1f})".format(v["ribs"], kv["ribs"], v["buttresses"], kv["buttresses"], v["ring"],
-                                                kv["ring"], v["caps"], kv["caps"], v["crown"], kv["crown"],
-                                                v["footing"], kv["footing"], v["shell_gross"], kv["shell"]),
+        "caps {:.1f} | {:.1f}, crown {:.1f} | {:.1f}, footing {:.1f} | {:.1f}; printed beads {:.1f} + lattice zone {:.1f} "
+        "(Karamba: printed concrete {:.1f}, the lattice bead at its fill share)".format(
+            v["ribs"], kv["ribs"], v["buttresses"], kv["buttresses"], v["ring"], kv["ring"], v["caps"], kv["caps"],
+            v["crown"], kv["crown"], v["footing"], kv["footing"], v["skins"], v["insulation"], kv["shell"]),
         "Revit and Karamba differ on purpose: Karamba overlaps parts at the nodes and runs the buttresses to the ring "
         "centroid; here each part stops where the next begins."]
     return "\n".join(lines + ["WARNING: " + w for w in r["warn"] + m["warn"]])
@@ -335,7 +359,7 @@ def _read_karamba_gh(path, names):
 
 
 INPUTS = ["karamba_gh", "origin", "rib_top", "foot_w", "wire_up"]
-OUTPUTS = ["info", "params", "shell", "ribs", "rib_names", "buttresses", "footing", "ring_lines", "cap_lines",
+OUTPUTS = ["info", "params", "shell", "insulation", "ribs", "rib_names", "buttresses", "footing", "ring_lines", "cap_lines",
            "crown_lines", "but_lines", "ring_b", "ring_h", "crown_b", "crown_h", "but_w", "foot_h", "wall_h"]
 
 
@@ -390,7 +414,7 @@ def _setup_params(comp):
 WIRE_GROUP = "revit_structure wire_up"
 BEAM_FAMILY = "M_Concrete-Rectangular Beam"
 # (output, element name, Revit category) for each Add DirectShape
-DIRECT_SHAPES = [("shell", "GH - Roof shell", "Roofs"), ("ribs", "GH - Ribs", "Structural Framing"),
+DIRECT_SHAPES = [("shell", "GH - Roof shell", "Roofs"), ("insulation", "GH - Roof insulation", "Roofs"), ("ribs", "GH - Ribs", "Structural Framing"),
                  ("buttresses", "GH - Buttresses", "Walls"), ("footing", "GH - Footing", "Structural Foundations")]
 # (line outputs, new type name, width output, depth output) for each Add Structural Beam
 BEAMS = [(["ring_lines", "cap_lines"], "Ring beam - GH", "ring_b", "ring_h"),
@@ -522,8 +546,8 @@ def _gh_main():
         here = os.path.dirname(ghenv.Component.OnPingDocument().FilePath)   # noqa: F821 (Grasshopper global)
     except Exception:
         pass
-    out = dict(shell=[], ribs=[], rib_names=[], buttresses=[], footing=[], ring_lines=[], cap_lines=[],
-               crown_lines=[], but_lines=[], params="", info="")
+    out = dict(shell=[], insulation=[], ribs=[], rib_names=[], buttresses=[], footing=[], ring_lines=[],
+               cap_lines=[], crown_lines=[], but_lines=[], params="", info="")
     try:
         if not _setup_params(ghenv.Component):          # noqa: F821
             out["info"] = "setting up the inputs and outputs; the component runs again by itself"
@@ -609,8 +633,16 @@ def _gh_main():
         ln = rg.Line(rg.Point3d(*ab[0]), rg.Point3d(*ab[1]))
         ln.Transform(xf)
         return ln
-    out["shell"] = [brep(x) for x in r["shell"]]
     out["ribs"] = [brep(x) for x in r["ribs"]]
+    out["shell"] = [brep(x) for x in r["shell"]]
+    cut_fail = 0
+    for i in r["inner_idx"]:                            # the ribs pass through the inner bead: cut them out
+        res = rg.Brep.CreateBooleanDifference([out["shell"][i]], out["ribs"], tol)
+        if res:
+            out["shell"][i] = res[0] if len(res) == 1 else rg.Brep.MergeBreps(list(res), tol)
+        else:
+            cut_fail += 1
+    out["insulation"] = [brep(x) for x in r["insulation"]]
     out["rib_names"] = r["rib_names"]
     out["buttresses"] = [brep(x) for x in r["buttresses"]]
     parts = [brep(x) for x in r["footing"]]
@@ -625,6 +657,8 @@ def _gh_main():
     out.update(ring_b=mp["ring_w"], ring_h=mp["base_h"], crown_b=mp["crown_b"], crown_h=mp["crown_h"],
                but_w=mp["but_w"], foot_h=mp["foot_h"], wall_h=mp["wall_h"])
     info = summary(r, m)
+    if cut_fail:
+        info += "\nWARNING: {} inner bead faces could not be cut for the ribs (left whole)".format(cut_fail)
     if parts and len(out["footing"]) != 1:
         info += "\nWARNING: the footing pieces did not join into one solid ({} pieces)".format(len(out["footing"]))
     import scriptcontext
