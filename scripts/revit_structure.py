@@ -314,11 +314,12 @@ def _read_karamba_gh(path, names):
             continue
         got = []
         for src in prm.Sources:
-            if hasattr(src, "CurrentValue"):            # Number Slider
+            kind = src.GetType().Name                   # the .NET class (Python sees only the IGH_Param interface)
+            if kind == "GH_NumberSlider":
                 got.append(float(str(src.CurrentValue)))
-            elif hasattr(src, "UserText"):              # Panel
+            elif kind == "GH_Panel":
                 got.append(str(src.UserText).strip())
-            elif type(src).__name__ == "GH_BooleanToggle":
+            elif kind == "GH_BooleanToggle":
                 got.append(bool(src.Value))
         if got:
             vals[prm.NickName] = got if len(got) > 1 or prm.Access == Grasshopper.Kernel.GH_ParamAccess.list else got[0]
