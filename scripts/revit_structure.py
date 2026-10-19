@@ -265,6 +265,13 @@ def build_revit(m, rib_top=None, piece_max=2000.0):
                 h = depth(e[2], rid)
                 off = top - h if lay == "bot" else top
                 pts.append(_add(_add(e, no, off), side, s * bw / 2))
+        ax = _unit(_sub(b, a))
+        if abs(ax[2]) > 1e-6:                            # cut the rib ends level: the foot sits flat on the ring
+            for e, idx in ((a, (0, 3, 4, 7)), (b, (1, 2, 5, 6))):   # top, the head flat under the crown ring
+                zt = z_ring_top if abs(e[2] - z_ring_top) < 1.0 else z_crown_bot if abs(e[2] - z_crown_bot) < 1.0 else None
+                if zt is not None:
+                    for i in idx:
+                        pts[i] = _add(pts[i], ax, (zt - pts[i][2]) / ax[2])
         out["ribs"].append(_hexa(pts))
         key = (rid, FACE[k])
         count[key] = count.get(key, 0) + 1
@@ -272,11 +279,16 @@ def build_revit(m, rib_top=None, piece_max=2000.0):
         out["rib_ids"].append(rid)
 
     # ---- ring beam, crown ring (4 straight sides each), buttress caps (merged per buttress)
-    for k in range(4):                                  # lines on the beam top (Revit hangs beams below the line)
-        out["ring"].append((P(k, d_b, -d_b, z_ring_top), P(k, d_b, d_b, z_ring_top)))
-        if p["crown_ring"]:
-            zt = z_c + p["crown_h"] / 2
-            out["crown"].append((P(k, d_c, -d_c, zt), P(k, d_c, d_c, zt)))
+    # as solids, mitred at the corners (Revit beams didn't meet there). The ring's inner face is flush with the wall
+    # and buttress inner face (`clear` / 2), 50 mm in from the Karamba centroid; the crown ring stays centred.
+    def frame_ring(ri, ro, z0, z1, tag):
+        for k in range(4):
+            out["rings"].append(_hexa([P(k, d, x * d, z) for z in (z0, z1) for d, x in ((ri, -1), (ri, 1), (ro, 1), (ro, -1))]))
+            out["ring_names"].append("M-{}-{}".format(tag, FACE[k]))
+    out.update(rings=[], ring_names=[])
+    frame_ring(half, half + p["ring_w"], p["wall_h"], z_ring_top, "ring")
+    if p["crown_ring"]:
+        frame_ring(d_c - p["crown_b"] / 2, d_c + p["crown_b"] / 2, z_crown_bot, z_crown_bot + p["crown_h"], "crown")
     caps = []
     for a, b in m["cap"]:
         if caps and max(abs(u - v) for u, v in zip(caps[-1][1], a)) < 1.0:
@@ -319,9 +331,9 @@ def build_revit(m, rib_top=None, piece_max=2000.0):
     pads = len(out["but_lines"]) * (pad_len - lap) * fw * fh if p["footing"] else 0.0
     out["vol"] = dict(skins=vol(out["shell"]), insulation=vol(out["insulation"]), ribs=vol(out["ribs"]), buttresses=vol(out["buttresses"]),
                       footing=(strip + pads) / 1e9,
-                      ring=8 * d_b * p["ring_w"] * p["base_h"] / 1e9,
+                      ring=vol(out["rings"][:4]),
                       caps=sum(math.dist(a, b) for a, b in out["cap"]) * p["ring_w"] * p["base_h"] / 1e9,
-                      crown=8 * d_c * p["crown_b"] * p["crown_h"] / 1e9 if p["crown_ring"] else 0.0)
+                      crown=vol(out["rings"][4:]))
     out["levels"] = dict(ring_top=z_ring_top, crown_bot=z_crown_bot, rib_top=rib_top, t_build=rs["total"],
                          s_in=s_in, s_out=s_out)
     if any(_volume(V, F) <= 0 for V, F in out["ribs"]):
@@ -348,8 +360,8 @@ def summary(r, m):
                                               lv["rib_top"], float(p["rib_d_eave"] or p["rib_d"]),
                                               float(p["rib_d_top"] or p["rib_d"]), p["rib_w"],
                                               p["hring_w"] or p["rib_w"], p["rib_d"]),
-        "buttresses: {}, {:.0f} x {:.0f} x {:.0f} tall{}; caps {} beams; ring 4 beams {:.0f} x {:.0f}; crown 4 beams "
-        "{:.0f} x {:.0f}".format(len(r["buttresses"]), p["but_total"], p["but_w"], r["buttresses"][0][0][4][2] if r["buttresses"] else p["wall_h"],
+        "buttresses: {}, {:.0f} x {:.0f} x {:.0f} tall{}; caps {} beams; ring {:.0f} x {:.0f} and crown "
+        "{:.0f} x {:.0f} as mitred solids in `ribs`".format(len(r["buttresses"]), p["but_total"], p["but_w"], r["buttresses"][0][0][4][2] if r["buttresses"] else p["wall_h"],
                                  " (cap cast in, up to the ring top)" if p["but_cap"] else "", len(r["cap"]),
                                  p["ring_w"], p["base_h"], p["crown_b"], p["crown_h"]),
         "footing: {:.0f} wide x {:.0f} deep below z = 0, {} pieces joined into one".format(
@@ -696,7 +708,8 @@ def _gh_main():
             cut_fail += 1
     out["insulation"] = [brep(x) for x in r["insulation"]]
     out["piece_names"] = r["piece_names"]
-    out["rib_names"] = r["rib_names"]
+    out["ribs"] += [brep(x) for x in r["rings"]]        # after the cut: the ring and crown only touch the shell
+    out["rib_names"] = r["rib_names"] + r["ring_names"]
     out["buttresses"] = [brep(x) for x in r["buttresses"]]
     parts = [brep(x) for x in r["footing"]]
     if parts:
