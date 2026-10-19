@@ -5,6 +5,8 @@ Paste into a Python 3 Script component (Rhino 8) in the Revit .gh (grasshopper/P
 the slider values straight from the Karamba .gh (input `karamba_gh`), so there are no sliders to copy: move a slider
 in the Karamba file, save it, then re-run this component (right-click > Recompute). Any input below that you wire
 overrides the value read from the Karamba file. Units: millimetres.
+The component sets up its own inputs and outputs (the names below) the first time it runs: no need to add them by
+hand. Inputs or outputs it doesn't know are removed; wires to the ones it keeps stay.
 
 What is real here and what is idealised in Karamba:
   - Karamba works on centrelines and mid-surfaces. Here every part gets its real section around those same lines:
@@ -41,7 +43,7 @@ OUTPUTS
     cap_lines    list Line   buttress caps (ring section)            -> Add Structural Beam, same type as the ring
     crown_lines  list Line   crown ring, 4 sides                     -> Add Structural Beam, type crown_b x crown_h
     but_lines    list Line   buttress base lines (for native structural walls later)
-    ring_b, ring_h, crown_b, crown_h, but_w, foot_w, foot_h, wall_h   float  mm
+    ring_b, ring_h, crown_b, crown_h, but_w, foot_h, wall_h   float  mm
     params       str     the parameter values used, and where each came from
     info         str     counts and volumes, to check against Karamba's info
 """
@@ -327,6 +329,59 @@ def _read_karamba_gh(path, names):
     return vals
 
 
+INPUTS = ["karamba_gh", "origin", "rib_top", "foot_w"]
+OUTPUTS = ["info", "params", "shell", "ribs", "rib_names", "buttresses", "footing", "ring_lines", "cap_lines",
+           "crown_lines", "but_lines", "ring_b", "ring_h", "crown_b", "crown_h", "but_w", "foot_h", "wall_h"]
+
+
+def _setup_params(comp):
+    """give the component exactly the INPUTS and OUTPUTS above. Grasshopper can't change parameters while it solves,
+    so this is scheduled for right after the current solution; the component then runs again. True = done already."""
+    import Grasshopper
+
+    def var(prm):                                       # the name the script sees (a renamed output can keep its
+        return getattr(prm, "VariableName", None) or prm.Name   # old variable name, e.g. "a")
+
+    def ok(params, want):
+        return [prm.NickName for prm in params] == want and all(var(prm) == prm.NickName for prm in params)
+    if ok(comp.Params.Input, INPUTS) and ok(comp.Params.Output, OUTPUTS):
+        return True
+
+    def make(name):
+        try:                                            # Rhino 8 script components
+            from RhinoCodePluginGH.Parameters import ScriptVariableParam
+            prm = ScriptVariableParam(name)
+        except Exception:                               # Rhino 7 GhPython
+            prm = Grasshopper.Kernel.Parameters.Param_GenericObject()
+        prm.Name = prm.NickName = name
+        for attr in ("VariableName", "PrettyName"):
+            if hasattr(prm, attr):
+                try:
+                    setattr(prm, attr, name)
+                except Exception:
+                    pass
+        prm.Access = Grasshopper.Kernel.GH_ParamAccess.item
+        prm.Optional = True
+        return prm
+
+    def fix(doc):
+        for params, want, side in ((comp.Params.Input, INPUTS, "Input"), (comp.Params.Output, OUTPUTS, "Output")):
+            keep = {}
+            for prm in list(params):
+                if prm.NickName in want and var(prm) == prm.NickName and prm.NickName not in keep:
+                    keep[prm.NickName] = prm
+                else:
+                    getattr(comp.Params, "Unregister{}Parameter".format(side))(prm)
+            for prm in list(params):
+                getattr(comp.Params, "Unregister{}Parameter".format(side))(prm, False)
+            for i, name in enumerate(want):
+                getattr(comp.Params, "Register{}Param".format(side))(keep.get(name) or make(name), i)
+        comp.Params.OnParametersChanged()
+        comp.ExpireSolution(False)
+    comp.OnPingDocument().ScheduleSolution(1, fix)
+    return False
+
+
 def _gh_main():
     import importlib
     import Rhino
@@ -339,6 +394,13 @@ def _gh_main():
         pass
     out = dict(shell=[], ribs=[], rib_names=[], buttresses=[], footing=[], ring_lines=[], cap_lines=[],
                crown_lines=[], but_lines=[], params="", info="")
+    try:
+        if not _setup_params(ghenv.Component):          # noqa: F821
+            out["info"] = "setting up the inputs and outputs; the component runs again by itself"
+            G.update(out)
+            return
+    except Exception as e:
+        out["setup_note"] = "WARNING: could not set up the inputs and outputs ({}); add them by hand".format(e)
     if not here:
         out["info"] = "ERROR: save this .gh first (next to the Karamba .gh, in the repo's grasshopper folder)"
         G.update(out)
@@ -411,11 +473,11 @@ def _gh_main():
     out["but_lines"] = [line(x) for x in r["but_lines"]]
     mp = m["p"]
     out.update(ring_b=mp["ring_w"], ring_h=mp["base_h"], crown_b=mp["crown_b"], crown_h=mp["crown_h"],
-               but_w=mp["but_w"], foot_w=mp["foot_w"], foot_h=mp["foot_h"], wall_h=mp["wall_h"])
+               but_w=mp["but_w"], foot_h=mp["foot_h"], wall_h=mp["wall_h"])
     info = summary(r, m)
     if parts and len(out["footing"]) != 1:
         info += "\nWARNING: the footing pieces did not join into one solid ({} pieces)".format(len(out["footing"]))
-    out["info"] = info
+    out["info"] = (out.pop("setup_note", "") + "\n" + info).strip()
     G.update(out)
 
 
