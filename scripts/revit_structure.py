@@ -32,7 +32,7 @@ INPUTS (all optional)
     rib_top      float   outer face of the ribs from the Karamba shell surface, mm, + = outwards (default: top of
                          the rib zone = bead + rib_d - centroid of the skins)
     wire_up      bool    Button: places the Rhino.Inside components to the right of this one, wired to the outputs
-                         (Add DirectShape for shell / ribs / buttresses / footing, Add Structural Beam + its type chain
+                         (Add DirectShape (Brep) for shell / ribs / buttresses / footing, Add Structural Beam + its type chain
                          for ring + caps and for the crown), in a group "revit_structure wire_up". Only the canvas
                          changes; Revit changes when those components run. Pressing again does nothing while the
                          group exists (delete the group and its components to redo it)
@@ -470,8 +470,8 @@ def _wire_up(comp):
         if o is not None and o.Recipients.Count > 0:    # already wired by hand: don't make a second element
             skipped.append(key)
             continue
-        ds = place("Add DirectShape", x0 + 250, y)
-        wire(comp, [key], ds, ["Geometry", "G"])
+        ds = place("Add DirectShape (Brep)", x0 + 250, y)
+        wire(comp, [key], ds, ["Brep", "B", "Geometry", "G"])
         wire(panel(name, x0, y), [], ds, ["Name", "N"])
         qc = place("Query Categories", x0 - 30, y + 40)
         wire(panel(cat, x0 - 230, y + 50), [], qc, ["Name", "N"])
