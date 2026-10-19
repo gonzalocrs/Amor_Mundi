@@ -451,7 +451,7 @@ def _setup_params(comp):
 
 
 WIRE_GROUP = "revit_structure wire_up"
-BEAM_FAMILY = "M_Concrete-Rectangular Beam"
+BEAM_FAMILY = "Concrete-Rectangular Beam"           # as Load Autodesk Family names it (no M_)
 # (output, element name, Revit category) for each Add DirectShape
 DIRECT_SHAPES = [("shell", "GH - Roof shell", "Roofs"), ("insulation", "GH - Roof insulation", "Roofs"), ("ribs", "GH - Ribs", "Structural Framing"),
                  ("buttresses", "GH - Buttresses", "Walls"), ("footing", "GH - Footing", "Structural Foundations")]
