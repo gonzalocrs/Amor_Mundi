@@ -721,6 +721,21 @@ def _gh_main():
                 sticky["revit_structure_wire"] = rep    # keep the report of the run that placed them
             comp.ExpireSolution(False)
         comp.OnPingDocument().ScheduleSolution(1, go)
+    comp = ghenv.Component                              # noqa: F821
+    filled = [k for k in OUTPUTS if k in out and out[k] not in ("", [], None)]
+
+    def check(gh_doc):                                  # after this solution: which outputs got no data although
+        dead = [prm.NickName for prm in comp.Params.Output   # the script filled them (Grasshopper didn't bind them)
+                if prm.NickName in filled and prm.VolatileData.IsEmpty]
+        if dead != sticky.get("revit_structure_dead", []):
+            sticky["revit_structure_dead"] = dead
+            comp.ExpireSolution(False)                  # run once more to show it in info
+    comp.OnPingDocument().ScheduleSolution(1, check)
+    dead = sticky.get("revit_structure_dead", [])
+    if dead:
+        info = ("WARNING: these outputs get no data from the script: {0}. Fix each one by hand: zoom in on the "
+                "component, right-click the output > Remove, then click the + under the outputs and name the new one "
+                "exactly as before ({0}). Rewire it.\n".format(", ".join(dead))) + info
     out["info"] = (out.pop("setup_note", "") + "\n" + sticky.get("revit_structure_wire", "") + "\n" + placed + "\n" + info).strip()
     G.update(out)
 
