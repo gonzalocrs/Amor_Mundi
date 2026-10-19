@@ -29,6 +29,7 @@ INPUTS (all optional)
     karamba_gh   str     path of the Karamba .gh; default: grasshopper/Pyramide Karamba 10_14_2026.gh next to
                          this .gh's folder
     origin       Plane   where the module sits in Revit: the Module Origin marker's plane (default World XY)
+    piece_max    float   TEMPORARY piece cut of the shell: largest piece width / length along the slope, mm (2000)
     rib_top      float   outer face of the ribs from the Karamba shell surface, mm, + = outwards (default: top of
                          the rib zone = bead + rib_d - centroid of the skins)
     wire_up      bool    Button: places the Rhino.Inside components to the right of this one, wired to the outputs
@@ -42,7 +43,10 @@ OUTPUTS
     shell        list Brep   printed beads: inner, middle, outer x 4 faces (the casing; the inner bead is cut where
                              the ribs pass, the rib zone between inner and middle bead is left open for the ribs and
                              rings)                                  -> Add DirectShape, category Roofs
-    insulation   list Brep   lattice zone (wavy bead + insulation), 4 faces -> Add DirectShape, category Roofs
+    insulation   list Brep   lattice zone (wavy bead + insulation)   -> Add DirectShape, category Roofs
+                 shell and insulation come cut into the TEMPORARY printed pieces: joints on the rib centrelines,
+                 each rib bay split into equal pieces at most piece_max wide and long (3 beads per piece in shell)
+    piece_names  list str    "E-C01-P01" (face, course from the eave, piece along the face), one per piece
     ribs         list Brep   one per rib                             -> Add DirectShape, category Structural Framing
     rib_names    list str    "M-col-E-03" style name per rib (same order)
     buttresses   list Brep   one per buttress                        -> Add DirectShape, category Walls
@@ -118,7 +122,7 @@ def _box(a, b, w, d_up, d_down, side):
     return _hexa(pts)
 
 
-def build_revit(m, rib_top=None):
+def build_revit(m, rib_top=None, piece_max=2000.0):
     """solids and beam lines from a build_model result `m`"""
     p, g = m["p"], m["geom"]
     rs = g["roof_sec"]
@@ -143,33 +147,6 @@ def build_revit(m, rib_top=None):
         n, t = frame(k)
         return (dist * n[0] + x * t[0], dist * n[1] + x * t[1], z)
 
-    # ---- roof shell as its layers, room side out, each face mitred on the hips (vertical diagonal planes):
-    # inner bead | rib zone (open: the cast ribs and rings sit here) | middle bead | lattice zone (insulation) | outer
-    # beads. The printed beads go to `shell`, the lattice zone to `insulation`
-    bead, n_out = p["bead"], int(p["outer_beads"])
-    cuts = [s_in]
-    for t in (bead, p["rib_d"], bead, p["lattice"], n_out * bead):
-        cuts.append(cuts[-1] + t)
-    layers = [("inner", 0), ("middle", 2), ("outer", 4), ("insulation", 3)]
-    out["shell_names"], out["inner_idx"], out["insulation"] = [], [], []
-
-    def layer(k, s0, s1):
-        pts = []
-        for z in (z_ring_top, z_crown_bot):
-            a0, a1 = W(z, s0), W(z, s1)
-            pts += [P(k, a0, -a0, z), P(k, a0, a0, z), P(k, a1, a1, z), P(k, a1, -a1, z)]
-        return _hexa(pts)
-    for name, i in layers:
-        for k in range(4):
-            piece = layer(k, cuts[i], cuts[i + 1])
-            if name == "insulation":
-                out["insulation"].append(piece)
-                continue
-            if name == "inner":
-                out["inner_idx"].append(len(out["shell"]))
-            out["shell"].append(piece)
-            out["shell_names"].append("{} bead {}".format(name, FACE[k]))
-
     # ---- ribs: merge Karamba's split segments back into one straight rib each
     chains = []
     for a, b, rid in m["ribs"]:
@@ -180,6 +157,65 @@ def build_revit(m, rib_top=None):
                 c[1] = b
                 continue
         chains.append([a, b, rid])
+
+    # ---- roof shell as its layers, room side out: inner bead | rib zone (open: the cast ribs and rings sit here) |
+    # middle bead | lattice zone (insulation) | outer beads. The printed beads go to `shell`, the lattice zone to
+    # `insulation`. TEMPORARY piece cut (until the construction study): joints on the rib centrelines (columns and
+    # middle rings, so each cast rib covers a joint and the piece edges form its channel), mitred on the hips; every
+    # rib bay split into equal pieces at most `piece_max` wide and long along the slope
+    bead, n_out = p["bead"], int(p["outer_beads"])
+    cuts = [s_in]
+    for t in (bead, p["rib_d"], bead, p["lattice"], n_out * bead):
+        cuts.append(cuts[-1] + t)
+    layers = [("inner", 0), ("middle", 2), ("outer", 4), ("insulation", 3)]
+    out.update(shell_names=[], inner_idx=[], insulation=[], piece_names=[], piece_sizes=[])
+    pmax = float(piece_max)
+
+    def corner(k, u, z, s):                             # face k, u = -1..1 across the face, height z, offset s
+        x = u * W(z, s) if abs(abs(u) - 1) < 1e-9 else u * W(z)   # hips mitred, other joints square to the face
+        return P(k, W(z, s), x, z)
+
+    def block(k, u0, u1, z0, z1, s0, s1):
+        return _hexa([corner(k, u, z, sv) for z in (z0, z1) for u, sv in ((u0, s0), (u1, s0), (u1, s1), (u0, s1))])
+
+    zs = [z_ring_top] + [z for z in m["geom"]["levels_a"] if z_ring_top < z < z_crown_bot] + [z_crown_bot]
+    courses = []                                        # (z0, z1, z of the band top: which columns reach it)
+    for za, zb in zip(zs, zs[1:]):
+        n = max(1, int(math.ceil((zb - za) * q / pmax - 1e-9)))
+        courses += [(za + (zb - za) * i / n, za + (zb - za) * (i + 1) / n, zb) for i in range(n)]
+    for k in range(4):
+        n, t = frame(k)
+        cols = []                                       # (u, top z) of the columns on face k
+        for a, b, rid in chains:
+            if rid != "col":
+                continue
+            mid = _add(a, _sub(b, a), 0.5)
+            if max(range(4), key=lambda kk: _dot(frame(kk)[0], mid)) != k:
+                continue
+            cols.append((_dot(mid, t) / W(mid[2]), max(a[2], b[2])))
+        for ci, (z0, z1, zband) in enumerate(courses):
+            us = sorted(set([-1.0, 1.0] + [round(u, 6) for u, top in cols if top >= zband - 1.0]))
+            pi = 0
+            for ua, ub in zip(us, us[1:]):
+                bay = max(abs(_dot(_sub(corner(k, ub, z0, sv), corner(k, ua, z0, sv)), t)) for sv in (cuts[0], cuts[-1]))
+                m_ = max(1, int(math.ceil(bay / pmax - 1e-9)))
+                for j in range(m_):
+                    u0, u1 = ua + (ub - ua) * j / m_, ua + (ub - ua) * (j + 1) / m_
+                    pi += 1
+                    name = "{}-C{:02d}-P{:02d}".format(FACE[k], ci + 1, pi)
+                    out["piece_names"].append(name)
+                    wid = max(abs(_dot(_sub(corner(k, u1, z0, sv), corner(k, u0, z0, sv)), t))
+                              for sv in (cuts[0], cuts[-1]))     # widest face of the piece (outer, at a hip)
+                    out["piece_sizes"].append((wid, (z1 - z0) * q))
+                    for lname, i in layers:
+                        piece = block(k, u0, u1, z0, z1, cuts[i], cuts[i + 1])
+                        if lname == "insulation":
+                            out["insulation"].append(piece)
+                            continue
+                        if lname == "inner":
+                            out["inner_idx"].append(len(out["shell"]))
+                        out["shell"].append(piece)
+                        out["shell_names"].append("{} {}".format(name, lname))
     d_eave = float(p["rib_d_eave"] or p["rib_d"])
     d_top = float(p["rib_d_top"] or p["rib_d"])
 
@@ -301,6 +337,9 @@ def summary(r, m):
         "where the ribs pass), rib zone {:.0f} left open for the ribs and rings, lattice zone {:.0f} in `insulation`".format(
             lv["t_build"], lv["s_in"], lv["s_out"], lv["ring_top"] / 1000, lv["crown_bot"] / 1000, p["bead"],
             p["rib_d"], p["lattice"]),
+        "printed pieces (TEMPORARY cut, joints on the rib centrelines): {} ({} per face), largest {:.0f} wide x {:.0f} "
+        "along the slope".format(len(r["piece_names"]), len(r["piece_names"]) // 4,
+                                 max(w for w, _ in r["piece_sizes"]), max(h for _, h in r["piece_sizes"])),
         "ribs: {} ({}), outer face {:+.0f} from the Karamba surface; columns and hips {:.0f} -> {:.0f} deep, {:.0f} wide; "
         "middle rings {:.0f} x {:.0f}".format(len(r["ribs"]), ", ".join("{} {}".format(c, k) for k, c in sorted(n.items())),
                                               lv["rib_top"], float(p["rib_d_eave"] or p["rib_d"]),
@@ -358,8 +397,8 @@ def _read_karamba_gh(path, names):
     return vals
 
 
-INPUTS = ["karamba_gh", "origin", "rib_top", "foot_w", "wire_up"]
-OUTPUTS = ["info", "params", "shell", "insulation", "ribs", "rib_names", "buttresses", "footing", "ring_lines", "cap_lines",
+INPUTS = ["karamba_gh", "origin", "rib_top", "piece_max", "foot_w", "wire_up"]
+OUTPUTS = ["info", "params", "shell", "insulation", "piece_names", "ribs", "rib_names", "buttresses", "footing", "ring_lines", "cap_lines",
            "crown_lines", "but_lines", "ring_b", "ring_h", "crown_b", "crown_h", "but_w", "foot_h", "wall_h"]
 
 
@@ -546,7 +585,7 @@ def _gh_main():
         here = os.path.dirname(ghenv.Component.OnPingDocument().FilePath)   # noqa: F821 (Grasshopper global)
     except Exception:
         pass
-    out = dict(shell=[], insulation=[], ribs=[], rib_names=[], buttresses=[], footing=[], ring_lines=[],
+    out = dict(shell=[], insulation=[], piece_names=[], ribs=[], rib_names=[], buttresses=[], footing=[], ring_lines=[],
                cap_lines=[], crown_lines=[], but_lines=[], params="", info="")
     try:
         if not _setup_params(ghenv.Component):          # noqa: F821
@@ -594,7 +633,7 @@ def _gh_main():
     out["params"] = note + "\n" + "\n".join("{} = {} ({})".format(k, p[k], src[k]) for k in sorted(p))
     try:
         m = karamba_model.build_model(**{k: p.get(k) for k in names})
-        r = build_revit(m, inp("rib_top"))
+        r = build_revit(m, inp("rib_top"), float(inp("piece_max") or 2000.0))
     except ValueError as e:
         out["info"] = "ERROR: {}".format(e)
         G.update(out)
@@ -636,13 +675,19 @@ def _gh_main():
     out["ribs"] = [brep(x) for x in r["ribs"]]
     out["shell"] = [brep(x) for x in r["shell"]]
     cut_fail = 0
+    rib_box = [rb.GetBoundingBox(True) for rb in out["ribs"]]
     for i in r["inner_idx"]:                            # the ribs pass through the inner bead: cut them out
-        res = rg.Brep.CreateBooleanDifference([out["shell"][i]], out["ribs"], tol)
+        bb = out["shell"][i].GetBoundingBox(True)
+        near = [rb for rb, rbb in zip(out["ribs"], rib_box) if rg.BoundingBox.Intersection(bb, rbb).IsValid]
+        if not near:
+            continue
+        res = rg.Brep.CreateBooleanDifference([out["shell"][i]], near, tol)
         if res:
             out["shell"][i] = res[0] if len(res) == 1 else rg.Brep.MergeBreps(list(res), tol)
         else:
             cut_fail += 1
     out["insulation"] = [brep(x) for x in r["insulation"]]
+    out["piece_names"] = r["piece_names"]
     out["rib_names"] = r["rib_names"]
     out["buttresses"] = [brep(x) for x in r["buttresses"]]
     parts = [brep(x) for x in r["footing"]]
