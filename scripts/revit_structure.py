@@ -440,7 +440,18 @@ def _gh_main():
     doc = Rhino.RhinoDoc.ActiveDoc
     tol = doc.ModelAbsoluteTolerance if doc else 0.01
     pl = G.get("origin")
-    xf = rg.Transform.PlaneToPlane(rg.Plane.WorldXY, pl) if pl is not None else rg.Transform.Identity
+    if isinstance(pl, (list, tuple)):
+        pl = pl[0] if pl else None
+    if pl is not None and not isinstance(pl, rg.Plane):
+        pl = getattr(pl, "Value", pl)                   # a Grasshopper GH_Plane
+    if isinstance(pl, rg.Plane):
+        xf = rg.Transform.PlaneToPlane(rg.Plane.WorldXY, pl)
+        placed = "placed on the origin plane at ({:.0f}, {:.0f}, {:.0f}), x axis ({:.3f}, {:.3f})".format(
+            pl.OriginX, pl.OriginY, pl.OriginZ, pl.XAxis.X, pl.XAxis.Y)
+    else:
+        xf = rg.Transform.Identity
+        placed = "NOT placed: origin is {} (wire the marker's Location plane into origin)".format(
+            "empty" if pl is None else type(pl).__name__)
 
     def brep(vf):
         V, F = vf
@@ -477,7 +488,7 @@ def _gh_main():
     info = summary(r, m)
     if parts and len(out["footing"]) != 1:
         info += "\nWARNING: the footing pieces did not join into one solid ({} pieces)".format(len(out["footing"]))
-    out["info"] = (out.pop("setup_note", "") + "\n" + info).strip()
+    out["info"] = (out.pop("setup_note", "") + "\n" + placed + "\n" + info).strip()
     G.update(out)
 
 
