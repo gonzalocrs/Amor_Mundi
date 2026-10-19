@@ -594,8 +594,12 @@ def _gh_main():
             return
     except Exception as e:
         out["setup_note"] = "WARNING: could not set up the inputs and outputs ({}); add them by hand".format(e)
+    in_names = set(prm.NickName for prm in ghenv.Component.Params.Input)   # noqa: F821
+
     def inp(name):                                      # an input's value: the script variable, else read straight
-        if G.get(name) is not None:                     # from the input (in case its variable name didn't take)
+        if name not in in_names:                        # from the input (in case its variable name didn't take).
+            return None                                 # Not an input: ignore leftovers of the last run's outputs
+        if G.get(name) is not None:                     # (wall_h, but_w, ... are outputs too)
             return G[name]
         for prm in ghenv.Component.Params.Input:        # noqa: F821
             if prm.NickName == name and not prm.VolatileData.IsEmpty:
@@ -712,7 +716,9 @@ def _gh_main():
         comp = ghenv.Component                          # noqa: F821
 
         def go(gh_doc):
-            sticky["revit_structure_wire"] = _wire_up(comp)
+            rep = _wire_up(comp)
+            if not (rep.startswith("wire_up: already done") and sticky.get("revit_structure_wire")):
+                sticky["revit_structure_wire"] = rep    # keep the report of the run that placed them
             comp.ExpireSolution(False)
         comp.OnPingDocument().ScheduleSolution(1, go)
     out["info"] = (out.pop("setup_note", "") + "\n" + sticky.get("revit_structure_wire", "") + "\n" + placed + "\n" + info).strip()
