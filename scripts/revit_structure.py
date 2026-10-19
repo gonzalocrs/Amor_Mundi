@@ -10,7 +10,8 @@ hand. Inputs or outputs it doesn't know are removed; wires to the ones it keeps 
 
 What is real here and what is idealised in Karamba:
   - Karamba works on centrelines and mid-surfaces. Here every part gets its real section around those same lines:
-    the ring beam, crown ring and buttress caps stay CENTRED on the Karamba lines (Revit beam justification Origin).
+    the ring beam and crown ring keep their Karamba centroid; their lines sit on the TOP of the beam, because Revit
+    hangs a beam below its line (z justification Top, the default).
   - Roof shell (printed casing): the full build-up square to the slope (inner bead | rib zone | middle bead | lattice |
     outer beads = `t_build`), placed so the Karamba shell surface is the centroid of the two skins, as in the script.
     It runs from the top of the ring beam to the underside of the crown ring, mitred on the hips. Solid volume =
@@ -21,7 +22,8 @@ What is real here and what is idealised in Karamba:
     and the depth grows into the room. Columns and hips taper continuously from `rib_d_eave` to `rib_d_top`.
     Ribs run from the top of the ring beam to the underside of the crown ring.
   - Buttresses: `but_w` thick, from the inner wall face to `but_total`, from the top of the footing (z = 0) to the
-    underside of the ring beam (wall_h). The cap on top is the Karamba cap beam (ring section).
+    underside of the ring beam (wall_h), or with `but_cap` (ring cast solid onto the buttresses) up to the top of
+    the ring: the Karamba cap beam is then part of the buttress solid, not a separate beam.
   - Footing: Karamba puts the footing beams on z = 0; here the footing hangs BELOW z = 0 (top at 0, foot_h deep),
     so the buttresses stand on it. Strip on the wall line + one pad under each buttress, joined into one solid.
 
@@ -270,17 +272,18 @@ def build_revit(m, rib_top=None, piece_max=2000.0):
         out["rib_ids"].append(rid)
 
     # ---- ring beam, crown ring (4 straight sides each), buttress caps (merged per buttress)
-    for k in range(4):
-        out["ring"].append((P(k, d_b, -d_b, z_b), P(k, d_b, d_b, z_b)))
+    for k in range(4):                                  # lines on the beam top (Revit hangs beams below the line)
+        out["ring"].append((P(k, d_b, -d_b, z_ring_top), P(k, d_b, d_b, z_ring_top)))
         if p["crown_ring"]:
-            out["crown"].append((P(k, d_c, -d_c, z_c), P(k, d_c, d_c, z_c)))
+            zt = z_c + p["crown_h"] / 2
+            out["crown"].append((P(k, d_c, -d_c, zt), P(k, d_c, d_c, zt)))
     caps = []
     for a, b in m["cap"]:
         if caps and max(abs(u - v) for u, v in zip(caps[-1][1], a)) < 1.0:
             caps[-1][1] = b
         else:
             caps.append([a, b])
-    out["cap"] = [tuple(c) for c in caps]
+    out["cap"] = [] if p["but_cap"] else [tuple(c) for c in caps]   # but_cap: the cap is in the buttress solid
 
     # ---- buttresses: one per Karamba buttress, real size
     for V, _ in m["but"]:
@@ -289,7 +292,7 @@ def build_revit(m, rib_top=None, piece_max=2000.0):
         n, t = frame(k)
         xb = _dot(foot, t)
         a, b = P(k, half, xb, 0.0), P(k, half + p["but_total"], xb, 0.0)
-        out["buttresses"].append(_box(a, b, p["but_w"], p["wall_h"], 0.0, t))
+        out["buttresses"].append(_box(a, b, p["but_w"], z_ring_top if p["but_cap"] else p["wall_h"], 0.0, t))
         out["but_lines"].append((a, b))
 
     # ---- footing below z = 0: strip on the wall line + pads (unioned in Grasshopper)
@@ -345,8 +348,9 @@ def summary(r, m):
                                               lv["rib_top"], float(p["rib_d_eave"] or p["rib_d"]),
                                               float(p["rib_d_top"] or p["rib_d"]), p["rib_w"],
                                               p["hring_w"] or p["rib_w"], p["rib_d"]),
-        "buttresses: {}, {:.0f} x {:.0f} x {:.0f} tall; caps {} beams; ring 4 beams {:.0f} x {:.0f}; crown 4 beams "
-        "{:.0f} x {:.0f}".format(len(r["buttresses"]), p["but_total"], p["but_w"], p["wall_h"], len(r["cap"]),
+        "buttresses: {}, {:.0f} x {:.0f} x {:.0f} tall{}; caps {} beams; ring 4 beams {:.0f} x {:.0f}; crown 4 beams "
+        "{:.0f} x {:.0f}".format(len(r["buttresses"]), p["but_total"], p["but_w"], r["buttresses"][0][0][4][2] if r["buttresses"] else p["wall_h"],
+                                 " (cap cast in, up to the ring top)" if p["but_cap"] else "", len(r["cap"]),
                                  p["ring_w"], p["base_h"], p["crown_b"], p["crown_h"]),
         "footing: {:.0f} wide x {:.0f} deep below z = 0, {} pieces joined into one".format(
             p["foot_w"], p["foot_h"], len(r["footing"])) if r["footing"] else "footing: none (footing = False)",
