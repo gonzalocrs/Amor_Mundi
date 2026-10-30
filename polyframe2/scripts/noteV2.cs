@@ -1,0 +1,4 @@
+using Grasshopper; using Grasshopper.Kernel; using Grasshopper.Kernel.Special; using System.Drawing;
+var d=Instances.ActiveCanvas.Document;
+var n=new GH_Panel(); n.CreateAttributes(); n.NickName="GUESS - read me"; n.UserText="GUESSED force diagram (not the friend's file). Octagon cap, proportion 0.85 (mid-side reactions smaller than corners), triangulated explicitly with 8-fold mirror symmetry (no Delaunay ties) from rings x spokes toward the 8 feet; one point below = cone depth (Scale Z). Stored as internalized Breps like PF example 3(7). Stage A pins the 4 corners only (exact); the mid-side feet land where the algebra puts them. Stage B pulls all 8 feet onto the wall line and runs PFPerp."; n.Attributes.Pivot=new PointF(30,420); d.AddObject(n,false); n.Attributes.Bounds=new RectangleF(30,420,560,110); n.Properties.Colour=Color.FromArgb(255,255,180,180);
+Console.WriteLine("ok");

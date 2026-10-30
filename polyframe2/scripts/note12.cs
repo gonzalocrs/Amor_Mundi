@@ -1,0 +1,4 @@
+using Grasshopper; using Grasshopper.Kernel; using Grasshopper.Kernel.Special; using System.Drawing;
+var d=Instances.ActiveCanvas.Document;
+var n=new GH_Panel(); n.CreateAttributes(); n.NickName="GUESS - read me"; n.UserText="GUESSED force diagram (not the friend's file). Regular 12-gon cap (edges face the 4 corners and the 8 wall third-points), triangulated explicitly with 12-fold mirror symmetry from rings x spokes toward the 12 feet; one point below = cone depth (Scale Z). Stored as internalized Breps like PF example 3(7). Stage A pins the 4 corners only (exact); the mid-side feet land where the algebra puts them. Stage B pulls all 12 feet onto the wall line and runs PFPerp."; n.Attributes.Pivot=new PointF(30,420); d.AddObject(n,false); n.Attributes.Bounds=new RectangleF(30,420,560,110); n.Properties.Colour=Color.FromArgb(255,255,180,180);
+Console.WriteLine("ok");

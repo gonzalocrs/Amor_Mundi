@@ -1,0 +1,1 @@
+dynamic gh=Rhino.RhinoApp.GetPlugInObject("Grasshopper"); gh.ShowEditor(); var d=Grasshopper.Instances.ActiveCanvas.Document; Console.WriteLine("doc "+(d==null?"null":d.ObjectCount+" preview "+d.PreviewMode)); if(d!=null){ d.PreviewMode=Grasshopper.Kernel.GH_PreviewMode.Shaded; d.NewSolution(false);} Rhino.RhinoDoc.ActiveDoc.Views.Redraw();

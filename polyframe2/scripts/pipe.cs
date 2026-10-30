@@ -1,0 +1,13 @@
+using Grasshopper; using Grasshopper.Kernel; using Grasshopper.Kernel.Types; using Grasshopper.Kernel.Parameters; using Rhino.Geometry;
+var doc=Instances.ActiveCanvas.Document;
+var src=doc.Objects.OfType<IGH_Component>().First(c=>c.NickName=="__T__");
+foreach(var o in doc.Objects.OfType<IGH_ActiveObject>()) if(o is IGH_PreviewObject p) p.Hidden=true;
+var old=doc.Objects.OfType<IGH_Component>().Where(c=>c.NickName=="PIPE"||c.NickName=="CPV").ToList(); foreach(var o in old) doc.RemoveObject(o,false);
+var pp=(IGH_Component)Instances.ComponentServer.EmitObject(new Guid("df7209e8-f74f-464b-96e9-d92df7726eec")); pp.CreateAttributes(); pp.NickName="PIPE"; doc.AddObject(pp,false);
+pp.Params.Input[0].AddSource(src.Params.Output.First(o=>o.Name.Contains("PFoam")||o.Name=="PFoam"));
+((Param_Number)pp.Params.Input[1]).PersistentData.Append(new GH_Number(40)); ((Param_Number)pp.Params.Input[2]).PersistentData.Append(new GH_Number(40));
+((IGH_PreviewObject)pp).Hidden=true;
+var cp=(IGH_Component)Instances.ComponentServer.ObjectProxies.First(x=>x.Desc.Name=="Custom Preview" && !x.Obsolete).CreateInstance(); cp.CreateAttributes(); cp.NickName="CPV"; doc.AddObject(cp,false);
+cp.Params.Input[0].AddSource(pp.Params.Output.First(o=>o.Name=="Pipe")); cp.Params.Input[1].AddSource(pp.Params.Output.First(o=>o.Name=="Color"));
+doc.NewSolution(false);
+Console.WriteLine("pipes "+pp.Params.Output.First(o=>o.Name=="Pipe").VolatileData.DataCount+" msgs "+string.Join("|",pp.RuntimeMessages(GH_RuntimeMessageLevel.Error).Concat(pp.RuntimeMessages(GH_RuntimeMessageLevel.Warning))));

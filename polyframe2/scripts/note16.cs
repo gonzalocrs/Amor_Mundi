@@ -1,0 +1,4 @@
+using Grasshopper; using Grasshopper.Kernel; using Grasshopper.Kernel.Special; using System.Drawing;
+var d=Instances.ActiveCanvas.Document;
+var n=new GH_Panel(); n.CreateAttributes(); n.NickName="GUESS - read me"; n.UserText="GUESSED force diagram (not the friend's file). Diagrid: regular 16-gon cap (5 supports per side incl. corners) made of diamond cells between half-offset circular rings (every bar diagonal, no rings), crown = one polygon cell (a hub node), outer band built by hand mirrored about each foot; one point below = cone depth (Scale Z). Stored as internalized Breps like PF example 3(7). Stage A pins the 4 corners only (exact) ; the other 12 feet land where the algebra puts them. Stage B pulls all 8 feet onto the wall line and runs PFPerp."; n.Attributes.Pivot=new PointF(30,420); d.AddObject(n,false); n.Attributes.Bounds=new RectangleF(30,420,560,110); n.Properties.Colour=Color.FromArgb(255,255,180,180);
+Console.WriteLine("ok");

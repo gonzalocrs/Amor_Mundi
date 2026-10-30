@@ -1,0 +1,2 @@
+using Grasshopper; using Grasshopper.Kernel;
+foreach(var p in Instances.ComponentServer.ObjectProxies.Where(q=>q.Desc.Name.Contains("Project") && !q.Obsolete && q.Kind==GH_ObjectType.CompiledObject && typeof(IGH_Component).IsAssignableFrom(q.Type))){ var o=(IGH_Component)p.CreateInstance(); Console.WriteLine(p.Desc.Name+" ["+p.Guid+"] "+p.Desc.Category+"/"+p.Desc.SubCategory+": in "+string.Join(",",o.Params.Input.Select(i=>i.Name))+" | out "+string.Join(",",o.Params.Output.Select(i=>i.Name))); }

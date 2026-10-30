@@ -1,0 +1,12 @@
+bool SW=false;
+var lines=new List<(double[],double[])>{ (new double[]{0,0,0},new double[]{2500,0,0}), (new double[]{2500,0,0},new double[]{5000,0,0}) };
+var m=Build(lines,new List<double[]>{new double[]{0,0,0},new double[]{5000,0,0}},new List<(double[],double)>{(new double[]{2500,0,0},10.0)},0.25,0.15,SW,out var info,out var mass);
+var ma=Analyze(m,out var md,out var w);
+Console.WriteLine("mass "+mass.ToString("0.0")+" kg (0.15x0.25x5 m x 2446 kg/m3 = "+(0.15*0.25*5*24/9.81*1000).ToString("0")+") | maxDisp "+md.ToString("0.00000")+" m (hand PL^3/48EI = 0.00407 m) | warn '"+w+"'");
+var (d,pm)=ModelDoc(ma);
+var bf=KC(d,"4f255ff1-ffed-4f54-99ab-f8f82c48a624"); bf.Params.Input[0].AddSource(pm);
+var rf=KC(d,"4786a421-313c-4673-b8b0-20b59742a7f2"); rf.Params.Input[0].AddSource(pm);
+d.Enabled=true; d.NewSolution(false,GH_SolutionMode.Silent);
+foreach(var o in bf.Params.Output.Skip(1).Take(6)) Console.WriteLine("BF "+o.Name+": "+string.Join(" ",o.VolatileData.AllData(true).Take(12).Select(x=>x.ToString())));
+foreach(var o in rf.Params.Output.Skip(1).Take(5)) Console.WriteLine("RF "+o.Name+": "+string.Join(" ",o.VolatileData.AllData(true).Take(6).Select(x=>x.ToString())));
+Console.WriteLine("ts default: "+string.Join(",",bf.Params.Input[3].VolatileData.AllData(true))+" | msgs "+string.Join("|",bf.RuntimeMessages(GH_RuntimeMessageLevel.Warning).Concat(bf.RuntimeMessages(GH_RuntimeMessageLevel.Error))));

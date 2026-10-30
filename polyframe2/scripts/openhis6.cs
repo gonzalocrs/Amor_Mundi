@@ -1,0 +1,11 @@
+using Grasshopper; using Grasshopper.Kernel;
+var rd=Rhino.RhinoDoc.ActiveDoc; Console.WriteLine("rhino doc: "+(rd.Path??"(unsaved)")+" objs "+rd.Objects.Count);
+dynamic gh=Rhino.RhinoApp.GetPlugInObject("Grasshopper"); if(!gh.IsEditorLoaded()) gh.LoadEditor(); gh.ShowEditor();
+foreach(GH_Document d in Instances.DocumentServer) Console.WriteLine(" existing gh doc: "+d.DisplayName+" "+d.FilePath);
+var path=@"C:\Users\gonza\Documents\GitHub\pyramid-roof\polyframe2\friend-15-pyramid-branches-flatcorners.gh";
+var io=new GH_DocumentIO(); if(!io.Open(path)){ Console.WriteLine("open failed"); return; } var doc=io.Document; doc.FilePath=path;
+Instances.DocumentServer.AddDocument(doc); Instances.ActiveCanvas.Document=doc; doc.Enabled=true;
+var sw=System.Diagnostics.Stopwatch.StartNew(); doc.NewSolution(false); Console.WriteLine("opened, solve ms "+sw.ElapsedMilliseconds+" objs "+doc.ObjectCount);
+foreach(var o in doc.Objects.OfType<IGH_ActiveObject>()) if(o.RuntimeMessageLevel==GH_RuntimeMessageLevel.Error) Console.WriteLine("ERR "+o.NickName);
+Instances.ActiveCanvas.Document.Properties?.ToString(); Instances.ActiveCanvas.Refresh();
+rd.Views.ActiveView?.ActiveViewport.ZoomExtents(); rd.Views.Redraw();

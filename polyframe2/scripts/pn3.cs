@@ -1,0 +1,3 @@
+using Grasshopper; using Grasshopper.Kernel;
+Console.WriteLine("pid "+System.Diagnostics.Process.GetCurrentProcess().Id);
+foreach(var name in new[]{"Pick'n'Choose","Stream Filter","Dispatch"}){ var p=Instances.ComponentServer.ObjectProxies.FirstOrDefault(q=>q.Desc.Name==name && !q.Obsolete && q.Kind==GH_ObjectType.CompiledObject && typeof(IGH_Component).IsAssignableFrom(q.Type)); if(p==null){ Console.WriteLine(name+": NONE"); continue;} var o=(IGH_Component)p.CreateInstance(); Console.WriteLine(name+" ["+p.Guid+"]: in "+string.Join(",",o.Params.Input.Select(i=>i.Name+":"+i.GetType().Name))+" | out "+string.Join(",",o.Params.Output.Select(i=>i.Name))); }

@@ -1,0 +1,1 @@
+var rd=__rhino_doc__; int n=0; foreach(var l in rd.Layers.Where(l=>!l.IsDeleted && l.Index!=rd.Layers.CurrentLayerIndex).ToList()){ var objs=rd.Objects.FindByLayer(l); if(objs==null||objs.Length==0){ if(rd.Layers.Purge(l.Index,true)) n++; } } Console.WriteLine("purged "+n+" empty layers; left "+rd.Layers.Count(l=>!l.IsDeleted));

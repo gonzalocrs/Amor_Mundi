@@ -1,0 +1,1 @@
+var rd=__rhino_doc__; var s=new Rhino.DocObjects.ObjectEnumeratorSettings{HiddenObjects=true,DeletedObjects=false}; var all=rd.Objects.GetObjectList(s).ToList(); Console.WriteLine("all "+all.Count+" hidden "+all.Count(o=>o.IsHidden)); foreach(var g in all.GroupBy(o=>rd.Layers[o.Attributes.LayerIndex].Name)) Console.WriteLine(g.Key+" "+g.Count());
