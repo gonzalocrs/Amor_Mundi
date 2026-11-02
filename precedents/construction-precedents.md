@@ -39,6 +39,18 @@ Compiled 2026-11-02. Each entry gives what was done, what we take from it, and t
 - **Takeaway:** printed formwork for ribs, plus formwork that stays as insulation between the ribs. That is our iteration 2 (trays + insulation).
 - **Sources:** [ETH research collection: ribbed floor slabs with 3D-printed formwork](https://www.research-collection.ethz.ch/entities/publication/fc511e49-ad57-4238-a835-14b9db93e1cd), [DETAIL: HiRes concrete slab, NEST](https://detail.de/de_en/hires-concrete-slab-im-empa-nest-dubendorf), [VAULTED commercial project](https://Startupticker.ch/en/news/vaulted-to-build-first-large-commercial-project), [Met Museum: Rippmann floor](https://www.metmuseum.org/zh/perspectives/rippman-floor-system-from-concept-to-construction)
 
+### ETH Digital Building Technologies: Funicular Floor demonstrator (2019, for NEST HiLo) — **target look (from Gonzalo, 2026-11-02)**
+- **What:**
+  - A funicular concrete floor with branching ribs on the soffit that blend into each other with smooth fillets ("gothic" look). Hybrid cooling/ventilation ducts are integrated inside.
+  - Cast in **FDM-printed PLA formwork**: 0.8 mm thick, under 10 kg for a ~600 kg floor, 77 unique parts. The formwork shapes both the internal ducts and the visible soffit.
+  - Shown at the ETH pavilion, Davos, WEF 2019.
+- **Takeaway:**
+  - the visual goal for our soffit: ribs **visible from below**, branching with smooth fillets at the nodes;
+  - ultra-light printed moulds for casting;
+  - services (ventilation) can be integrated in the rib/shell.
+- **Sources:** [DBT: Functional Formwork for a Funicular Floor](https://dbt.arch.ethz.ch/project/functional-formwork-for-concrete-floors/), [Paper: 3D-Printed Formwork for Integrated Funicular Concrete Slabs](https://journals.sagepub.com/doi/xml/10.1089/3dp.2021.0024), [Dezeen: HiRes Concrete Slab](https://www.dezeen.com/2022/07/08/eth-zurich-contoured-concrete-slab-ceiling-architecture/amp/)
+- **Note:** the project page says ~600 kg floor / <10 kg formwork; the paper says 660 kg slab / <15 kg formwork. Treat both as approximate.
+
 ---
 
 ## 2. 3D-printed concrete in compression
