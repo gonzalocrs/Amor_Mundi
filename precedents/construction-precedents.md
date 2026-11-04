@@ -165,3 +165,19 @@ Compiled 2026-11-02. Each entry gives what was done, what we take from it, and t
 2. Striatus falsework details: striatusbridge.com and BRG papers.
 3. Pantheon thickness figures: use a scholarly source.
 4. Every staged-construction claim for our dome (partial rings self-supporting, hoop tension in lower rings) still needs a **Karamba staged check**. The precedents show it can work; they don't prove it for #16.
+
+---
+
+## 5. Rib methods and node ("knot") connections — verified sources (2026-11-04)
+
+| Topic | Precedent | Source |
+|---|---|---|
+| Method 1: printed formwork + cast ribs | ETH DBT Funicular Floor (2019): concrete cast in 0.8 mm FDM-printed PLA formwork | [Project + process](https://dbt.arch.ethz.ch/project/functional-formwork-for-concrete-floors/); [Paper: 3D-Printed Formwork for Integrated Funicular Concrete Slabs](https://journals.sagepub.com/doi/xml/10.1089/3dp.2021.0024) |
+| Method 2: printed solid ribs | Gemert bicycle bridge (TU/e + BAM, 2017): printed elements, rotated, pressed together by post-tensioning tendons | [Salet et al. 2018, Design of a 3D printed concrete bridge by testing](https://doi.org/10.1080/17452759.2018.1476064); [Witteveen+Bos process page](https://www.witteveenbos.com/projects/worlds-first-3d-printed-bicycle-bridge-gemert) |
+| Method 2 (compression-only blocks) | Striatus (2021) | Project page only, no technical paper found: [ZHA](https://www.zha.com/projects/installations-pavilions/striatus-3d-printed-concrete-bridge) |
+| Knot A: wet joint + rebar placed after hardening | Aramburu, Calderon-Uriszar-Aldaca & Puente 2023, J. Building Engineering 73, 106728: 3DPC beam segments, wet joints, rebar in a groove, bending tests | [DOI](https://doi.org/10.1016/j.jobe.2023.106728); [Tecnalia repository](https://dsp.tecnalia.com/items/8bb0670a-5a6c-41e9-ac61-f94d338d46e4) |
+| Knot B: grouted splice sleeve | Michigan DOT R-1512 (2008): tests of NMB Splice Sleeve and Lenton Interlok; NMB introduced in Japan by Nisso Master Builders | [Report PDF](https://utcdb.cs.fiu.edu/wp-content/uploads/2021/09/MDOT_Research_Report_R1512_234541_7.pdf) |
+| Knot C: printed pieces + post-tensioning | Gemert bridge (above) | as above |
+| Knot D: bolted steel node | **No concrete precedent found.** Closest: steel gridshell connectors (steel-to-steel, not valid for us) | [Notre Dame modular connector](https://athrall.nd.edu/Papers/Modular%20Connector%20for%20Resilient%20Grid%20Shell%20Structures.pdf) |
+
+Correction: an earlier chat claim that grouted sleeves are "widely used in Japanese precast" is not supported by these sources; only that the NMB system was introduced in Japan.
