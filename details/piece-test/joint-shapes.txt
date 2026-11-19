@@ -1,0 +1,15 @@
+                                           Rectangular    Oval           Circular     
+Print: worst step over the layer below     7.0 mm (ok)    7.0 mm (ok)    7.0 mm (ok)  
+Ring tunnel, bed to crown                  30-300 mm      30-300 mm      30-250 mm    
+Ring pour area (printable / ideal)         340 / 256 cm2  298 / 276 cm2  232 / 201 cm2
+Rib pour area                              256 cm2        276 cm2        201 cm2      
+Grout per piece (rib + ring)               52 l           48 l           37 l         
+Printed piece                              218 kg         220 kg         221 kg       
+Layers with a separate bead (stops)        27             27             22           
+Shortest layer                             62 s           62 s           62 s         
+Print time                                 53 min         53 min         53 min       
+Sharp corners in the rib bead              4              0              0            
+Column bars, spacing u x n                 68 x 44        99 x 40        58 x 34      
+Ring bars, spacing n x s                   68 x 68        64 x 40        58 x 35      
+Clear between bars (need 21)               32 / 56        28 / 28        22 / 23      
+Ring and column bars at the node, n apart  12 mm          12 mm          12 mm        

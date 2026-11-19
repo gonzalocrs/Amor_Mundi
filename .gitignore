@@ -22,3 +22,5 @@ Thumbs.db
 
 # Software licenses (personal, never commit)
 *.lic
+details/piece-test/*.svg
+details/piece-test/test-print/
