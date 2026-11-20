@@ -67,3 +67,20 @@ Hand checks:
 - Footing (W-Y, worst column): N = 61.6 + 56.4 = 118 kN, M = 32.6 + 24.4 x 0.8 = 56 kNm, e = 0.47 m > B/6. q = 2N / (3 (B/2 - e) B) = 115 kPa.
 
 Typhoon governs, not earthquake: the bonded courses + ribs + ring frame take Q = 274 kN with drift 1/368. No perpendicular shear walls are needed for strength. The two corner footings overlap, so cast each corner pair as one combined footing.
+
+## Mortar joints (10 mm polymer-modified mortar), all load cases
+- Bed joints at the fins (Karamba fin = 2 end walls, 8 x 30 cm):
+  - Worst case W45: N -24..+3.5 kN, strong-axis M up to 4.3 kNm at a few points at the base; 95 % of points are under 0.9 kNm.
+  - On the end-wall area alone that gives 4.5 MPa compression and 3.6 MPa bending tension, which is too much for a mortar bond.
+  - The real bed joint is the whole piece section over 1.2 m: 2 skins of 4 cm, about 0.40 m apart, plus the end walls. A = 0.12 m2, W = 8.3e-3 m3.
+  - Peak compression 0.2 + 0.5 = 0.7 MPa (mortar 30 MPa or more). Peak bending tension 0.5 MPa; typical about 0.1 MPa.
+  - Shear 0.17 MPa on the end walls alone, 0.34 of the EN 1996 resistance 0.3 + 0.4 sigma; on the full joint area about 0.03 MPa.
+- Head joints (hoop direction): compression 0.23 MPa, tension 0.13 MPa, so about 9 kN per course section. The D10 ring bar in the groove takes 23 kN short-term.
+- Required: tensile bond strength of the mortar at least 0.6 MPa (EN 1015-12 pull-off test on printed samples). Where the peaks are (first two courses above the ring beam), add D10 starter bars from the ring beam, grouted into the head-joint ducts.
+
+## Bottom detail piece, updated for the D24 core / D32 tube
+- h 57.6 cm, 232 kg (was 230), bearing 15.4 cm.
+- The centre of gravity is 3.8 cm inside the bearing edge (was 3.6), so the piece still tips inward.
+- Overturning moment 85 Nm, so the clip takes 554 N (56 kgf). The same clip as before is fine.
+- Top piece unchanged: 188 kg, clip 40 kgf.
+- Previews 16, 17.
