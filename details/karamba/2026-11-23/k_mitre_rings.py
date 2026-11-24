@@ -55,6 +55,11 @@ def build(doc, roof, lc, lim, layer_index, sect=None):
             for n in E[i][1:3]: at.setdefault(n, []).append(i)
         for i in ids:
             _, na, nb = E[i]; pa, pb = G.Point3d(*N[na]), G.Point3d(*N[nb])
+            if g == "column":                          # stop the column at the ring underside (no box above the ring)
+                zr = max(N[n][2] for e2 in groups["ring"] for n in E[e2][1:3]) - S["ring"][1] / 2
+                if pa.Z > zr: pa = G.Point3d(pa.X, pa.Y, zr)
+                if pb.Z > zr: pb = G.Point3d(pb.X, pb.Y, zr)
+                if pa.DistanceTo(pb) < 1e-3: continue
             x, y, z = axes(pa, pb); L = pa.DistanceTo(pb)
             ends = []
             for t, (n, p, xin) in enumerate(((na, pa, x), (nb, pb, -x))):
@@ -154,6 +159,8 @@ def loops(N, E, F, ids, sect, lim):
                 base = m.Vertices.Count
                 for c in range(4): m.Vertices.Add(P[k][c]); m.VertexColors.Add(C[k][c])
                 m.Faces.AddFace(base, base + 1, base + 2, base + 3) if k else m.Faces.AddFace(base + 3, base + 2, base + 1, base)
-        m.Normals.ComputeNormals(); m.UnifyNormals(); m.Normals.ComputeNormals()
+        m.UnifyNormals(); m.Normals.ComputeNormals()
+        if m.IsClosed and m.Volume() < 0: m.Flip(True, True, True)   # outward normals: lit like the ribs, not seen from inside
+        m.Normals.ComputeNormals()
         out.append(m)
     return out
