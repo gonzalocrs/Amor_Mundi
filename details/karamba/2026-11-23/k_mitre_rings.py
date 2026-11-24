@@ -39,9 +39,16 @@ def build(doc, roof, lc, lim, layer_index, sect=None):
     N, E, F = D["nodes"], D["els"], D["forces"][lc]
     S = sect or SECT[roof]
     groups = {g: [i for i, e in enumerate(E) if e[0] == g] for g in ("ring", "crown", "column")}
+    att0 = Rhino.DocObjects.ObjectAttributes(); att0.LayerIndex = layer_index
+    done = set()
+    for g in ("ring", "crown"):
+        for mesh in loops(N, E, F, groups[g], S[g], lim):
+            doc.Objects.AddMesh(mesh, att0)
+        done.add(g)
     att = Rhino.DocObjects.ObjectAttributes(); att.LayerIndex = layer_index
     count = 0
     for g, ids in groups.items():
+        if g in done: continue
         b, h = S[g]; A = b * h; Iy = b * h ** 3 / 12; Iz = h * b ** 3 / 12
         at = {}
         for i in ids:
@@ -78,3 +85,75 @@ def build(doc, roof, lc, lim, layer_index, sect=None):
             m.Normals.ComputeNormals(); m.Compact()
             doc.Objects.AddMesh(m, att); count += 1
     return count
+
+
+def loops(N, E, F, ids, sect, lim):
+    """ring / crown as closed loops, welded: walk each loop in order; at every node the four section corners are
+    computed once on the bisector (mitre) plane and shared by the two segments; each of the four faces of the box is
+    one strip mesh along the whole loop with shared vertices, so the normals average across the joints (smooth along
+    the ring, crisp at the box edges). Colour at a node corner = mean of the two segment ends' Karamba stress there."""
+    b, h = sect; A = b * h; Iy = b * h ** 3 / 12; Iz = h * b ** 3 / 12
+    corners = [(-b / 2, -h / 2), (b / 2, -h / 2), (b / 2, h / 2), (-b / 2, h / 2)]
+    at = {}
+    for i in ids:
+        for n in E[i][1:3]: at.setdefault(n, []).append(i)
+    left = set(ids); out = []
+    while left:
+        i0 = left.pop(); seq = [i0]
+        a0, b0 = E[i0][1], E[i0][2]; nodes = [a0, b0]; cur = b0; prev = i0
+        while True:
+            nxt = [j for j in at[cur] if j != prev and j in left]
+            if len(at[cur]) != 2 or not nxt: break
+            j = nxt[0]; left.discard(j); seq.append(j)
+            cur = E[j][2] if E[j][1] == cur else E[j][1]; nodes.append(cur); prev = j
+        closed = nodes[0] == nodes[-1] and len(at[nodes[0]]) == 2
+        pts = [G.Point3d(*N[n]) for n in nodes]
+        nseg = len(seq)
+        def seg_dir(k):
+            v = pts[k + 1] - pts[k]; v.Unitize(); return v
+        def frame(x):
+            z = G.Vector3d.ZAxis - x * x.Z; z.Unitize(); return G.Vector3d.CrossProduct(z, x), z
+        P = []; C = []
+        for k in range(len(nodes)):
+            if closed and k == len(nodes) - 1:
+                P.append(P[0]); C.append(C[0]); continue
+            xin = seg_dir(k - 1) if k > 0 else (seg_dir(nseg - 1) if closed else None)
+            xout = seg_dir(k) if k < nseg else None
+            if xin is None: xin = xout
+            if xout is None: xout = xin
+            t = xin + xout; t.Unitize()                     # tangent at the node; mitre plane normal
+            y, z = frame(t)
+            ym, zm = [], []
+            # section corners on the mitre plane: offset in the bisector frame, scaled so the faces stay parallel
+            cosh = max(0.2, xin * t)
+            P.append([pts[k] + y * (cy / cosh) + z * cz for (cy, cz) in corners])
+            # stresses from the two segment ends meeting here (Karamba local y flips if the bar runs against the walk)
+            ss = []
+            for kk, end_is_b in ((k - 1, True), (k, False)):
+                kk = kk % nseg if closed else kk
+                if kk < 0 or kk >= nseg: continue
+                i = seq[kk]; na = E[i][1]
+                walk_a = nodes[kk]; same = (na == walk_a)
+                t_end = (1 if end_is_b else 0) if same else (0 if end_is_b else 1)
+                sgn = 1 if same else -1
+                Nn = F["N"][2 * i + t_end]; My = F["My"][2 * i + t_end]; Mz = F["Mz"][2 * i + t_end]
+                ss.append([(Nn / A + My * cz / Iy - Mz * (sgn * cy) / Iz) / 10000.0 for (cy, cz) in corners])
+            C.append([kcol(sum(v[c] for v in ss) / len(ss), lim) for c in range(4)])
+        m = G.Mesh()
+        K = len(nodes) - 1 if closed else len(nodes)       # closed: the last node is the first, so wrap round
+        for side in range(4):
+            s2 = (side + 1) % 4; base = m.Vertices.Count
+            for k in range(K):
+                m.Vertices.Add(P[k][side]); m.VertexColors.Add(C[k][side])
+                m.Vertices.Add(P[k][s2]); m.VertexColors.Add(C[k][s2])
+            for k in range(K if closed else K - 1):
+                q = base + 2 * k; q2 = base + 2 * ((k + 1) % K)
+                m.Faces.AddFace(q, q2, q2 + 1, q + 1)
+        if not closed:
+            for k in (0, len(nodes) - 1):
+                base = m.Vertices.Count
+                for c in range(4): m.Vertices.Add(P[k][c]); m.VertexColors.Add(C[k][c])
+                m.Faces.AddFace(base, base + 1, base + 2, base + 3) if k else m.Faces.AddFace(base + 3, base + 2, base + 1, base)
+        m.Normals.ComputeNormals(); m.UnifyNormals(); m.Normals.ComputeNormals()
+        out.append(m)
+    return out
