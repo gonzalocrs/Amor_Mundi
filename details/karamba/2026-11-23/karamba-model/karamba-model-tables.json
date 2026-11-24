@@ -1,0 +1,475 @@
+{
+ "15x10": {
+  "elements": [
+   {
+    "element": "Ribs, bottom band",
+    "id": "rib_bottom",
+    "section_mm": "solid round D220 (cast core; printed tube around it not counted as stiffness)",
+    "bars": 508
+   },
+   {
+    "element": "Ribs, middle band",
+    "id": "rib_middle",
+    "section_mm": "solid round D160",
+    "bars": 360
+   },
+   {
+    "element": "Ribs, top band",
+    "id": "rib_top",
+    "section_mm": "solid round D120",
+    "bars": 276
+   },
+   {
+    "element": "Base ring",
+    "id": "ring",
+    "section_mm": "400 x 400",
+    "bars": 72
+   },
+   {
+    "element": "Crown ring",
+    "id": "crown",
+    "section_mm": "250 x 250",
+    "bars": 16
+   },
+   {
+    "element": "Columns",
+    "id": "column",
+    "section_mm": "360 x 360, fixed at the base, 20 columns",
+    "bars": 40
+   },
+   {
+    "element": "Printed courses (hoops)",
+    "id": "course",
+    "section_mm": "box 450 x 500, 2 skins; printed, E x 0.02 of C30/37 (head joints open); tied to the ribs at the tubes; not drawn in the render",
+    "bars": 1352
+   },
+   {
+    "element": "Piece end walls (fins)",
+    "id": "fin",
+    "section_mm": "2 walls 80 x 300; pinned truss, E 25 GPa, COMPRESSION ONLY (bed joints): removed by Karamba's Tension/Compression Eliminator wherever it would pull, per load case; weight carried in the courses; not drawn",
+    "bars": 576
+   }
+  ],
+  "material": "C30/37 (Karamba); allowable Fc 36 per AIJ: 12 MPa long-term, 24 MPa short-term",
+  "load_cases": [
+   {
+    "case": "LONG",
+    "combination": "1.0 self-weight + formwork top-up 0.34 kN/m2 + insulation and finishes 1.13 kN/m2",
+    "used_for": "long-term allowables; the render"
+   },
+   {
+    "case": "W+Y, W-Y, W+X, W-X, W45",
+    "combination": "LONG + typhoon qp 2.6 kN/m2 (5 directions)",
+    "used_for": "short-term allowables"
+   },
+   {
+    "case": "LIVEX, LIVEY",
+    "combination": "LONG + maintenance 0.6 kN/m2 on half the roof",
+    "used_for": "checked as long-term"
+   },
+   {
+    "case": "EQX, EQY",
+    "combination": "LONG + 0.14 x weight sideways (Ci = 0.7 x 1 x 1 x 0.2)",
+    "used_for": "short-term allowables"
+   }
+  ],
+  "weight_kN": {
+   "whole_structure_vertical_reaction_LONG": 1664.1,
+   "columns": 155.5,
+   "roof_above_columns": 1508.6,
+   "note": "footing not in Karamba (checked by hand)"
+  },
+  "weight_t": {
+   "whole_structure": 169.6,
+   "roof_above_columns": 153.8
+  },
+  "legend": {
+   "LONG": {
+    "load_case": "LONG",
+    "allowable_MPa": 12.0,
+    "max_compression_MPa": 8.15,
+    "max_compression_utilisation": 0.679,
+    "max_tension_MPa": 6.11,
+    "colour_scale": "Karamba legend fixed at +-4 MPa (see render.legends)",
+    "model": "D2"
+   },
+   "SHORT": {
+    "load_case": "W-Y",
+    "allowable_MPa": 24.0,
+    "max_compression_MPa": 14.42,
+    "max_compression_utilisation": 0.601,
+    "max_tension_MPa": 11.75,
+    "colour_scale": "Karamba legend fixed at +-7 MPa (see render.legends)",
+    "model": "D2"
+   }
+  },
+  "casing_note": "Design model D2. Every printed piece is printed around its rib tube and the cast core runs through it, so the casing hangs on the ribs. The bed joints between courses are mortar and only push: the piece end walls that cross them are compression-only (Karamba removes any that would pull, case by case). The head joints along a course are taken as open (courses E x 0.02). About a third of the weight reaches the base ring through the casing; under typhoon some end walls lift off (up to 63 of 576 on the 15x10, 12 of 240 on the 10x10) and the ribs carry their load around them.",
+  "render": {
+   "see": "top-level 'render' (D2)",
+   "images": [
+    "karamba-model-15x10-LONG.png",
+    "karamba-model-15x10-SHORT.png"
+   ]
+  },
+  "images": {
+   "see": "top-level 'render' (D2)",
+   "images": [
+    "karamba-model-15x10-LONG.png",
+    "karamba-model-15x10-SHORT.png"
+   ]
+  },
+  "weight_LONG_kN": 1664,
+  "weight_LONG_t": 169.6
+ },
+ "10x10": {
+  "elements": [
+   {
+    "element": "Ribs, bottom band",
+    "id": "rib_bottom",
+    "section_mm": "solid round D180 (cast core; printed tube around it not counted as stiffness)",
+    "bars": 268
+   },
+   {
+    "element": "Ribs, middle band",
+    "id": "rib_middle",
+    "section_mm": "solid round D140",
+    "bars": 168
+   },
+   {
+    "element": "Ribs, top band",
+    "id": "rib_top",
+    "section_mm": "solid round D120",
+    "bars": 208
+   },
+   {
+    "element": "Base ring",
+    "id": "ring",
+    "section_mm": "400 x 400",
+    "bars": 56
+   },
+   {
+    "element": "Crown ring",
+    "id": "crown",
+    "section_mm": "250 x 250",
+    "bars": 16
+   },
+   {
+    "element": "Columns",
+    "id": "column",
+    "section_mm": "300 x 300, fixed at the base, 16 columns",
+    "bars": 32
+   },
+   {
+    "element": "Printed courses (hoops)",
+    "id": "course",
+    "section_mm": "box 450 x 500, 2 skins; printed, E x 0.02 of C30/37 (head joints open); tied to the ribs at the tubes; not drawn in the render",
+    "bars": 672
+   },
+   {
+    "element": "Piece end walls (fins)",
+    "id": "fin",
+    "section_mm": "2 walls 80 x 300; pinned truss, E 25 GPa, COMPRESSION ONLY (bed joints): removed by Karamba's Tension/Compression Eliminator wherever it would pull, per load case; weight carried in the courses; not drawn",
+    "bars": 240
+   }
+  ],
+  "material": "C30/37 (Karamba); allowable Fc 36 per AIJ: 12 MPa long-term, 24 MPa short-term",
+  "load_cases": [
+   {
+    "case": "LONG",
+    "combination": "1.0 self-weight + formwork top-up 0.34 kN/m2 + insulation and finishes 1.13 kN/m2",
+    "used_for": "long-term allowables; the render"
+   },
+   {
+    "case": "W+Y, W-Y, W+X, W-X, W45",
+    "combination": "LONG + typhoon qp 2.6 kN/m2 (5 directions)",
+    "used_for": "short-term allowables"
+   },
+   {
+    "case": "LIVEX, LIVEY",
+    "combination": "LONG + maintenance 0.6 kN/m2 on half the roof",
+    "used_for": "checked as long-term"
+   },
+   {
+    "case": "EQX, EQY",
+    "combination": "LONG + 0.14 x weight sideways (Ci = 0.7 x 1 x 1 x 0.2)",
+    "used_for": "short-term allowables"
+   }
+  ],
+  "weight_kN": {
+   "whole_structure_vertical_reaction_LONG": 830.9,
+   "columns": 86.4,
+   "roof_above_columns": 744.5,
+   "note": "footing not in Karamba (checked by hand)"
+  },
+  "weight_t": {
+   "whole_structure": 84.7,
+   "roof_above_columns": 75.9
+  },
+  "legend": {
+   "LONG": {
+    "load_case": "LONG",
+    "allowable_MPa": 12.0,
+    "max_compression_MPa": 6.36,
+    "max_compression_utilisation": 0.53,
+    "max_tension_MPa": 4.9,
+    "colour_scale": "Karamba legend fixed at +-4 MPa (see render.legends)",
+    "model": "D2"
+   },
+   "SHORT": {
+    "load_case": "W+Y",
+    "allowable_MPa": 24.0,
+    "max_compression_MPa": 10.82,
+    "max_compression_utilisation": 0.451,
+    "max_tension_MPa": 8.72,
+    "colour_scale": "Karamba legend fixed at +-7 MPa (see render.legends)",
+    "model": "D2"
+   }
+  },
+  "casing_note": "Design model D2. Every printed piece is printed around its rib tube and the cast core runs through it, so the casing hangs on the ribs. The bed joints between courses are mortar and only push: the piece end walls that cross them are compression-only (Karamba removes any that would pull, case by case). The head joints along a course are taken as open (courses E x 0.02). About a third of the weight reaches the base ring through the casing; under typhoon some end walls lift off (up to 63 of 576 on the 15x10, 12 of 240 on the 10x10) and the ribs carry their load around them.",
+  "render": {
+   "see": "top-level 'render' (D2)",
+   "images": [
+    "karamba-model-10x10-LONG.png",
+    "karamba-model-10x10-SHORT.png"
+   ]
+  },
+  "images": {
+   "see": "top-level 'render' (D2)",
+   "images": [
+    "karamba-model-10x10-LONG.png",
+    "karamba-model-10x10-SHORT.png"
+   ]
+  },
+  "weight_LONG_kN": 831,
+  "weight_LONG_t": 84.7
+ },
+ "render": {
+  "method": "Karamba BeamView, render mode 'Axial Stress' (coloured cross sections); ModelView picks the load case and shows every element group except printed courses and fins; BeamView mesh baked to layers 'karamba render <roof> <case>' in the separate Rhino; two-point perspective from the SW, eye 3.2 m (0.8 m above the top of the ring), white background, 3200 x 2000; footing light grey.",
+  "colour_scale": "Fixed legend range: LONG -4 to +4 MPa, typhoon -7 to +7 MPa (Karamba ModelView 'absolute value' thresholds); beyond the range = full end colour. Actual extremes in these cases: 15x10 LONG -8.0 / +5.9, 15x10 W-Y -13.9 / +11.2, 10x10 LONG -5.9 / +4.4, 10x10 W45 -10.0 / +7.6 MPa.",
+  "legends": {
+   "15x10 LONG": {
+    "load_case": "LONG",
+    "mode": "ColoredCrossSectionStress",
+    "legend_source": "Karamba BeamView 'Axial Stress'; ModelView result range set to absolute -4 / +4 MPa; values beyond take the end colours (full red = compression, full blue = tension)",
+    "legend_unit": "stress[kN/cm²]",
+    "legend_min_kN_cm2": -0.4,
+    "legend_max_kN_cm2": 0.4,
+    "legend_min_MPa": -4.0,
+    "legend_max_MPa": 4.0,
+    "legend_tags": [
+     "stress[kN/cm²]",
+     "-4.00e-01",
+     "-3.20e-01",
+     "-2.40e-01",
+     "-1.60e-01",
+     "-8.00e-02",
+     " 0.00e+00",
+     " 8.00e-02",
+     " 1.60e-01",
+     " 2.40e-01",
+     " 3.20e-01",
+     " 4.00e-01",
+     ""
+    ],
+    "legend_colours": [
+     "Color [A=255, R=254, G=0, B=73]",
+     "Color [A=255, R=254, G=0, B=73]",
+     "Color [A=255, R=254, G=53, B=111]",
+     "Color [A=255, R=254, G=103, B=146]",
+     "Color [A=255, R=254, G=157, B=185]",
+     "Color [A=255, R=253, G=206, B=220]",
+     "Color [A=255, R=248, G=247, B=252]",
+     "Color [A=255, R=211, G=205, B=243]",
+     "Color [A=255, R=171, G=159, B=232]",
+     "Color [A=255, R=134, G=116, B=222]",
+     "Color [A=255, R=94, G=70, B=211]",
+     "Color [A=255, R=66, G=38, B=204]",
+     "Color [A=255, R=66, G=38, B=204]"
+    ],
+    "sign": "negative = compression (Karamba convention)",
+    "actual_extremes_MPa_my_section_check": {
+     "compression": 8.2,
+     "in": "rib_bottom",
+     "tension": -6.1,
+     "t_in": "rib_bottom"
+    }
+   },
+   "15x10 SHORT": {
+    "load_case": "W-Y",
+    "mode": "ColoredCrossSectionStress",
+    "legend_source": "Karamba BeamView 'Axial Stress'; ModelView result range set to absolute -7 / +7 MPa; values beyond take the end colours (full red = compression, full blue = tension)",
+    "legend_unit": "stress[kN/cm²]",
+    "legend_min_kN_cm2": -0.7,
+    "legend_max_kN_cm2": 0.7,
+    "legend_min_MPa": -7.0,
+    "legend_max_MPa": 7.0,
+    "legend_tags": [
+     "stress[kN/cm²]",
+     "-7.00e-01",
+     "-5.60e-01",
+     "-4.20e-01",
+     "-2.80e-01",
+     "-1.40e-01",
+     " 0.00e+00",
+     " 1.40e-01",
+     " 2.80e-01",
+     " 4.20e-01",
+     " 5.60e-01",
+     " 7.00e-01",
+     ""
+    ],
+    "legend_colours": [
+     "Color [A=255, R=254, G=0, B=73]",
+     "Color [A=255, R=254, G=0, B=73]",
+     "Color [A=255, R=254, G=53, B=111]",
+     "Color [A=255, R=254, G=103, B=146]",
+     "Color [A=255, R=254, G=157, B=185]",
+     "Color [A=255, R=253, G=206, B=220]",
+     "Color [A=255, R=248, G=247, B=252]",
+     "Color [A=255, R=211, G=205, B=243]",
+     "Color [A=255, R=171, G=159, B=232]",
+     "Color [A=255, R=134, G=116, B=222]",
+     "Color [A=255, R=94, G=70, B=211]",
+     "Color [A=255, R=66, G=38, B=204]",
+     "Color [A=255, R=66, G=38, B=204]"
+    ],
+    "sign": "negative = compression (Karamba convention)",
+    "actual_extremes_MPa_my_section_check": {
+     "compression": 14.4,
+     "in": "rib_bottom",
+     "tension": -11.8,
+     "t_in": "rib_bottom"
+    }
+   },
+   "10x10 LONG": {
+    "load_case": "LONG",
+    "mode": "ColoredCrossSectionStress",
+    "legend_source": "Karamba BeamView 'Axial Stress'; ModelView result range set to absolute -4 / +4 MPa; values beyond take the end colours (full red = compression, full blue = tension)",
+    "legend_unit": "stress[kN/cm²]",
+    "legend_min_kN_cm2": -0.4,
+    "legend_max_kN_cm2": 0.4,
+    "legend_min_MPa": -4.0,
+    "legend_max_MPa": 4.0,
+    "legend_tags": [
+     "stress[kN/cm²]",
+     "-4.00e-01",
+     "-3.20e-01",
+     "-2.40e-01",
+     "-1.60e-01",
+     "-8.00e-02",
+     " 0.00e+00",
+     " 8.00e-02",
+     " 1.60e-01",
+     " 2.40e-01",
+     " 3.20e-01",
+     " 4.00e-01",
+     ""
+    ],
+    "legend_colours": [
+     "Color [A=255, R=254, G=0, B=73]",
+     "Color [A=255, R=254, G=0, B=73]",
+     "Color [A=255, R=254, G=53, B=111]",
+     "Color [A=255, R=254, G=103, B=146]",
+     "Color [A=255, R=254, G=157, B=185]",
+     "Color [A=255, R=253, G=206, B=220]",
+     "Color [A=255, R=248, G=247, B=252]",
+     "Color [A=255, R=211, G=205, B=243]",
+     "Color [A=255, R=171, G=159, B=232]",
+     "Color [A=255, R=134, G=116, B=222]",
+     "Color [A=255, R=94, G=70, B=211]",
+     "Color [A=255, R=66, G=38, B=204]",
+     "Color [A=255, R=66, G=38, B=204]"
+    ],
+    "sign": "negative = compression (Karamba convention)",
+    "actual_extremes_MPa_my_section_check": {
+     "compression": 6.4,
+     "in": "rib_bottom",
+     "tension": -4.9,
+     "t_in": "rib_bottom"
+    }
+   },
+   "10x10 SHORT": {
+    "load_case": "W+Y",
+    "mode": "ColoredCrossSectionStress",
+    "legend_source": "Karamba BeamView 'Axial Stress'; ModelView result range set to absolute -7 / +7 MPa; values beyond take the end colours (full red = compression, full blue = tension)",
+    "legend_unit": "stress[kN/cm²]",
+    "legend_min_kN_cm2": -0.7,
+    "legend_max_kN_cm2": 0.7,
+    "legend_min_MPa": -7.0,
+    "legend_max_MPa": 7.0,
+    "legend_tags": [
+     "stress[kN/cm²]",
+     "-7.00e-01",
+     "-5.60e-01",
+     "-4.20e-01",
+     "-2.80e-01",
+     "-1.40e-01",
+     " 0.00e+00",
+     " 1.40e-01",
+     " 2.80e-01",
+     " 4.20e-01",
+     " 5.60e-01",
+     " 7.00e-01",
+     ""
+    ],
+    "legend_colours": [
+     "Color [A=255, R=254, G=0, B=73]",
+     "Color [A=255, R=254, G=0, B=73]",
+     "Color [A=255, R=254, G=53, B=111]",
+     "Color [A=255, R=254, G=103, B=146]",
+     "Color [A=255, R=254, G=157, B=185]",
+     "Color [A=255, R=253, G=206, B=220]",
+     "Color [A=255, R=248, G=247, B=252]",
+     "Color [A=255, R=211, G=205, B=243]",
+     "Color [A=255, R=171, G=159, B=232]",
+     "Color [A=255, R=134, G=116, B=222]",
+     "Color [A=255, R=94, G=70, B=211]",
+     "Color [A=255, R=66, G=38, B=204]",
+     "Color [A=255, R=66, G=38, B=204]"
+    ],
+    "sign": "negative = compression (Karamba convention)",
+    "actual_extremes_MPa_my_section_check": {
+     "compression": 10.8,
+     "in": "rib_bottom",
+     "tension": -8.7,
+     "t_in": "rib_bottom"
+    }
+   }
+  },
+  "edges": "frame-only images: facet edges in their face colour darkened 25 %; formwork images: no edge pass (the ghost would turn grey).",
+  "displacement_scale": "0 (undeformed geometry)",
+  "model": "D2 (forces of each case from its own compression-only solve)",
+  "formwork": "karamba-model-<roof>-<case>.png: the cast frame (ribs, rings, crown, columns) coloured by Karamba axial stress as before, plus the printed formwork - every course (box 450 x 500, real section) and end wall from Karamba's BeamView of the same case - drawn as a pale grey ghost, about 82 % transparent, not stress-coloured, just to show it is there. In the typhoon case the end walls that lift off are not in the reduced model, so they are simply absent. Baked in the Karamba Rhino to the visible sublayer 'karamba render <roof> <case>::printed formwork' (toggle it). The previous images without the formwork are kept as karamba-model-<roof>-<case>-frame-only.png."
+ },
+ "casing_note": "Design model D2. Every printed piece is printed around its rib tube and the cast core runs through it, so the casing hangs on the ribs. The bed joints between courses are mortar and only push: the piece end walls that cross them are compression-only (Karamba removes any that would pull, case by case). The head joints along a course are taken as open (courses E x 0.02). About a third of the weight reaches the base ring through the casing; under typhoon some end walls lift off (up to 63 of 576 on the 15x10, 12 of 240 on the 10x10) and the ribs carry their load around them.",
+ "worst_cases": {
+  "15x10": {
+   "rib_long": {
+    "util_pct": 76,
+    "member": "rib_bottom",
+    "case": "LIVEY",
+    "stress_MPa": 9.1
+   },
+   "rib_short": {
+    "util_pct": 60,
+    "member": "rib_bottom",
+    "case": "W-Y",
+    "stress_MPa": 14.4
+   }
+  },
+  "10x10": {
+   "rib_long": {
+    "util_pct": 60,
+    "member": "rib_bottom",
+    "case": "LIVEX",
+    "stress_MPa": 7.2
+   },
+   "rib_short": {
+    "util_pct": 45,
+    "member": "rib_bottom",
+    "case": "W+Y",
+    "stress_MPa": 10.8
+   }
+  }
+ }
+}

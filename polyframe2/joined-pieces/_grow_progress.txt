@@ -1,0 +1,42 @@
+strict grow
+01:34:45 15x10 growth per course (m): [0.0, 0.058, 0.058, 0.089, 0.058, 0.068, 0.063, 0.063, 0.064, 0.063, 0.064, 0.127, 0.095, 0.095, 0.095, 0.095, 0.096, 0.096, 0.097]
+01:34:49 15x10 20 {'grown': 20, 'no growth': 1} added 0.47 m3
+01:34:52 15x10 40 {'grown': 40, 'no growth': 1} added 0.94 m3
+01:34:54 15x10 60 {'grown': 60, 'no growth': 1} added 1.37 m3
+01:34:56 15x10 80 {'grown': 80, 'no growth': 1} added 1.82 m3
+01:35:07 saved
+01:35:10 15x10 100 {'grown': 100, 'no growth': 22} added 2.27 m3
+01:35:13 15x10 120 {'grown': 120, 'no growth': 25} added 2.74 m3
+01:35:16 15x10 140 {'grown': 140, 'no growth': 25} added 3.18 m3
+01:35:19 15x10 160 {'grown': 159, 'no growth': 25, 'band separate': 1} added 3.63 m3
+01:35:31 saved
+01:35:34 15x10 180 {'grown': 179, 'no growth': 25, 'band separate': 1} added 4.06 m3
+01:35:37 15x10 200 {'grown': 199, 'no growth': 25, 'band separate': 1} added 4.54 m3
+01:35:41 15x10 220 {'grown': 219, 'no growth': 25, 'band separate': 1} added 5.03 m3
+01:35:44 15x10 240 {'grown': 239, 'no growth': 25, 'band separate': 1} added 5.50 m3
+01:35:55 saved
+01:36:00 15x10 260 {'grown': 259, 'no growth': 25, 'band separate': 1} added 5.97 m3
+01:36:02 15x10 280 {'grown': 278, 'no growth': 25, 'band separate': 2} added 6.47 m3
+01:36:05 15x10 300 {'grown': 298, 'no growth': 25, 'band separate': 2} added 6.91 m3
+01:36:07 15x10 320 {'grown': 318, 'no growth': 25, 'band separate': 2} added 7.34 m3
+01:36:18 saved
+01:36:20 15x10 340 {'grown': 338, 'no growth': 25, 'band separate': 2} added 7.78 m3
+01:36:23 15x10 360 {'grown': 358, 'no growth': 29, 'band separate': 2} added 8.25 m3
+01:36:25 15x10 380 {'grown': 378, 'no growth': 29, 'band separate': 2} added 8.70 m3
+01:36:27 15x10 DONE {'grown': 393, 'no growth': 36, 'band separate': 2} added 9.04 m3
+01:36:36 saved after 15x10
+01:36:36 10x10 growth per course (m): [0.0, 0.079, 0.08, 0.116, 0.118, 0.098, 0.158, 0.128, 0.129, 0.131, 0.131]
+01:36:40 10x10 20 {'grown': 20} added 0.50 m3
+01:36:43 10x10 40 {'grown': 40, 'no growth': 3} added 0.98 m3
+01:36:45 10x10 60 {'grown': 60, 'no growth': 3} added 1.48 m3
+01:36:49 10x10 80 {'grown': 80, 'no growth': 17} added 1.95 m3
+01:36:58 saved
+01:37:02 10x10 100 {'grown': 100, 'no growth': 17} added 2.44 m3
+01:37:06 10x10 120 {'grown': 120, 'no growth': 17} added 2.97 m3
+01:37:10 10x10 140 {'grown': 139, 'no growth': 17, 'band separate': 1} added 3.51 m3
+01:37:13 10x10 160 {'grown': 156, 'no growth': 17, 'band separate': 4} added 4.05 m3
+01:37:23 saved
+01:37:26 10x10 180 {'grown': 176, 'no growth': 17, 'band separate': 4} added 4.52 m3
+01:37:26 10x10 DONE {'grown': 183, 'no growth': 29, 'band separate': 4} added 4.69 m3
+01:37:36 saved after 10x10
+01:37:36 GROW ALL DONE

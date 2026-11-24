@@ -1,0 +1,7 @@
+02:12:07 15x10 course 1: 0 slots []
+02:12:16 15x10 course 2: 0 slots []
+02:12:29 15x10 course 3: 0 slots []
+02:12:37 15x10 course 4: 0 slots []
+02:12:47 15x10 course 5: 0 slots []
+02:12:57 15x10 course 6: 0 slots []
+02:13:04 15x10 course 7: 0 slots []

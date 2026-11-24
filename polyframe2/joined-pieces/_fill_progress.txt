@@ -1,0 +1,54 @@
+15x10 00:20:47 {'filled': 2, 'fill-fail-union': 3}
+15x10 00:21:07 {'filled': 6, 'fill-fail-union': 4}
+15x10 00:21:44 {'filled': 7, 'fill-fail-union': 8}
+15x10 00:22:05 {'filled': 10, 'fill-fail-union': 10}
+15x10 00:22:19 {'filled': 13, 'fill-fail-union': 12}
+15x10 00:22:46 {'filled': 15, 'fill-fail-union': 14, 'fill-fail-core': 1}
+15x10 00:22:54 {'filled': 17, 'fill-fail-union': 15, 'fill-fail-core': 1, 'no-web': 2}
+15x10 00:23:21 {'filled': 19, 'fill-fail-union': 18, 'fill-fail-core': 1, 'no-web': 2}
+15x10 00:23:32 {'filled': 21, 'fill-fail-union': 19, 'fill-fail-core': 1, 'no-web': 4}
+15x10 00:23:36 {'filled': 23, 'fill-fail-union': 19, 'fill-fail-core': 1, 'no-web': 7}
+15x10 00:23:40 {'filled': 25, 'fill-fail-union': 19, 'fill-fail-core': 1, 'no-web': 10}
+15x10 00:24:02 {'filled': 25, 'fill-fail-union': 21, 'fill-fail-core': 2, 'no-web': 12}
+15x10 00:24:34 {'filled': 27, 'fill-fail-union': 24, 'fill-fail-core': 2, 'no-web': 12}
+15x10 00:24:53 {'filled': 30, 'fill-fail-union': 26, 'fill-fail-core': 2, 'no-web': 12}
+15x10 00:25:19 {'filled': 32, 'fill-fail-union': 29, 'fill-fail-core': 2, 'no-web': 12}
+15x10 00:26:01 {'filled': 32, 'fill-fail-union': 34, 'fill-fail-core': 2, 'no-web': 12}
+15x10 00:26:35 {'filled': 32, 'fill-fail-union': 39, 'fill-fail-core': 2, 'no-web': 12}
+15x10 00:27:03 {'filled': 34, 'fill-fail-union': 42, 'fill-fail-core': 2, 'no-web': 12}
+15x10 00:27:30 {'filled': 35, 'fill-fail-union': 45, 'fill-fail-core': 3, 'no-web': 12}
+15x10 00:28:14 {'filled': 35, 'fill-fail-union': 49, 'fill-fail-core': 4, 'no-web': 12}
+10x10 00:28:33 {'no-web': 5}
+10x10 00:28:36 {'no-web': 10}
+10x10 00:28:54 {'no-web': 11, 'fill-fail-union': 2, 'filled': 2}
+10x10 00:29:07 {'no-web': 11, 'fill-fail-union': 2, 'filled': 7}
+10x10 00:29:21 {'no-web': 11, 'fill-fail-union': 2, 'filled': 12}
+10x10 00:29:28 {'no-web': 14, 'fill-fail-union': 3, 'filled': 13}
+10x10 00:29:39 {'no-web': 14, 'fill-fail-union': 6, 'filled': 15}
+10x10 00:29:47 {'no-web': 15, 'fill-fail-union': 6, 'filled': 19}
+10x10 00:30:00 {'no-web': 15, 'fill-fail-union': 7, 'filled': 23}
+10x10 00:30:22 {'no-web': 15, 'fill-fail-union': 10, 'filled': 25}
+10x10 00:31:08 {'no-web': 15, 'fill-fail-union': 14, 'filled': 26}
+10x10 00:31:37 {'no-web': 15, 'fill-fail-union': 18, 'filled': 27}
+10x10 00:31:55 {'no-web': 15, 'fill-fail-union': 20, 'filled': 30}
+10x10 00:32:15 {'no-web': 15, 'fill-fail-union': 21, 'filled': 33, 'fill-fail-core': 1}
+10x10 00:32:22 {'no-web': 15, 'fill-fail-union': 22, 'filled': 37, 'fill-fail-core': 1}
+10x10 00:32:46 {'no-web': 15, 'fill-fail-union': 25, 'filled': 39, 'fill-fail-core': 1}
+10x10 00:33:19 {'no-web': 15, 'fill-fail-union': 26, 'filled': 43, 'fill-fail-core': 1}
+10x10 00:33:34 {'no-web': 15, 'fill-fail-union': 27, 'filled': 47, 'fill-fail-core': 1}
+10x10 00:33:53 {'no-web': 15, 'fill-fail-union': 29, 'filled': 50, 'fill-fail-core': 1}
+10x10 00:34:09 {'no-web': 15, 'fill-fail-union': 31, 'filled': 53, 'fill-fail-core': 1}
+10x10 00:34:19 {'no-web': 15, 'fill-fail-union': 32, 'filled': 57, 'fill-fail-core': 1}
+10x10 00:34:25 {'no-web': 16, 'fill-fail-union': 32, 'filled': 61, 'fill-fail-core': 1}
+10x10 00:34:54 {'no-web': 17, 'fill-fail-union': 34, 'filled': 63, 'fill-fail-core': 1}
+10x10 00:35:15 {'no-web': 17, 'fill-fail-union': 36, 'filled': 66, 'fill-fail-core': 1}
+10x10 00:35:42 {'no-web': 17, 'fill-fail-union': 38, 'filled': 69, 'fill-fail-core': 1}
+10x10 00:36:09 {'no-web': 17, 'fill-fail-union': 41, 'filled': 71, 'fill-fail-core': 1}
+10x10 00:36:50 {'no-web': 17, 'fill-fail-union': 45, 'filled': 72, 'fill-fail-core': 1}
+10x10 00:37:16 {'no-web': 17, 'fill-fail-union': 47, 'filled': 75, 'fill-fail-core': 1}
+10x10 00:37:47 {'no-web': 17, 'fill-fail-union': 52, 'filled': 75, 'fill-fail-core': 1}
+10x10 00:38:16 {'no-web': 17, 'fill-fail-union': 56, 'filled': 76, 'fill-fail-core': 1}
+10x10 00:38:43 {'no-web': 17, 'fill-fail-union': 58, 'filled': 79, 'fill-fail-core': 1}
+10x10 00:39:05 {'no-web': 17, 'fill-fail-union': 60, 'filled': 81, 'fill-fail-core': 2}
+10x10 00:39:27 {'no-web': 17, 'fill-fail-union': 62, 'filled': 84, 'fill-fail-core': 2}
+DONE 15x10 ({'filled': 39, 'fill-fail-union': 49, 'fill-fail-core': 4, 'no-web': 12}, 0.921, 0, 481) | 10x10 ({'no-web': 17, 'fill-fail-union': 64, 'filled': 85, 'fill-fail-core': 2}, 2.639, 0, 681) | saved

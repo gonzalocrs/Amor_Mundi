@@ -1,0 +1,290 @@
+{
+ "15x10": {
+  "rectangular strip footing": {
+   "count": 1,
+   "lift_m": 0.0,
+   "size_m": [
+    16.376,
+    11.27,
+    0.5
+   ],
+   "z_m": [
+    -0.8,
+    -0.3
+   ],
+   "volume_m3": 32.23,
+   "section": "1200 x 500 mm strip, base -0.80, top -0.30",
+   "outside_m": [
+    16.376,
+    11.27
+   ],
+   "corner_blocks_m": [
+    2.363,
+    2.033
+   ],
+   "check": "bearing 115 kPa short-term (400 assumed), tipping FS 1.67, sliding FS 2.09",
+   "weight_t": 77.4,
+   "weight_kN": 774
+  },
+  "columns": {
+   "count": 20,
+   "lift_m": 1.8,
+   "size_m": [
+    15.536,
+    10.43,
+    2.3
+   ],
+   "z_m": [
+    -0.3,
+    2.0
+   ],
+   "volume_m3": 5.96,
+   "section": "360 x 360 mm",
+   "check": "N 42 to 133 kN, utilisation 28 % (Fc 36)",
+   "weight_t": 14.3,
+   "weight_kN": 143
+  },
+  "base ring step": {
+   "count": 4,
+   "lift_m": 3.8,
+   "size_m": [
+    15.752,
+    10.54,
+    0.4
+   ],
+   "z_m": [
+    2.0,
+    2.4
+   ],
+   "volume_m3": 9.68,
+   "section": "cast ring 400 x 400 mm in a 3 cm printed U formwork",
+   "check": "tension 109 kN (typhoon), bending 24.5 kNm, bars 333 of 603 mm2 per face",
+   "weight_t": 23.2,
+   "weight_kN": 232
+  },
+  "rib net": {
+   "count": 1080,
+   "lift_m": 5.8,
+   "size_m": [
+    15.106,
+    10.106,
+    9.39
+   ],
+   "z_m": [
+    2.4,
+    11.79
+   ],
+   "volume_m3": 22.37,
+   "section": [
+    {
+     "band": "bottom",
+     "cast_core_mm": 220,
+     "printed_tube_mm": 280
+    },
+    {
+     "band": "middle",
+     "cast_core_mm": 160,
+     "printed_tube_mm": 220
+    },
+    {
+     "band": "top",
+     "cast_core_mm": 120,
+     "printed_tube_mm": 180
+    }
+   ],
+   "check": "worst bottom band 75 % long-term (Fc 36: 12 MPa long, 24 MPa short)",
+   "note": "volume = rib length x printed tube section (core inside); the model solids overlap at the node balls, so their raw sum (28.0 m3) double counts",
+   "weight_t": 53.7,
+   "weight_kN": 537,
+   "volume_m3_model_solids": 28.04,
+   "length_m": 499.1
+  },
+  "printed courses": {
+   "count": 819,
+   "lift_m": 17.19,
+   "size_m": [
+    15.14,
+    10.14,
+    9.5
+   ],
+   "z_m": [
+    2.4,
+    11.9
+   ],
+   "volume_m3": 39.97,
+   "section": "closed printed pieces, 3 cm walls, 3 cm lid, 6 x 4 cm groove for the course bar; each with its growth band",
+   "check": "carried by the ribs and rings; bonded bed joints (mortar pull-off test needed)",
+   "weight_t": 95.9,
+   "weight_kN": 959
+  },
+  "crown ring": {
+   "count": 11,
+   "lift_m": 19.19,
+   "size_m": [
+    3.985,
+    2.792,
+    0.463
+   ],
+   "z_m": [
+    11.437,
+    11.9
+   ],
+   "volume_m3": 1.54,
+   "section": "cast ring 250 x 250 mm in the printed top-course U formwork",
+   "check": "compression up to 14 kN, 17 % (Fc 36)",
+   "weight_t": 3.7,
+   "weight_kN": 37
+  },
+  "global": {
+   "weight_kN": 1664,
+   "max_displacement_mm": 14.882911122499072,
+   "buckling_factor": 48.5,
+   "concrete_total_t": 268.2,
+   "weight_note": "weights = model volume x 2.4 t/m3 (24 kN/m3), cast and printed concrete alike; rib net = tube solids incl. the cast core"
+  }
+ },
+ "10x10": {
+  "rectangular strip footing": {
+   "count": 1,
+   "lift_m": 0.0,
+   "size_m": [
+    10.99,
+    10.99,
+    0.5
+   ],
+   "z_m": [
+    -0.8,
+    -0.3
+   ],
+   "volume_m3": 18.79,
+   "section": "850 x 500 mm strip, base -0.80, top -0.30",
+   "outside_m": [
+    10.99,
+    10.99
+   ],
+   "corner_blocks_m": [
+    1.732,
+    1.732
+   ],
+   "check": "bearing 105 kPa short-term (400 assumed), tipping FS 1.66, sliding FS 3.03",
+   "weight_t": 45.1,
+   "weight_kN": 451
+  },
+  "columns": {
+   "count": 16,
+   "lift_m": 1.8,
+   "size_m": [
+    10.44,
+    10.44,
+    2.3
+   ],
+   "z_m": [
+    -0.3,
+    2.0
+   ],
+   "volume_m3": 3.31,
+   "section": "300 x 300 mm",
+   "check": "N 27 to 79 kN, utilisation 24 % (Fc 36)",
+   "weight_t": 7.9,
+   "weight_kN": 79
+  },
+  "base ring step": {
+   "count": 4,
+   "lift_m": 3.8,
+   "size_m": [
+    10.68,
+    10.68,
+    0.4
+   ],
+   "z_m": [
+    2.0,
+    2.4
+   ],
+   "volume_m3": 8.19,
+   "section": "cast ring 400 x 400 mm in a 3 cm printed U formwork",
+   "check": "tension 52 kN (typhoon), bending 11.4 kNm, bars 197 of 603 mm2 per face",
+   "weight_t": 19.7,
+   "weight_kN": 197
+  },
+  "rib net": {
+   "count": 604,
+   "lift_m": 5.8,
+   "size_m": [
+    10.022,
+    10.022,
+    5.282
+   ],
+   "z_m": [
+    2.4,
+    7.682
+   ],
+   "volume_m3": 9.97,
+   "section": [
+    {
+     "band": "bottom",
+     "cast_core_mm": 180,
+     "printed_tube_mm": 240
+    },
+    {
+     "band": "middle",
+     "cast_core_mm": 140,
+     "printed_tube_mm": 200
+    },
+    {
+     "band": "top",
+     "cast_core_mm": 120,
+     "printed_tube_mm": 180
+    }
+   ],
+   "check": "worst bottom band 57 % long-term (Fc 36: 12 MPa long, 24 MPa short)",
+   "note": "volume = rib length x printed tube section (core inside); the model solids overlap at the node balls, so their raw sum (12.0 m3) double counts",
+   "weight_t": 23.9,
+   "weight_kN": 239,
+   "volume_m3_model_solids": 12.02,
+   "length_m": 287.6
+  },
+  "printed courses": {
+   "count": 392,
+   "lift_m": 13.08,
+   "size_m": [
+    10.08,
+    10.08,
+    5.392
+   ],
+   "z_m": [
+    2.4,
+    7.792
+   ],
+   "volume_m3": 19.56,
+   "section": "closed printed pieces, 3 cm walls, 3 cm lid, 6 x 4 cm groove for the course bar; each with its growth band",
+   "check": "carried by the ribs and rings; bonded bed joints (mortar pull-off test needed)",
+   "weight_t": 46.9,
+   "weight_kN": 469
+  },
+  "crown ring": {
+   "count": 13,
+   "lift_m": 15.08,
+   "size_m": [
+    3.92,
+    3.92,
+    0.46
+   ],
+   "z_m": [
+    7.332,
+    7.792
+   ],
+   "volume_m3": 1.82,
+   "section": "cast ring 250 x 250 mm in the printed top-course U formwork",
+   "check": "compression up to 16 kN, 11 % (Fc 36)",
+   "weight_t": 4.4,
+   "weight_kN": 44
+  },
+  "global": {
+   "weight_kN": 831,
+   "max_displacement_mm": 4.978639817616645,
+   "buckling_factor": 101.2,
+   "concrete_total_t": 147.9,
+   "weight_note": "weights = model volume x 2.4 t/m3 (24 kN/m3), cast and printed concrete alike; rib net = tube solids incl. the cast core"
+  }
+ }
+}

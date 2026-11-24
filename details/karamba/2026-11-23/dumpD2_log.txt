@@ -1,0 +1,22 @@
+start
+15x10 LONG: removed 0
+15x10 W+Y: removed 52
+15x10 W-Y: removed 63
+15x10 W+X: removed 43
+15x10 W-X: removed 42
+15x10 W45: removed 48
+15x10 LIVEX: removed 0
+15x10 LIVEY: removed 0
+15x10 EQX: removed 0
+15x10 EQY: removed 6
+10x10 LONG: removed 0
+10x10 W+Y: removed 12
+10x10 W-Y: removed 12
+10x10 W+X: removed 12
+10x10 W-X: removed 12
+10x10 W45: removed 10
+10x10 LIVEX: removed 0
+10x10 LIVEY: removed 0
+10x10 EQX: removed 0
+10x10 EQY: removed 0
+DONE {'15x10': {'LONG': 0, 'W+Y': 52, 'W-Y': 63, 'W+X': 43, 'W-X': 42, 'W45': 48, 'LIVEX': 0, 'LIVEY': 0, 'EQX': 0, 'EQY': 6}, '10x10': {'LONG': 0, 'W+Y': 12, 'W-Y': 12, 'W+X': 12, 'W-X': 12, 'W45': 10, 'LIVEX': 0, 'LIVEY': 0, 'EQX': 0, 'EQY': 0}}

@@ -1,0 +1,13 @@
+02:17:34 15x10 50 {'no growth (course 0)': 36, 'hollow': 50}
+02:17:38 15x10 100 {'no growth (course 0)': 36, 'hollow': 100}
+02:17:43 15x10 150 {'no growth (course 0)': 36, 'hollow': 150}
+02:17:47 15x10 200 {'no growth (course 0)': 36, 'hollow': 200}
+02:17:51 15x10 250 {'no growth (course 0)': 36, 'hollow': 250}
+02:17:56 15x10 300 {'no growth (course 0)': 36, 'hollow': 300}
+02:18:00 15x10 350 {'no growth (course 0)': 36, 'hollow': 350}
+02:18:03 15x10 DONE {'no growth (course 0)': 36, 'hollow': 395}
+02:18:07 10x10 50 {'no growth (course 0)': 29, 'hollow': 50}
+02:18:11 10x10 100 {'no growth (course 0)': 29, 'hollow': 100}
+02:18:16 10x10 150 {'no growth (course 0)': 29, 'hollow': 150}
+02:18:19 10x10 DONE {'no growth (course 0)': 29, 'hollow': 187}
+02:18:31 ALL DONE saved

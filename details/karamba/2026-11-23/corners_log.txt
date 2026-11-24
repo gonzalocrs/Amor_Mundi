@@ -1,0 +1,13 @@
+17:57:49 15x10 case 0: removed [], supports 20, column lines 40, 10s
+17:57:58 15x10 case 1: removed ['SW'], supports 19, column lines 38, 9s
+17:58:06 15x10 case 2adj: removed ['SW', 'SE'], supports 18, column lines 36, 9s
+17:58:15 15x10 case 2diag: removed ['SW', 'NE'], supports 18, column lines 36, 9s
+17:58:24 15x10 case 3: removed ['SW', 'SE', 'NE'], supports 17, column lines 34, 9s
+17:58:34 15x10 case 4: removed ['SW', 'SE', 'NE', 'NW'], supports 16, column lines 32, 10s
+17:58:41 10x10 case 0: removed [], supports 16, column lines 32, 7s
+17:58:47 10x10 case 1: removed ['SW'], supports 15, column lines 30, 6s
+17:58:53 10x10 case 2adj: removed ['SW', 'SE'], supports 14, column lines 28, 6s
+17:58:59 10x10 case 2diag: removed ['SW', 'NE'], supports 14, column lines 28, 6s
+17:59:05 10x10 case 3: removed ['SW', 'SE', 'NE'], supports 13, column lines 26, 6s
+17:59:10 10x10 case 4: removed ['SW', 'SE', 'NE', 'NW'], supports 12, column lines 24, 5s
+17:59:10 ALL DONE

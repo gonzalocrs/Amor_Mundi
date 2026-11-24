@@ -1,0 +1,1 @@
+{"15x10": {"offset_m": 0.268, "col_dev_m": 0.033, "solids": 1, "solid": true, "valid": true, "volume_m3": 26.78, "feet_inside": "80/80", "min_edge_m": 0.25, "centreline_m": 44.64}, "10x10": {"offset_m": 0.286, "col_dev_m": 0.036, "solids": 1, "solid": true, "valid": true, "volume_m3": 15.16, "feet_inside": "64/64", "min_edge_m": 0.246, "centreline_m": 35.68}}

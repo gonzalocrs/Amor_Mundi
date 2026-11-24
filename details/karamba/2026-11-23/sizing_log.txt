@@ -1,0 +1,13 @@
+start
+15x10 it0 D={'rib_bottom': 22, 'rib_middle': 16, 'rib_top': 12} util={'rib_bottom': 1.64, 'rib_middle': 1.929, 'rib_top': 2.883} disp=86.3 buck=8.63 Rz=1664
+15x10 it1 D={'rib_bottom': 24, 'rib_middle': 18, 'rib_top': 14} util={'rib_bottom': 1.334, 'rib_middle': 1.608, 'rib_top': 2.043} disp=60.3 buck=12.61 Rz=1756
+15x10 it2 D={'rib_bottom': 26, 'rib_middle': 20, 'rib_top': 16} util={'rib_bottom': 1.098, 'rib_middle': 1.352, 'rib_top': 1.528} disp=44.6 buck=15.73 Rz=1856
+15x10 it3 D={'rib_bottom': 28, 'rib_middle': 22, 'rib_top': 18} util={'rib_bottom': 0.916, 'rib_middle': 1.151, 'rib_top': 1.261} disp=34.6 buck=19.43 Rz=1964
+15x10 it4 D={'rib_bottom': 28, 'rib_middle': 24, 'rib_top': 20} util={'rib_bottom': 0.885, 'rib_middle': 1.067, 'rib_top': 1.108} disp=29.2 buck=23.01 Rz=2023
+15x10 it5 D={'rib_bottom': 28, 'rib_middle': 26, 'rib_top': 22} util={'rib_bottom': 0.856, 'rib_middle': 0.995, 'rib_top': 0.983} disp=25.1 buck=27.05 Rz=2086
+15x10 done 36s
+10x10 it0 D={'rib_bottom': 18, 'rib_middle': 14, 'rib_top': 12} util={'rib_bottom': 1.404, 'rib_middle': 1.104, 'rib_top': 1.567} disp=22.6 buck=23.24 Rz=831
+10x10 it1 D={'rib_bottom': 20, 'rib_middle': 16, 'rib_top': 14} util={'rib_bottom': 1.071, 'rib_middle': 0.844, 'rib_top': 1.027} disp=17.0 buck=31.81 Rz=878
+10x10 it2 D={'rib_bottom': 22, 'rib_middle': 16, 'rib_top': 16} util={'rib_bottom': 0.87, 'rib_middle': 0.818, 'rib_top': 0.729} disp=14.7 buck=38.63 Rz=916
+10x10 done 13s
+DONE

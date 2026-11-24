@@ -1,0 +1,106 @@
+02:33:54 10x10 ribs: plan 1374, axes 212, section 577
+02:33:57 10x10 section: cut 109, beyond 1906
+02:33:59 10x10 elevation: 3815
+02:34:05 15x10 ribs: plan 2310, axes 368, section 898
+02:34:10 15x10 section: cut 166, beyond 3361
+02:34:14 15x10 elevation: 7503
+02:34:23 axon iso: 23867
+02:34:31 axon worm: 12288
+02:34:31 ALL DONE
+02:39:59 axon worm: 10309
+02:41:50 axon worm: 10360
+02:49:44 15x10 section: cut 154, beyond 4016
+02:49:48 10x10 section: cut 84, beyond 2032
+02:52:34 15x10 top 15409 bottom 6985
+02:52:39 10x10 top 8285 bottom 3664
+02:55:04 axon worm: 12285
+03:10:56 axon worm: 10377
+03:34:14 axon worm: 10490
+03:34:22 15x10 top 15329 bottom 7066
+03:34:27 10x10 top 8332 bottom 3777
+03:35:44 axon worm: 10690
+03:35:53 15x10 top 15380 bottom 7276
+03:35:58 10x10 top 8319 bottom 3913
+11:51:36 10x10 ribs: plan 1397, axes 212, section 483
+11:51:39 10x10 section: cut 84, beyond 1354
+11:51:43 15x10 ribs: plan 2312, axes 368, section 693
+11:51:49 15x10 section: cut 154, beyond 2447
+11:52:04 axon iso: 27418
+11:52:13 axon worm: 8699
+12:09:27 axon iso: 27205
+12:09:39 axon worm: 8660
+12:09:56 15x10 top 22597 bottom 6016
+12:10:06 10x10 top 11634 bottom 3166
+12:15:02 axon worm v3: 7913 + ribs 2249
+12:15:09 15x10 bottom v3: 5170 + ribs 2080
+12:15:14 10x10 bottom v3: 2639 + ribs 1282
+12:18:19 axon iso: 27056
+12:31:39 axon iso: 26601
+12:35:12 axon iso: 26208
+12:35:21 axon worm v3: 7750 + ribs 2252
+12:35:36 15x10 top 21751 bottom 5880
+12:35:43 15x10 bottom v3: 5048 + ribs 2119
+12:35:49 10x10 top 11413 bottom 3085
+12:35:53 10x10 bottom v3: 2578 + ribs 1297
+13:03:15 axon iso: 26242
+16:57:14 15x10 linework patched: plan cut 20, below 16, elev 47, sect cut 4, beyond 41
+16:57:14 10x10 linework patched: plan cut 16, below 16, elev 37, sect cut 4, beyond 31
+16:57:23 axon iso: 26365
+16:57:32 axon worm v3: 7738 + ribs 2299
+16:57:39 15x10 bottom v3: 4976 + ribs 2113
+16:57:43 10x10 bottom v3: 2502 + ribs 1299
+16:57:43 pads refresh done
+16:58:15 15x10 elevation: 5469
+16:58:15 15x10 elevation re-cut from current.3dm and written to linework
+16:58:17 10x10 elevation: 2603
+16:58:17 10x10 elevation re-cut from current.3dm and written to linework
+17:43:22 15x10 linework patched: plan cut 20, below 2, elev 47, sect cut 4, beyond 41
+17:43:22 10x10 linework patched: plan cut 16, below 2, elev 37, sect cut 4, beyond 31
+17:43:38 axon iso: 26202
+17:43:50 axon worm v3: 7736 + ribs 2281
+17:43:59 15x10 bottom v3: 5003 + ribs 2100
+17:44:04 10x10 bottom v3: 2510 + ribs 1282
+17:44:04 pads refresh done
+18:00:11 15x10 linework patched: plan cut 20, below 2, elev 47, sect cut 4, beyond 41
+18:00:12 10x10 linework patched: plan cut 16, below 2, elev 37, sect cut 4, beyond 31
+18:00:23 axon iso: 26209
+18:00:33 axon worm v3: 7806 + ribs 2293
+18:00:40 15x10 bottom v3: 5019 + ribs 2075
+18:00:45 10x10 bottom v3: 2500 + ribs 1315
+18:00:45 pads refresh done
+18:30:31 15x10 section: cut 154, beyond 2346
+18:30:31 15x10 section re-cut whole from current.3dm (off 0.1)
+18:30:35 10x10 section: cut 84, beyond 1368
+18:30:35 10x10 section re-cut whole from current.3dm (off 0.1)
+18:32:07 15x10 section: cut 154, beyond 2402
+18:32:07 15x10 section re-cut v2 (ring edges kept)
+18:32:10 10x10 section: cut 84, beyond 1332
+18:32:11 10x10 section re-cut v2 (ring edges kept)
+18:55:01 exploded 15x10: 18840 lines; {'footing': 1, 'columns': 20, 'base ring': 4, 'ribs': 1080, 'crown ring': 2, 'printed courses': 828}
+18:56:42 exploded 15x10: 19320 lines, anchors ['base ring step', 'crown ring', 'printed courses', 'rib net']
+18:56:50 exploded 10x10: 10991 lines, anchors ['base ring step', 'crown ring', 'printed courses', 'rib net']
+19:07:50 exploded bricks 15x10: 26452 lines, 19 courses, height 35.9 m
+19:09:16 exploded bricks 15x10: 36875 lines, 19 courses, 2596 tube parts, height 49.5 m
+19:12:01 exploded bricks 15x10: 36863 lines, 19 courses, 2596 tube parts, height 49.5 m
+19:12:36 exploded bricks 15x10: 35986 lines, 19 courses, 2596 tube parts, 2012 rebar lines, height 49.5 m
+19:18:20 exploded formwork 15x10: 14393 lines, 19 courses, 1286 tube parts, height 33.5 m
+19:19:23 exploded formwork 15x10: 15387 lines, 19 courses, 1286 tube parts, height 36.3 m
+ERR formwork Traceback (most recent call last): |   File "file:///C:/Users/gonza/AppData/Local/Temp/rhino_mcp_a0531d1bca0b4045908b9f32733fda4a.py", line 33, in job | AttributeError: module 'rf2_' has no attribute 'log' | 
+19:25:15 exploded formwork 15x10: 21489 lines, 19 courses, 1286 tube parts, height 47.1 m
+formwork arctic done
+19:25:52 exploded formwork 15x10: 21721 lines, 19 courses, 1286 tube parts, height 48.7 m
+formwork v2 arctic done
+19:27:07 exploded formwork 15x10: 21742 lines, 19 courses, 1298 tube parts, height 48.7 m
+formwork v2b arctic done
+19:28:15 exploded formwork 15x10: 21516 lines, 18 courses, 1262 tube parts, height 47.5 m
+formwork v2c arctic done
+19:35:40 exploded formwork 15x10: 41432 lines, 18 courses, 2516 tube parts, height 47.5 m
+formwork v3 arctic done
+19:37:19 exploded formwork 15x10: 42159 lines, 18 courses, 2516 tube parts, height 47.5 m
+formwork v3f arctic done
+19:44:06 exploded formwork 10x10: 20423 lines, 10 courses, 1384 tube parts, height 29.7 m
+formwork v4 arctic done
+19:45:02 exploded formwork 10x10: 20415 lines, 10 courses, 1384 tube parts, height 31.7 m
+formwork v4b arctic done
+19:54:09 exploded formwork 15x10: 39170 lines, 18 courses, 2516 tube parts, height 49.5 m
+formwork 15x10 rings done

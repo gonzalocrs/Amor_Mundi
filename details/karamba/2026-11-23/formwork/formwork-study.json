@@ -1,0 +1,631 @@
+{
+ "method": "Karamba 3.1, 2 m canvases, all 10 cases; only course/fin E and G changed. Allowables Fc36: 12 MPa long, 24 MPa short. Rib/ring/column stress = -N/A + M/W from Karamba end forces (my section check, not Karamba utilisation).",
+ "results": {
+  "15x10 A": {
+   "variant": "ribs only: courses and fins E x 0.0001 (pure weight)",
+   "E_kN_cm2": {
+    "course": 0.33,
+    "fin": 0.33
+   },
+   "rib_long": {
+    "util": 2.883,
+    "group": "rib_top",
+    "case": "LIVEY",
+    "stress_MPa": 34.59
+   },
+   "rib_short": {
+    "util": 2.58,
+    "group": "rib_top",
+    "case": "W-Y",
+    "stress_MPa": 61.93
+   },
+   "ring_N_kN": [
+    -50.0,
+    92.6
+   ],
+   "ring_M_kNm": 28.9,
+   "crown_N_kN": [
+    -48.7,
+    13.5
+   ],
+   "crown_M_kNm": 43.1,
+   "column_N_kN": [
+    -181.6,
+    -3.4
+   ],
+   "column_M_kNm": 58.6,
+   "ring_util": {
+    "util": 0.14,
+    "group": "ring",
+    "case": "W45",
+    "stress_MPa": 3.37
+   },
+   "column_util_long": {
+    "util": 0.435,
+    "group": "column",
+    "case": "LIVEX",
+    "stress_MPa": 5.21
+   },
+   "column_util_short": {
+    "util": 0.423,
+    "group": "column",
+    "case": "W45",
+    "stress_MPa": 10.15
+   },
+   "max_deflection_mm": 86.3,
+   "deflection_case": "W-Y",
+   "max_deflection_ThII_mm": 88.5,
+   "buckling_factor_1": 8.63,
+   "vertical_reaction_LONG_kN": 1664.1,
+   "fails": [
+    "rib_long 288%",
+    "rib_short 258%"
+   ]
+  },
+  "15x10 B": {
+   "variant": "current: courses E x 0.02, fins E x 0.3",
+   "E_kN_cm2": {
+    "course": 66.0,
+    "fin": 990.0
+   },
+   "rib_long": {
+    "util": 0.753,
+    "group": "rib_bottom",
+    "case": "LIVEY",
+    "stress_MPa": 9.03
+   },
+   "rib_short": {
+    "util": 0.581,
+    "group": "rib_bottom",
+    "case": "W-Y",
+    "stress_MPa": 13.95
+   },
+   "ring_N_kN": [
+    23.6,
+    109.4
+   ],
+   "ring_M_kNm": 24.6,
+   "crown_N_kN": [
+    -14.0,
+    6.8
+   ],
+   "crown_M_kNm": 7.6,
+   "column_N_kN": [
+    -133.2,
+    -41.8
+   ],
+   "column_M_kNm": 34.4,
+   "ring_util": {
+    "util": 0.1,
+    "group": "ring",
+    "case": "W+Y",
+    "stress_MPa": 2.39
+   },
+   "column_util_long": {
+    "util": 0.233,
+    "group": "column",
+    "case": "LIVEY",
+    "stress_MPa": 2.79
+   },
+   "column_util_short": {
+    "util": 0.279,
+    "group": "column",
+    "case": "W45",
+    "stress_MPa": 6.7
+   },
+   "max_deflection_mm": 14.9,
+   "deflection_case": "W+Y",
+   "max_deflection_ThII_mm": 15.1,
+   "buckling_factor_1": 48.47,
+   "vertical_reaction_LONG_kN": 1664.2,
+   "courses": {
+    "max_compression_MPa": 0.79,
+    "at": {
+     "case": "W45",
+     "element": 1959,
+     "node_xyz": [
+      81.2679,
+      -2.2287,
+      7.559
+     ]
+    },
+    "max_tension_MPa": 0.41,
+    "at_t": {
+     "case": "W+Y",
+     "element": 1969,
+     "node_xyz": [
+      85.3616,
+      -2.7976,
+      7.559
+     ]
+    },
+    "A_m2": 0.0565
+   },
+   "fins": {
+    "max_compression_MPa": 5.72,
+    "at": {
+     "case": "W+Y",
+     "element": 2591,
+     "node_xyz": [
+      82.7145,
+      -4.7884,
+      2.4
+     ]
+    },
+    "max_tension_MPa": 4.83,
+    "at_t": {
+     "case": "W+Y",
+     "element": 2592,
+     "node_xyz": [
+      87.2855,
+      -4.7884,
+      2.4
+     ]
+    },
+    "A_m2": 0.018
+   },
+   "base_share_LONG": {
+    "ribs": 811.3,
+    "courses_fins": 296.6,
+    "courses_fins_share": 0.268
+   },
+   "bed_joints": {
+    "tension_MPa": 4.83,
+    "tension_case": "W+Y",
+    "shear_MPa": 0.21,
+    "shear_case": "W+Y",
+    "vs_mortar_bond_0.6MPa": 8.04,
+    "vs_layer_tension_2MPa": 2.41
+   },
+   "fails": []
+  },
+  "15x10 C": {
+   "variant": "formwork structural: courses and fins E = 25 GPa, bonded to the ribs",
+   "E_kN_cm2": {
+    "course": 2500.0,
+    "fin": 2500.0
+   },
+   "rib_long": {
+    "util": 0.364,
+    "group": "rib_bottom",
+    "case": "LIVEY",
+    "stress_MPa": 4.36
+   },
+   "rib_short": {
+    "util": 0.218,
+    "group": "rib_bottom",
+    "case": "W45",
+    "stress_MPa": 5.24
+   },
+   "ring_N_kN": [
+    27.6,
+    87.5
+   ],
+   "ring_M_kNm": 22.2,
+   "crown_N_kN": [
+    -4.0,
+    0.2
+   ],
+   "crown_M_kNm": 0.8,
+   "column_N_kN": [
+    -133.7,
+    -41.9
+   ],
+   "column_M_kNm": 28.3,
+   "ring_util": {
+    "util": 0.076,
+    "group": "ring",
+    "case": "W-Y",
+    "stress_MPa": 1.82
+   },
+   "column_util_long": {
+    "util": 0.185,
+    "group": "column",
+    "case": "LIVEY",
+    "stress_MPa": 2.23
+   },
+   "column_util_short": {
+    "util": 0.23,
+    "group": "column",
+    "case": "W45",
+    "stress_MPa": 5.52
+   },
+   "max_deflection_mm": 1.9,
+   "deflection_case": "W+Y",
+   "max_deflection_ThII_mm": 1.9,
+   "buckling_factor_1": 417.33,
+   "vertical_reaction_LONG_kN": 1664.2,
+   "courses": {
+    "max_compression_MPa": 1.46,
+    "at": {
+     "case": "W45",
+     "element": 1574,
+     "node_xyz": [
+      85.9791,
+      -3.7962,
+      5.071
+     ]
+    },
+    "max_tension_MPa": 1.14,
+    "at_t": {
+     "case": "W45",
+     "element": 1211,
+     "node_xyz": [
+      91.1484,
+      3.6631,
+      2.976
+     ]
+    },
+    "A_m2": 0.0565
+   },
+   "fins": {
+    "max_compression_MPa": 4.88,
+    "at": {
+     "case": "EQY",
+     "element": 2575,
+     "node_xyz": [
+      87.2855,
+      4.7884,
+      2.4
+     ]
+    },
+    "max_tension_MPa": 2.75,
+    "at_t": {
+     "case": "EQY",
+     "element": 2575,
+     "node_xyz": [
+      87.2855,
+      4.7884,
+      2.4
+     ]
+    },
+    "A_m2": 0.018
+   },
+   "base_share_LONG": {
+    "ribs": 760.2,
+    "courses_fins": 439.7,
+    "courses_fins_share": 0.366
+   },
+   "bed_joints": {
+    "tension_MPa": 2.75,
+    "tension_case": "EQY",
+    "shear_MPa": 0.29,
+    "shear_case": "W+Y",
+    "vs_mortar_bond_0.6MPa": 4.58,
+    "vs_layer_tension_2MPa": 1.37
+   },
+   "fails": [
+    "bed joints 2.8 MPa > 0.6 MPa bond"
+   ]
+  },
+  "10x10 A": {
+   "variant": "ribs only: courses and fins E x 0.0001 (pure weight)",
+   "E_kN_cm2": {
+    "course": 0.33,
+    "fin": 0.33
+   },
+   "rib_long": {
+    "util": 1.567,
+    "group": "rib_top",
+    "case": "LIVEX",
+    "stress_MPa": 18.81
+   },
+   "rib_short": {
+    "util": 1.263,
+    "group": "rib_top",
+    "case": "W45",
+    "stress_MPa": 30.32
+   },
+   "ring_N_kN": [
+    -7.9,
+    43.5
+   ],
+   "ring_M_kNm": 15.4,
+   "crown_N_kN": [
+    -40.3,
+    3.4
+   ],
+   "crown_M_kNm": 25.1,
+   "column_N_kN": [
+    -74.5,
+    -19.9
+   ],
+   "column_M_kNm": 24.3,
+   "ring_util": {
+    "util": 0.084,
+    "group": "ring",
+    "case": "W45",
+    "stress_MPa": 2.0
+   },
+   "column_util_long": {
+    "util": 0.343,
+    "group": "column",
+    "case": "LIVEX",
+    "stress_MPa": 4.11
+   },
+   "column_util_short": {
+    "util": 0.339,
+    "group": "column",
+    "case": "W45",
+    "stress_MPa": 8.15
+   },
+   "max_deflection_mm": 22.6,
+   "deflection_case": "W45",
+   "max_deflection_ThII_mm": 22.9,
+   "buckling_factor_1": 23.24,
+   "vertical_reaction_LONG_kN": 830.9,
+   "fails": [
+    "rib_long 157%",
+    "rib_short 126%"
+   ]
+  },
+  "10x10 B": {
+   "variant": "current: courses E x 0.02, fins E x 0.3",
+   "E_kN_cm2": {
+    "course": 66.0,
+    "fin": 990.0
+   },
+   "rib_long": {
+    "util": 0.567,
+    "group": "rib_bottom",
+    "case": "LIVEX",
+    "stress_MPa": 6.81
+   },
+   "rib_short": {
+    "util": 0.418,
+    "group": "rib_bottom",
+    "case": "W45",
+    "stress_MPa": 10.02
+   },
+   "ring_N_kN": [
+    28.0,
+    52.5
+   ],
+   "ring_M_kNm": 12.0,
+   "crown_N_kN": [
+    -15.7,
+    3.1
+   ],
+   "crown_M_kNm": 4.9,
+   "column_N_kN": [
+    -78.8,
+    -26.7
+   ],
+   "column_M_kNm": 16.8,
+   "ring_util": {
+    "util": 0.05,
+    "group": "ring",
+    "case": "W+Y",
+    "stress_MPa": 1.19
+   },
+   "column_util_long": {
+    "util": 0.176,
+    "group": "column",
+    "case": "LIVEX",
+    "stress_MPa": 2.11
+   },
+   "column_util_short": {
+    "util": 0.244,
+    "group": "column",
+    "case": "W45",
+    "stress_MPa": 5.85
+   },
+   "max_deflection_mm": 5.0,
+   "deflection_case": "W+X",
+   "max_deflection_ThII_mm": 5.0,
+   "buckling_factor_1": 101.17,
+   "vertical_reaction_LONG_kN": 830.9,
+   "courses": {
+    "max_compression_MPa": 0.55,
+    "at": {
+     "case": "W45",
+     "element": 1091,
+     "node_xyz": [
+      82.5951,
+      -22.1066,
+      5.9139
+     ]
+    },
+    "max_tension_MPa": 0.2,
+    "at_t": {
+     "case": "W+Y",
+     "element": 971,
+     "node_xyz": [
+      84.9959,
+      -23.2999,
+      4.9502
+     ]
+    },
+    "A_m2": 0.0565
+   },
+   "fins": {
+    "max_compression_MPa": 3.87,
+    "at": {
+     "case": "W45",
+     "element": 1383,
+     "node_xyz": [
+      80.2206,
+      -18.2658,
+      2.4
+     ]
+    },
+    "max_tension_MPa": 2.91,
+    "at_t": {
+     "case": "W45",
+     "element": 1383,
+     "node_xyz": [
+      80.2206,
+      -18.2658,
+      2.4
+     ]
+    },
+    "A_m2": 0.018
+   },
+   "base_share_LONG": {
+    "ribs": 382.1,
+    "courses_fins": 161.4,
+    "courses_fins_share": 0.297
+   },
+   "bed_joints": {
+    "tension_MPa": 2.91,
+    "tension_case": "W45",
+    "shear_MPa": 0.22,
+    "shear_case": "W+Y",
+    "vs_mortar_bond_0.6MPa": 4.85,
+    "vs_layer_tension_2MPa": 1.46
+   },
+   "fails": []
+  },
+  "10x10 C": {
+   "variant": "formwork structural: courses and fins E = 25 GPa, bonded to the ribs",
+   "E_kN_cm2": {
+    "course": 2500.0,
+    "fin": 2500.0
+   },
+   "rib_long": {
+    "util": 0.307,
+    "group": "rib_bottom",
+    "case": "LIVEX",
+    "stress_MPa": 3.69
+   },
+   "rib_short": {
+    "util": 0.186,
+    "group": "rib_bottom",
+    "case": "W45",
+    "stress_MPa": 4.46
+   },
+   "ring_N_kN": [
+    20.8,
+    55.2
+   ],
+   "ring_M_kNm": 11.6,
+   "crown_N_kN": [
+    -4.4,
+    -0.7
+   ],
+   "crown_M_kNm": 0.6,
+   "column_N_kN": [
+    -76.3,
+    -25.3
+   ],
+   "column_M_kNm": 14.3,
+   "ring_util": {
+    "util": 0.04,
+    "group": "ring",
+    "case": "W+Y",
+    "stress_MPa": 0.97
+   },
+   "column_util_long": {
+    "util": 0.119,
+    "group": "column",
+    "case": "LIVEX",
+    "stress_MPa": 1.43
+   },
+   "column_util_short": {
+    "util": 0.215,
+    "group": "column",
+    "case": "W45",
+    "stress_MPa": 5.17
+   },
+   "max_deflection_mm": 1.0,
+   "deflection_case": "W-X",
+   "max_deflection_ThII_mm": 1.0,
+   "buckling_factor_1": 470.85,
+   "vertical_reaction_LONG_kN": 831.0,
+   "courses": {
+    "max_compression_MPa": 0.85,
+    "at": {
+     "case": "W+Y",
+     "element": 835,
+     "node_xyz": [
+      85.0,
+      -23.8994,
+      3.9676
+     ]
+    },
+    "max_tension_MPa": 0.86,
+    "at_t": {
+     "case": "W45",
+     "element": 698,
+     "node_xyz": [
+      89.0082,
+      -16.489,
+      2.95
+     ]
+    },
+    "A_m2": 0.0565
+   },
+   "fins": {
+    "max_compression_MPa": 3.92,
+    "at": {
+     "case": "EQX",
+     "element": 1372,
+     "node_xyz": [
+      89.7794,
+      -18.2658,
+      2.4
+     ]
+    },
+    "max_tension_MPa": 2.53,
+    "at_t": {
+     "case": "EQX",
+     "element": 1372,
+     "node_xyz": [
+      89.7794,
+      -18.2658,
+      2.4
+     ]
+    },
+    "A_m2": 0.018
+   },
+   "base_share_LONG": {
+    "ribs": 351.4,
+    "courses_fins": 219.4,
+    "courses_fins_share": 0.384
+   },
+   "bed_joints": {
+    "tension_MPa": 2.53,
+    "tension_case": "EQX",
+    "shear_MPa": 0.24,
+    "shear_case": "W45",
+    "vs_mortar_bond_0.6MPa": 4.22,
+    "vs_layer_tension_2MPa": 1.27
+   },
+   "fails": [
+    "bed joints 2.5 MPa > 0.6 MPa bond"
+   ]
+  }
+ },
+ "images": {
+  "files": "formwork-<roof>-<A|B|C>.png",
+  "what": "cast members coloured by my check: worst fibre compression / 24 MPa in the worst short-term case (white 0, yellow 50 %, red 100 %, dark red > 100 %); printed courses and fins as thin grey lines",
+  "why_not_karamba_ratio": "Karamba's Stress/Strength Ratio divides by plain-concrete strengths (ft 2.9 MPa cores, 0.5 MPa printed), so reinforced ribs in tension read 500-2000 % and the image is blank white; it is not a design check",
+  "per_image": {
+   "15x10 A": {
+    "case": "W-Y",
+    "max_util_short": 2.58
+   },
+   "15x10 B": {
+    "case": "W-Y",
+    "max_util_short": 0.581
+   },
+   "15x10 C": {
+    "case": "W45",
+    "max_util_short": 0.218
+   },
+   "10x10 A": {
+    "case": "W45",
+    "max_util_short": 1.263
+   },
+   "10x10 B": {
+    "case": "W45",
+    "max_util_short": 0.418
+   },
+   "10x10 C": {
+    "case": "W45",
+    "max_util_short": 0.186
+   }
+  }
+ },
+ "printed_concrete_E_C": "25 GPa (2500 kN/cm2), G = E/2.4"
+}

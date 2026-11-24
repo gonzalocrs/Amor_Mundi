@@ -1,0 +1,353 @@
+{
+ "method": "Variant D: variant C (printed courses and fins E = 25 GPa, tied to the ribs at the tube) with the fins - the members that cross the bed joints - as pin-ended trusses (Karamba Create Linear Element, Bending = False) and compression-only through Karamba 3.1 'Tension/Compression Eliminator' (6.Algorithms, Compr = True, BeamIds = fin, MaxIter 20), run separately for each of the 10 load cases. In B/C the bed-joint tension came from fin bending, their axial force was compression; making them trusses removes that bending. Head joints along a course cannot be isolated in this model, so the hoops are bracketed: D1 courses full E, D2 courses E x 0.02. Allowables Fc36 12 / 24 MPa. Interface shear = force from the printed pieces along the rib axis per metre of rib, over the core perimeter; compared with 0.5 MPa (smooth printed tube) and 1.0 MPa (keyed / rough tube).",
+ "results": {
+  "15x10 D1": {
+   "rib_long": {
+    "util": 0.387,
+    "band": "rib_bottom",
+    "case": "LIVEY"
+   },
+   "rib_short": {
+    "util": 0.23,
+    "band": "rib_bottom",
+    "case": "W45"
+   },
+   "max_deflection_mm": 2.0,
+   "deflection_case": "W+Y",
+   "buckling_factor_1_LONG_model": 371.73,
+   "vertical_reaction_LONG_kN": 1664.1,
+   "base_share_LONG": {
+    "ribs": 890.5,
+    "courses_fins": 443.5,
+    "courses_fins_share": 0.332
+   },
+   "fins_total": 576,
+   "fins_dropped_in_tension": {
+    "LONG": 0,
+    "LIVEX": 0,
+    "LIVEY": 0,
+    "W+Y": 0,
+    "W-Y": 0,
+    "W+X": 2,
+    "W-X": 2,
+    "W45": 0,
+    "EQX": 0,
+    "EQY": 0
+   },
+   "max_axial_N_in_remaining_fins_kN": {
+    "LONG": -0.761,
+    "LIVEX": -0.761,
+    "LIVEY": -0.815,
+    "W+Y": -0.042,
+    "W-Y": -0.324,
+    "W+X": -0.007,
+    "W-X": -0.008,
+    "W45": -0.174,
+    "EQX": -0.669,
+    "EQY": -0.641
+   },
+   "fins_max_compression": {
+    "MPa": 1.31,
+    "case": "W45"
+   },
+   "courses_max_compression": {
+    "MPa": 1.53,
+    "case": "W45"
+   },
+   "courses_max_tension_along_hoop": {
+    "MPa": 1.23,
+    "case": "W45"
+   },
+   "tube_core_interface": {
+    "rib_bottom": {
+     "tau_long_MPa": 0.031,
+     "tau_total_MPa": 0.056,
+     "kN_per_m_along": 21.31,
+     "case": "W45",
+     "node": 90,
+     "util_smooth_0.5MPa": 0.06,
+     "util_keyed_1.0MPa": 0.03
+    },
+    "rib_middle": {
+     "tau_long_MPa": 0.029,
+     "tau_total_MPa": 0.032,
+     "kN_per_m_along": 14.37,
+     "case": "W45",
+     "node": 666,
+     "util_smooth_0.5MPa": 0.06,
+     "util_keyed_1.0MPa": 0.03
+    },
+    "rib_top": {
+     "tau_long_MPa": 0.043,
+     "tau_total_MPa": 0.047,
+     "kN_per_m_along": 16.36,
+     "case": "W45",
+     "node": 874,
+     "util_smooth_0.5MPa": 0.09,
+     "util_keyed_1.0MPa": 0.04
+    }
+   }
+  },
+  "15x10 D2": {
+   "rib_long": {
+    "util": 0.761,
+    "band": "rib_bottom",
+    "case": "LIVEY"
+   },
+   "rib_short": {
+    "util": 0.601,
+    "band": "rib_bottom",
+    "case": "W-Y"
+   },
+   "max_deflection_mm": 15.6,
+   "deflection_case": "W+Y",
+   "buckling_factor_1_LONG_model": 43.33,
+   "vertical_reaction_LONG_kN": 1664.1,
+   "base_share_LONG": {
+    "ribs": 889.2,
+    "courses_fins": 444.8,
+    "courses_fins_share": 0.333
+   },
+   "fins_total": 576,
+   "fins_dropped_in_tension": {
+    "LONG": 0,
+    "LIVEX": 0,
+    "LIVEY": 0,
+    "W+Y": 52,
+    "W-Y": 63,
+    "W+X": 43,
+    "W-X": 42,
+    "W45": 48,
+    "EQX": 0,
+    "EQY": 6
+   },
+   "max_axial_N_in_remaining_fins_kN": {
+    "LONG": -0.126,
+    "LIVEX": -0.094,
+    "LIVEY": -0.095,
+    "W+Y": -0.062,
+    "W-Y": -0.013,
+    "W+X": -0.001,
+    "W-X": -0.001,
+    "W45": -0.014,
+    "EQX": -0.038,
+    "EQY": -0.006
+   },
+   "fins_max_compression": {
+    "MPa": 1.55,
+    "case": "W45"
+   },
+   "courses_max_compression": {
+    "MPa": 0.82,
+    "case": "W45"
+   },
+   "courses_max_tension_along_hoop": {
+    "MPa": 0.43,
+    "case": "W-Y"
+   },
+   "tube_core_interface": {
+    "rib_bottom": {
+     "tau_long_MPa": 0.013,
+     "tau_total_MPa": 0.039,
+     "kN_per_m_along": 9.33,
+     "case": "W45",
+     "node": 436,
+     "util_smooth_0.5MPa": 0.03,
+     "util_keyed_1.0MPa": 0.01
+    },
+    "rib_middle": {
+     "tau_long_MPa": 0.032,
+     "tau_total_MPa": 0.033,
+     "kN_per_m_along": 16.21,
+     "case": "W45",
+     "node": 666,
+     "util_smooth_0.5MPa": 0.06,
+     "util_keyed_1.0MPa": 0.03
+    },
+    "rib_top": {
+     "tau_long_MPa": 0.049,
+     "tau_total_MPa": 0.058,
+     "kN_per_m_along": 18.43,
+     "case": "W45",
+     "node": 874,
+     "util_smooth_0.5MPa": 0.1,
+     "util_keyed_1.0MPa": 0.05
+    }
+   }
+  },
+  "10x10 D1": {
+   "rib_long": {
+    "util": 0.36,
+    "band": "rib_bottom",
+    "case": "LIVEX"
+   },
+   "rib_short": {
+    "util": 0.209,
+    "band": "rib_bottom",
+    "case": "W45"
+   },
+   "max_deflection_mm": 1.0,
+   "deflection_case": "W-X",
+   "buckling_factor_1_LONG_model": 448.96,
+   "vertical_reaction_LONG_kN": 830.9,
+   "base_share_LONG": {
+    "ribs": 411.7,
+    "courses_fins": 224.8,
+    "courses_fins_share": 0.353
+   },
+   "fins_total": 240,
+   "fins_dropped_in_tension": {
+    "LONG": 0,
+    "LIVEX": 0,
+    "LIVEY": 0,
+    "W+Y": 0,
+    "W-Y": 0,
+    "W+X": 0,
+    "W-X": 0,
+    "W45": 0,
+    "EQX": 0,
+    "EQY": 0
+   },
+   "max_axial_N_in_remaining_fins_kN": {
+    "LONG": -1.056,
+    "LIVEX": -1.055,
+    "LIVEY": -1.055,
+    "W+Y": -0.444,
+    "W-Y": -0.444,
+    "W+X": -0.444,
+    "W-X": -0.444,
+    "W45": -0.628,
+    "EQX": -0.916,
+    "EQY": -0.916
+   },
+   "fins_max_compression": {
+    "MPa": 1.03,
+    "case": "W45"
+   },
+   "courses_max_compression": {
+    "MPa": 0.88,
+    "case": "W+Y"
+   },
+   "courses_max_tension_along_hoop": {
+    "MPa": 0.95,
+    "case": "W45"
+   },
+   "tube_core_interface": {
+    "rib_bottom": {
+     "tau_long_MPa": 0.016,
+     "tau_total_MPa": 0.036,
+     "kN_per_m_along": 9.12,
+     "case": "LIVEY",
+     "node": 118,
+     "util_smooth_0.5MPa": 0.03,
+     "util_keyed_1.0MPa": 0.02
+    },
+    "rib_middle": {
+     "tau_long_MPa": 0.023,
+     "tau_total_MPa": 0.052,
+     "kN_per_m_along": 9.93,
+     "case": "W+Y",
+     "node": 330,
+     "util_smooth_0.5MPa": 0.05,
+     "util_keyed_1.0MPa": 0.02
+    },
+    "rib_top": {
+     "tau_long_MPa": 0.034,
+     "tau_total_MPa": 0.034,
+     "kN_per_m_along": 12.66,
+     "case": "W45",
+     "node": 529,
+     "util_smooth_0.5MPa": 0.07,
+     "util_keyed_1.0MPa": 0.03
+    }
+   }
+  },
+  "10x10 D2": {
+   "rib_long": {
+    "util": 0.602,
+    "band": "rib_bottom",
+    "case": "LIVEX"
+   },
+   "rib_short": {
+    "util": 0.451,
+    "band": "rib_bottom",
+    "case": "W+Y"
+   },
+   "max_deflection_mm": 5.3,
+   "deflection_case": "W-X",
+   "buckling_factor_1_LONG_model": 85.48,
+   "vertical_reaction_LONG_kN": 830.9,
+   "base_share_LONG": {
+    "ribs": 407.4,
+    "courses_fins": 229.1,
+    "courses_fins_share": 0.36
+   },
+   "fins_total": 240,
+   "fins_dropped_in_tension": {
+    "LONG": 0,
+    "LIVEX": 0,
+    "LIVEY": 0,
+    "W+Y": 12,
+    "W-Y": 12,
+    "W+X": 12,
+    "W-X": 12,
+    "W45": 10,
+    "EQX": 0,
+    "EQY": 0
+   },
+   "max_axial_N_in_remaining_fins_kN": {
+    "LONG": -0.554,
+    "LIVEX": -0.554,
+    "LIVEY": -0.554,
+    "W+Y": -0.001,
+    "W-Y": -0.001,
+    "W+X": -0.001,
+    "W-X": -0.001,
+    "W45": -0.091,
+    "EQX": -0.185,
+    "EQY": -0.185
+   },
+   "fins_max_compression": {
+    "MPa": 0.95,
+    "case": "W+Y"
+   },
+   "courses_max_compression": {
+    "MPa": 0.58,
+    "case": "W45"
+   },
+   "courses_max_tension_along_hoop": {
+    "MPa": 0.21,
+    "case": "W+Y"
+   },
+   "tube_core_interface": {
+    "rib_bottom": {
+     "tau_long_MPa": 0.013,
+     "tau_total_MPa": 0.022,
+     "kN_per_m_along": 7.47,
+     "case": "W45",
+     "node": 238,
+     "util_smooth_0.5MPa": 0.03,
+     "util_keyed_1.0MPa": 0.01
+    },
+    "rib_middle": {
+     "tau_long_MPa": 0.015,
+     "tau_total_MPa": 0.037,
+     "kN_per_m_along": 6.64,
+     "case": "W45",
+     "node": 380,
+     "util_smooth_0.5MPa": 0.03,
+     "util_keyed_1.0MPa": 0.02
+    },
+    "rib_top": {
+     "tau_long_MPa": 0.031,
+     "tau_total_MPa": 0.031,
+     "kN_per_m_along": 11.61,
+     "case": "W45",
+     "node": 529,
+     "util_smooth_0.5MPa": 0.06,
+     "util_keyed_1.0MPa": 0.03
+    }
+   }
+  }
+ }
+}

@@ -1,0 +1,8 @@
+start
+15x10 A done in 10s, worst short W-Y
+15x10 B done in 9s, worst short W-Y
+15x10 C done in 9s, worst short W45
+10x10 A done in 7s, worst short W45
+10x10 B done in 6s, worst short W45
+10x10 C done in 6s, worst short W45
+DONE {'15x10 A': ('W-Y', -309.2, 2071.5), '15x10 B': ('W-Y', -69.5, 962.5), '15x10 C': ('W45', -29.8, 512.8), '10x10 A': ('W45', -151.2, 1147.0), '10x10 B': ('W45', -49.9, 582.8), '10x10 C': ('W45', -25.9, 479.0)}

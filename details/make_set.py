@@ -12,6 +12,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import pyramid_drawings as pd
 import roof_grid as rg
 import roof_slice as rs
+import stepped_sheets as ss
 
 SHEETS = [   # (number, file name, builder, scale note)
     ("01", "floor-plan", lambda: pd.plan(), ""),
@@ -69,14 +70,16 @@ def new_set_dir(root, label=""):
     name = "{:02d}_{}".format(max(vs, default=0) + 1, datetime.date.today().isoformat()) + ("_" + slug if slug else "")
     return os.path.join(root, name)
 
-def main(dxf_only=False, label=""):
+STEPPED_SHEETS = ss.sheets()   # stepped roofs v3e (0.5 m courses, joined printed pieces): plan, elevation, section A-A per roof
+
+def main(dxf_only=False, label="", sheets_list=None):
     import cad_export
     here = os.path.dirname(os.path.abspath(__file__))
     out = new_set_dir(os.path.join(here, "set"), label); cad = os.path.join(out, "cad")
     os.makedirs(cad)
     print("new drawing set:", out)
     pdfs, sheets = [], []
-    for no, name, build, note in SHEETS:
+    for no, name, build, note in (sheets_list or SHEETS):
         sh = build()
         sh.sheet_no, sh.scale_note = no, note
         base = os.path.join(out, "{}-{}".format(no, name))
@@ -86,9 +89,10 @@ def main(dxf_only=False, label=""):
             print("wrote", base + ".pdf")
         cad_export.export_dxf(sh, os.path.join(cad, "{}-{}".format(no, name)))
         sheets.append(("{} {}".format(no, name), sh))
-    cad_export.export_set(sheets, os.path.join(cad, "pyramid-roof-drawing-set.dxf"))
+    setname = "stepped-roofs-drawing-set" if sheets_list is STEPPED_SHEETS else "pyramid-roof-drawing-set"
+    cad_export.export_set(sheets, os.path.join(cad, setname + ".dxf"))
     if pdfs:
-        merged = os.path.join(out, "pyramid-roof-drawing-set.pdf")
+        merged = os.path.join(out, setname + ".pdf")
         try:
             subprocess.run(["pdfunite"] + pdfs + [merged], check=True)
         except Exception:
@@ -99,4 +103,7 @@ def main(dxf_only=False, label=""):
         print("wrote", merged)
 
 if __name__ == "__main__":
-    main(label=" ".join(sys.argv[1:]))
+    if len(sys.argv) > 1 and sys.argv[1] == "--stepped":      # python details/make_set.py --stepped "label"
+        main(label=" ".join(sys.argv[2:]), sheets_list=STEPPED_SHEETS)
+    else:
+        main(label=" ".join(sys.argv[1:]))

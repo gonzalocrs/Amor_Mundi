@@ -1,0 +1,11 @@
+start
+15x10 try {'rib_bottom': 26, 'rib_middle': 26, 'rib_top': 22} ok=False util={'rib_bottom': 0.984, 'rib_middle': 1.043, 'rib_top': 1.022}
+15x10 try {'rib_bottom': 28, 'rib_middle': 24, 'rib_top': 22} ok=False util={'rib_bottom': 0.873, 'rib_middle': 1.023, 'rib_top': 1.002}
+15x10 try {'rib_bottom': 28, 'rib_middle': 26, 'rib_top': 20} ok=False util={'rib_bottom': 0.868, 'rib_middle': 1.043, 'rib_top': 1.094}
+15x10 FINAL {'rib_bottom': 28, 'rib_middle': 26, 'rib_top': 22} {'rib_bottom': (0.856, 'LIVEX', 1.08, 9.2), 'rib_middle': (0.995, 'LIVEY', 0.87, 11.06), 'rib_top': (0.983, 'LIVEX', -0.52, 12.32)} disp 25.1 buck 27.05 Rz 2086
+10x10 try {'rib_bottom': 20, 'rib_middle': 16, 'rib_top': 16} ok=False util={'rib_bottom': 1.042, 'rib_middle': 0.89, 'rib_top': 0.759}
+10x10 try {'rib_bottom': 22, 'rib_middle': 14, 'rib_top': 16} ok=False util={'rib_bottom': 0.897, 'rib_middle': 1.01, 'rib_top': 0.737}
+10x10 try {'rib_bottom': 22, 'rib_middle': 16, 'rib_top': 14} ok=True util={'rib_bottom': 0.893, 'rib_middle': 0.766, 'rib_top': 0.989}
+10x10 try {'rib_bottom': 22, 'rib_middle': 16, 'rib_top': 12} ok=False util={'rib_bottom': 0.938, 'rib_middle': 0.845, 'rib_top': 1.374}
+10x10 FINAL {'rib_bottom': 22, 'rib_middle': 16, 'rib_top': 14} {'rib_bottom': (0.893, 'LIVEX', 0.71, 10.01), 'rib_middle': (0.766, 'LIVEX', 0.73, 8.46), 'rib_top': (0.989, 'LIVEX', 0.92, 10.94)} disp 15.7 buck 34.32 Rz 901
+DONE

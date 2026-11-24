@@ -1,0 +1,26 @@
+{
+ "15x10 A": {
+  "case": "W-Y",
+  "max_util_short": 2.58
+ },
+ "15x10 B": {
+  "case": "W-Y",
+  "max_util_short": 0.581
+ },
+ "15x10 C": {
+  "case": "W45",
+  "max_util_short": 0.218
+ },
+ "10x10 A": {
+  "case": "W45",
+  "max_util_short": 1.263
+ },
+ "10x10 B": {
+  "case": "W45",
+  "max_util_short": 0.418
+ },
+ "10x10 C": {
+  "case": "W45",
+  "max_util_short": 0.186
+ }
+}

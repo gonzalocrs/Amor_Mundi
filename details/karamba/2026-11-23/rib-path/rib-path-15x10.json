@@ -1,0 +1,3901 @@
+{
+ "roof": "15x10",
+ "model": "Karamba 2 m canvas, design model D2 (pieces tied to the ribs, bed joints compression-only, head joints open), forces-15x10.json",
+ "path_rule": "start = most utilised bottom-band rib bar (LONG/12 or W-Y/24); down to the base ring and up to the crown ring, at each Y-joint keeping the straightest branch",
+ "start_bar": 10,
+ "start_bar_utilisation": 0.679,
+ "local_axes": "x along the bar (first -> second Karamba node); z in the vertical plane through the bar, up = OUT-OF-PLANE / room-normal side of the roof; y = z x x, horizontal, in the roof surface. My = out-of-plane bending, Mz = in-plane bending.",
+ "sign": "N + tension; forces delivered to a node = +S at a bar's first node, -S at its second node (S = N x + Vy y + Vz z)",
+ "equilibrium_check": {
+  "max_horizontal_residual_kN_LONG": 2.242,
+  "note": "sum of all bar end forces at each free path node under LONG; gravity point loads are vertical, so the horizontal part should be ~0"
+ },
+ "ring_node": {
+  "node": 15,
+  "xyz": [
+   85.0,
+   4.8,
+   2.4
+  ],
+  "support_from_ring_columns_arches_kN": {
+   "LONG": [
+    0.0,
+    -13.76,
+    70.0
+   ],
+   "W-Y": [
+    0.0,
+    -9.72,
+    93.11
+   ]
+  }
+ },
+ "crown_node": {
+  "node": 943,
+  "xyz": [
+   85.2733,
+   0.9957,
+   11.9
+  ],
+  "force_from_crown_ring_kN": {
+   "LONG": [
+    0.63,
+    1.57,
+    -0.63
+   ],
+   "W-Y": [
+    -0.14,
+    5.21,
+    -4.34
+   ]
+  }
+ },
+ "nodes": [
+  {
+   "index": 0,
+   "node": 15,
+   "xyz": [
+    85.0,
+    4.8,
+    2.4
+   ],
+   "s_m": 0.0,
+   "band": "bottom",
+   "core_D_mm": 220,
+   "y_joint": false,
+   "ribs_meeting": 2,
+   "on_base_ring": true,
+   "on_crown_ring": false,
+   "delivered": {
+    "LONG": {
+     "branch_rib": {
+      "F_kN": [
+       19.26,
+       6.88,
+       -35.0
+      ],
+      "M_kNm": [
+       6.91,
+       -4.42,
+       0.5
+      ],
+      "bars": [
+       11
+      ]
+     },
+     "ring": {
+      "F_kN": [
+       0.0,
+       -2.41,
+       -7.58
+      ],
+      "M_kNm": [
+       -0.17,
+       0.0,
+       0.0
+      ],
+      "bars": [
+       2548,
+       2549
+      ]
+     },
+     "column": {
+      "F_kN": [
+       0.0,
+       -11.35,
+       77.58
+      ],
+      "M_kNm": [
+       -13.65,
+       0.0,
+       0.0
+      ],
+      "bars": [
+       3173
+      ]
+     }
+    },
+    "W-Y": {
+     "branch_rib": {
+      "F_kN": [
+       25.94,
+       4.86,
+       -46.56
+      ],
+      "M_kNm": [
+       13.95,
+       -5.92,
+       2.19
+      ],
+      "bars": [
+       11
+      ]
+     },
+     "ring": {
+      "F_kN": [
+       0.0,
+       -4.5,
+       -9.96
+      ],
+      "M_kNm": [
+       -3.55,
+       0.0,
+       0.0
+      ],
+      "bars": [
+       2548,
+       2549
+      ]
+     },
+     "column": {
+      "F_kN": [
+       0.0,
+       -5.22,
+       103.07
+      ],
+      "M_kNm": [
+       -24.36,
+       0.0,
+       0.0
+      ],
+      "bars": [
+       3173
+      ]
+     }
+    }
+   }
+  },
+  {
+   "index": 1,
+   "node": 16,
+   "xyz": [
+    85.514,
+    4.6279,
+    2.8974
+   ],
+   "s_m": 0.736,
+   "band": "bottom",
+   "core_D_mm": 220,
+   "y_joint": true,
+   "ribs_meeting": 3,
+   "on_base_ring": false,
+   "on_crown_ring": false,
+   "delivered": {
+    "LONG": {
+     "branch_rib": {
+      "F_kN": [
+       -4.23,
+       1.84,
+       -11.48
+      ],
+      "M_kNm": [
+       2.2,
+       -2.17,
+       -0.16
+      ],
+      "bars": [
+       100
+      ]
+     }
+    },
+    "W-Y": {
+     "branch_rib": {
+      "F_kN": [
+       -5.22,
+       0.72,
+       -13.72
+      ],
+      "M_kNm": [
+       4.12,
+       -2.71,
+       0.28
+      ],
+      "bars": [
+       100
+      ]
+     }
+    }
+   }
+  },
+  {
+   "index": 2,
+   "node": 108,
+   "xyz": [
+    85.5471,
+    4.5985,
+    2.976
+   ],
+   "s_m": 0.826,
+   "band": "bottom",
+   "core_D_mm": 220,
+   "y_joint": false,
+   "ribs_meeting": 2,
+   "on_base_ring": false,
+   "on_crown_ring": false,
+   "delivered": {
+    "LONG": {
+     "course": {
+      "F_kN": [
+       -3.41,
+       0.65,
+       -0.32
+      ],
+      "M_kNm": [
+       -0.1,
+       -0.09,
+       -0.08
+      ],
+      "bars": [
+       1225,
+       1226
+      ]
+     }
+    },
+    "W-Y": {
+     "course": {
+      "F_kN": [
+       -4.82,
+       0.82,
+       -0.72
+      ],
+      "M_kNm": [
+       -0.34,
+       -0.25,
+       -0.05
+      ],
+      "bars": [
+       1225,
+       1226
+      ]
+     }
+    }
+   }
+  },
+  {
+   "index": 3,
+   "node": 109,
+   "xyz": [
+    85.7739,
+    4.3966,
+    3.515
+   ],
+   "s_m": 1.445,
+   "band": "bottom",
+   "core_D_mm": 220,
+   "y_joint": false,
+   "ribs_meeting": 2,
+   "on_base_ring": false,
+   "on_crown_ring": false,
+   "delivered": {
+    "LONG": {
+     "course": {
+      "F_kN": [
+       -2.54,
+       0.69,
+       -0.13
+      ],
+      "M_kNm": [
+       -0.13,
+       -0.22,
+       0.27
+      ],
+      "bars": [
+       1337,
+       1338
+      ]
+     }
+    },
+    "W-Y": {
+     "course": {
+      "F_kN": [
+       -3.23,
+       0.69,
+       -0.15
+      ],
+      "M_kNm": [
+       -0.38,
+       -0.41,
+       0.42
+      ],
+      "bars": [
+       1337,
+       1338
+      ]
+     }
+    }
+   }
+  },
+  {
+   "index": 4,
+   "node": 107,
+   "xyz": [
+    85.9431,
+    4.2459,
+    3.9172
+   ],
+   "s_m": 1.906,
+   "band": "bottom",
+   "core_D_mm": 220,
+   "y_joint": true,
+   "ribs_meeting": 3,
+   "on_base_ring": false,
+   "on_crown_ring": false,
+   "delivered": {
+    "LONG": {
+     "branch_rib": {
+      "F_kN": [
+       -9.04,
+       -4.41,
+       13.66
+      ],
+      "M_kNm": [
+       -0.88,
+       0.52,
+       0.2
+      ],
+      "bars": [
+       96
+      ]
+     }
+    },
+    "W-Y": {
+     "branch_rib": {
+      "F_kN": [
+       -9.69,
+       -2.94,
+       11.87
+      ],
+      "M_kNm": [
+       -1.7,
+       1.19,
+       0.61
+      ],
+      "bars": [
+       96
+      ]
+     }
+    }
+   }
+  },
+  {
+   "index": 5,
+   "node": 296,
+   "xyz": [
+    85.9433,
+    4.1974,
+    4.042
+   ],
+   "s_m": 2.04,
+   "band": "bottom",
+   "core_D_mm": 220,
+   "y_joint": false,
+   "ribs_meeting": 2,
+   "on_base_ring": false,
+   "on_crown_ring": false,
+   "delivered": {
+    "LONG": {
+     "course": {
+      "F_kN": [
+       -0.04,
+       1.45,
+       0.47
+      ],
+      "M_kNm": [
+       -0.13,
+       -0.08,
+       -0.03
+      ],
+      "bars": [
+       1434,
+       1435
+      ]
+     }
+    },
+    "W-Y": {
+     "course": {
+      "F_kN": [
+       -1.41,
+       1.34,
+       1.51
+      ],
+      "M_kNm": [
+       -0.34,
+       -0.3,
+       0.12
+      ],
+      "bars": [
+       1434,
+       1435
+      ]
+     }
+    }
+   }
+  },
+  {
+   "index": 6,
+   "node": 297,
+   "xyz": [
+    85.9442,
+    3.9963,
+    4.559
+   ],
+   "s_m": 2.595,
+   "band": "bottom",
+   "core_D_mm": 220,
+   "y_joint": false,
+   "ribs_meeting": 2,
+   "on_base_ring": false,
+   "on_crown_ring": false,
+   "delivered": {
+    "LONG": {
+     "course": {
+      "F_kN": [
+       -0.07,
+       1.36,
+       0.49
+      ],
+      "M_kNm": [
+       -0.14,
+       -0.03,
+       -0.03
+      ],
+      "bars": [
+       1526,
+       1527
+      ]
+     }
+    },
+    "W-Y": {
+     "course": {
+      "F_kN": [
+       -0.9,
+       1.23,
+       1.65
+      ],
+      "M_kNm": [
+       -0.33,
+       -0.21,
+       0.22
+      ],
+      "bars": [
+       1526,
+       1527
+      ]
+     }
+    }
+   }
+  },
+  {
+   "index": 7,
+   "node": 298,
+   "xyz": [
+    85.9449,
+    3.8295,
+    4.9879
+   ],
+   "s_m": 3.055,
+   "band": "bottom",
+   "core_D_mm": 220,
+   "y_joint": true,
+   "ribs_meeting": 3,
+   "on_base_ring": false,
+   "on_crown_ring": false,
+   "delivered": {
+    "LONG": {
+     "branch_rib": {
+      "F_kN": [
+       7.41,
+       3.85,
+       -12.89
+      ],
+      "M_kNm": [
+       -0.2,
+       0.19,
+       0.07
+      ],
+      "bars": [
+       470
+      ]
+     }
+    },
+    "W-Y": {
+     "branch_rib": {
+      "F_kN": [
+       12.56,
+       3.66,
+       -14.94
+      ],
+      "M_kNm": [
+       -0.63,
+       0.86,
+       0.13
+      ],
+      "bars": [
+       470
+      ]
+     }
+    }
+   }
+  },
+  {
+   "index": 8,
+   "node": 425,
+   "xyz": [
+    85.9791,
+    3.7962,
+    5.071
+   ],
+   "s_m": 3.151,
+   "band": "middle",
+   "core_D_mm": 160,
+   "y_joint": false,
+   "ribs_meeting": 2,
+   "on_base_ring": false,
+   "on_crown_ring": false,
+   "delivered": {
+    "LONG": {
+     "course": {
+      "F_kN": [
+       -2.02,
+       0.44,
+       0.55
+      ],
+      "M_kNm": [
+       -0.07,
+       -0.28,
+       0.09
+      ],
+      "bars": [
+       1608,
+       1609
+      ]
+     }
+    },
+    "W-Y": {
+     "course": {
+      "F_kN": [
+       -5.52,
+       0.26,
+       1.58
+      ],
+      "M_kNm": [
+       -0.14,
+       -0.77,
+       0.28
+      ],
+      "bars": [
+       1608,
+       1609
+      ]
+     }
+    }
+   }
+  },
+  {
+   "index": 9,
+   "node": 489,
+   "xyz": [
+    86.1875,
+    3.5931,
+    5.577
+   ],
+   "s_m": 3.735,
+   "band": "middle",
+   "core_D_mm": 160,
+   "y_joint": false,
+   "ribs_meeting": 2,
+   "on_base_ring": false,
+   "on_crown_ring": false,
+   "delivered": {
+    "LONG": {
+     "course": {
+      "F_kN": [
+       -0.32,
+       0.7,
+       0.08
+      ],
+      "M_kNm": [
+       0.1,
+       -0.1,
+       0.33
+      ],
+      "bars": [
+       1688,
+       1689
+      ]
+     }
+    },
+    "W-Y": {
+     "course": {
+      "F_kN": [
+       -0.59,
+       0.81,
+       0.34
+      ],
+      "M_kNm": [
+       0.31,
+       -0.21,
+       0.75
+      ],
+      "bars": [
+       1688,
+       1689
+      ]
+     }
+    }
+   }
+  },
+  {
+   "index": 10,
+   "node": 490,
+   "xyz": [
+    86.393,
+    3.3929,
+    6.076
+   ],
+   "s_m": 4.31,
+   "band": "middle",
+   "core_D_mm": 160,
+   "y_joint": false,
+   "ribs_meeting": 2,
+   "on_base_ring": false,
+   "on_crown_ring": false,
+   "delivered": {
+    "LONG": {
+     "course": {
+      "F_kN": [
+       2.15,
+       0.94,
+       -0.39
+      ],
+      "M_kNm": [
+       0.04,
+       -0.18,
+       0.31
+      ],
+      "bars": [
+       1768,
+       1769
+      ]
+     }
+    },
+    "W-Y": {
+     "course": {
+      "F_kN": [
+       4.93,
+       1.3,
+       -1.03
+      ],
+      "M_kNm": [
+       0.15,
+       -0.36,
+       0.63
+      ],
+      "bars": [
+       1768,
+       1769
+      ]
+     }
+    }
+   }
+  },
+  {
+   "index": 11,
+   "node": 488,
+   "xyz": [
+    86.4079,
+    3.3784,
+    6.1121
+   ],
+   "s_m": 4.352,
+   "band": "middle",
+   "core_D_mm": 160,
+   "y_joint": true,
+   "ribs_meeting": 3,
+   "on_base_ring": false,
+   "on_crown_ring": false,
+   "delivered": {
+    "LONG": {
+     "branch_rib": {
+      "F_kN": [
+       -6.23,
+       -0.58,
+       3.07
+      ],
+      "M_kNm": [
+       0.48,
+       0.31,
+       0.16
+      ],
+      "bars": [
+       534
+      ]
+     }
+    },
+    "W-Y": {
+     "branch_rib": {
+      "F_kN": [
+       -10.38,
+       0.58,
+       2.5
+      ],
+      "M_kNm": [
+       1.12,
+       0.58,
+       0.34
+      ],
+      "bars": [
+       534
+      ]
+     }
+    }
+   }
+  },
+  {
+   "index": 12,
+   "node": 618,
+   "xyz": [
+    86.3976,
+    3.1907,
+    6.575
+   ],
+   "s_m": 4.851,
+   "band": "middle",
+   "core_D_mm": 160,
+   "y_joint": false,
+   "ribs_meeting": 2,
+   "on_base_ring": false,
+   "on_crown_ring": false,
+   "delivered": {
+    "LONG": {
+     "course": {
+      "F_kN": [
+       -0.44,
+       1.74,
+       0.44
+      ],
+      "M_kNm": [
+       0.03,
+       -0.29,
+       0.29
+      ],
+      "bars": [
+       1849,
+       1850
+      ]
+     }
+    },
+    "W-Y": {
+     "course": {
+      "F_kN": [
+       -0.24,
+       2.53,
+       0.44
+      ],
+      "M_kNm": [
+       0.01,
+       -0.57,
+       0.55
+      ],
+      "bars": [
+       1849,
+       1850
+      ]
+     }
+    }
+   }
+  },
+  {
+   "index": 13,
+   "node": 619,
+   "xyz": [
+    86.3867,
+    2.9903,
+    7.069
+   ],
+   "s_m": 5.385,
+   "band": "middle",
+   "core_D_mm": 160,
+   "y_joint": false,
+   "ribs_meeting": 2,
+   "on_base_ring": false,
+   "on_crown_ring": false,
+   "delivered": {
+    "LONG": {
+     "course": {
+      "F_kN": [
+       2.03,
+       2.89,
+       0.68
+      ],
+      "M_kNm": [
+       0.12,
+       -0.23,
+       0.34
+      ],
+      "bars": [
+       1929,
+       1930
+      ]
+     }
+    },
+    "W-Y": {
+     "course": {
+      "F_kN": [
+       4.25,
+       4.88,
+       0.85
+      ],
+      "M_kNm": [
+       0.17,
+       -0.5,
+       0.75
+      ],
+      "bars": [
+       1929,
+       1930
+      ]
+     }
+    }
+   }
+  },
+  {
+   "index": 14,
+   "node": 617,
+   "xyz": [
+    86.3817,
+    2.8996,
+    7.2926
+   ],
+   "s_m": 5.626,
+   "band": "middle",
+   "core_D_mm": 160,
+   "y_joint": true,
+   "ribs_meeting": 3,
+   "on_base_ring": false,
+   "on_crown_ring": false,
+   "delivered": {
+    "LONG": {
+     "branch_rib": {
+      "F_kN": [
+       -7.17,
+       -0.9,
+       5.06
+      ],
+      "M_kNm": [
+       0.48,
+       0.31,
+       0.52
+      ],
+      "bars": [
+       681
+      ]
+     }
+    },
+    "W-Y": {
+     "branch_rib": {
+      "F_kN": [
+       -13.35,
+       -1.81,
+       10.45
+      ],
+      "M_kNm": [
+       1.05,
+       0.38,
+       1.08
+      ],
+      "bars": [
+       681
+      ]
+     }
+    }
+   }
+  },
+  {
+   "index": 15,
+   "node": 730,
+   "xyz": [
+    86.2753,
+    2.7917,
+    7.559
+   ],
+   "s_m": 5.932,
+   "band": "middle",
+   "core_D_mm": 160,
+   "y_joint": false,
+   "ribs_meeting": 2,
+   "on_base_ring": false,
+   "on_crown_ring": false,
+   "delivered": {
+    "LONG": {
+     "course": {
+      "F_kN": [
+       0.77,
+       2.0,
+       1.13
+      ],
+      "M_kNm": [
+       -0.06,
+       -0.03,
+       -0.08
+      ],
+      "bars": [
+       1999,
+       2000
+      ]
+     }
+    },
+    "W-Y": {
+     "course": {
+      "F_kN": [
+       1.99,
+       3.02,
+       2.03
+      ],
+      "M_kNm": [
+       -0.25,
+       -0.06,
+       -0.24
+      ],
+      "bars": [
+       1999,
+       2000
+      ]
+     }
+    }
+   }
+  },
+  {
+   "index": 16,
+   "node": 731,
+   "xyz": [
+    86.0796,
+    2.5933,
+    8.049
+   ],
+   "s_m": 6.496,
+   "band": "top",
+   "core_D_mm": 120,
+   "y_joint": false,
+   "ribs_meeting": 2,
+   "on_base_ring": false,
+   "on_crown_ring": false,
+   "delivered": {
+    "LONG": {
+     "course": {
+      "F_kN": [
+       0.74,
+       1.15,
+       0.73
+      ],
+      "M_kNm": [
+       -0.04,
+       0.11,
+       -0.09
+      ],
+      "bars": [
+       2067,
+       2068
+      ]
+     }
+    },
+    "W-Y": {
+     "course": {
+      "F_kN": [
+       1.3,
+       1.67,
+       1.22
+      ],
+      "M_kNm": [
+       -0.19,
+       0.27,
+       -0.2
+      ],
+      "bars": [
+       2067,
+       2068
+      ]
+     }
+    }
+   }
+  },
+  {
+   "index": 17,
+   "node": 793,
+   "xyz": [
+    85.8867,
+    2.3977,
+    8.5321
+   ],
+   "s_m": 7.052,
+   "band": "top",
+   "core_D_mm": 120,
+   "y_joint": true,
+   "ribs_meeting": 3,
+   "on_base_ring": false,
+   "on_crown_ring": false,
+   "delivered": {
+    "LONG": {
+     "branch_rib": {
+      "F_kN": [
+       1.51,
+       -1.35,
+       1.58
+      ],
+      "M_kNm": [
+       0.03,
+       -0.23,
+       -0.14
+      ],
+      "bars": [
+       876
+      ]
+     }
+    },
+    "W-Y": {
+     "branch_rib": {
+      "F_kN": [
+       2.53,
+       -2.44,
+       2.6
+      ],
+      "M_kNm": [
+       0.17,
+       -0.37,
+       -0.31
+      ],
+      "bars": [
+       876
+      ]
+     }
+    }
+   }
+  },
+  {
+   "index": 18,
+   "node": 833,
+   "xyz": [
+    85.8864,
+    2.3953,
+    8.538
+   ],
+   "s_m": 7.058,
+   "band": "top",
+   "core_D_mm": 120,
+   "y_joint": false,
+   "ribs_meeting": 2,
+   "on_base_ring": false,
+   "on_crown_ring": false,
+   "delivered": {
+    "LONG": {
+     "course": {
+      "F_kN": [
+       0.95,
+       0.97,
+       0.92
+      ],
+      "M_kNm": [
+       0.09,
+       -0.04,
+       0.09
+      ],
+      "bars": [
+       2127,
+       2128
+      ]
+     }
+    },
+    "W-Y": {
+     "course": {
+      "F_kN": [
+       0.94,
+       0.99,
+       2.22
+      ],
+      "M_kNm": [
+       0.09,
+       -0.1,
+       0.19
+      ],
+      "bars": [
+       2127,
+       2128
+      ]
+     }
+    }
+   }
+  },
+  {
+   "index": 19,
+   "node": 834,
+   "xyz": [
+    85.8631,
+    2.1937,
+    9.025
+   ],
+   "s_m": 7.586,
+   "band": "top",
+   "core_D_mm": 120,
+   "y_joint": false,
+   "ribs_meeting": 2,
+   "on_base_ring": false,
+   "on_crown_ring": false,
+   "delivered": {
+    "LONG": {
+     "course": {
+      "F_kN": [
+       0.37,
+       0.63,
+       0.78
+      ],
+      "M_kNm": [
+       0.14,
+       0.01,
+       -0.09
+      ],
+      "bars": [
+       2190,
+       2191
+      ]
+     }
+    },
+    "W-Y": {
+     "course": {
+      "F_kN": [
+       0.44,
+       0.51,
+       2.07
+      ],
+      "M_kNm": [
+       0.29,
+       -0.04,
+       -0.11
+      ],
+      "bars": [
+       2190,
+       2191
+      ]
+     }
+    }
+   }
+  },
+  {
+   "index": 20,
+   "node": 835,
+   "xyz": [
+    85.8399,
+    1.9934,
+    9.509
+   ],
+   "s_m": 8.11,
+   "band": "top",
+   "core_D_mm": 120,
+   "y_joint": false,
+   "ribs_meeting": 2,
+   "on_base_ring": false,
+   "on_crown_ring": false,
+   "delivered": {
+    "LONG": {
+     "course": {
+      "F_kN": [
+       -0.2,
+       0.49,
+       0.54
+      ],
+      "M_kNm": [
+       0.16,
+       -0.0,
+       -0.07
+      ],
+      "bars": [
+       2254,
+       2255
+      ]
+     }
+    },
+    "W-Y": {
+     "course": {
+      "F_kN": [
+       -0.24,
+       0.62,
+       1.39
+      ],
+      "M_kNm": [
+       0.37,
+       -0.06,
+       -0.06
+      ],
+      "bars": [
+       2254,
+       2255
+      ]
+     }
+    }
+   }
+  },
+  {
+   "index": 21,
+   "node": 836,
+   "xyz": [
+    85.8244,
+    1.8591,
+    9.8335
+   ],
+   "s_m": 8.462,
+   "band": "top",
+   "core_D_mm": 120,
+   "y_joint": false,
+   "ribs_meeting": 2,
+   "on_base_ring": false,
+   "on_crown_ring": false,
+   "delivered": {
+    "LONG": {},
+    "W-Y": {}
+   }
+  },
+  {
+   "index": 22,
+   "node": 939,
+   "xyz": [
+    85.7827,
+    1.7937,
+    9.99
+   ],
+   "s_m": 8.636,
+   "band": "top",
+   "core_D_mm": 120,
+   "y_joint": false,
+   "ribs_meeting": 2,
+   "on_base_ring": false,
+   "on_crown_ring": false,
+   "delivered": {
+    "LONG": {
+     "course": {
+      "F_kN": [
+       -0.24,
+       0.17,
+       0.44
+      ],
+      "M_kNm": [
+       0.19,
+       -0.08,
+       0.04
+      ],
+      "bars": [
+       2311,
+       2312
+      ]
+     }
+    },
+    "W-Y": {
+     "course": {
+      "F_kN": [
+       -0.1,
+       0.43,
+       1.52
+      ],
+      "M_kNm": [
+       0.5,
+       -0.25,
+       0.18
+      ],
+      "bars": [
+       2311,
+       2312
+      ]
+     }
+    }
+   }
+  },
+  {
+   "index": 23,
+   "node": 940,
+   "xyz": [
+    85.6544,
+    1.5927,
+    10.471
+   ],
+   "s_m": 9.173,
+   "band": "top",
+   "core_D_mm": 120,
+   "y_joint": false,
+   "ribs_meeting": 2,
+   "on_base_ring": false,
+   "on_crown_ring": false,
+   "delivered": {
+    "LONG": {
+     "course": {
+      "F_kN": [
+       0.08,
+       0.02,
+       0.34
+      ],
+      "M_kNm": [
+       0.18,
+       -0.05,
+       0.01
+      ],
+      "bars": [
+       2367,
+       2368
+      ]
+     }
+    },
+    "W-Y": {
+     "course": {
+      "F_kN": [
+       0.06,
+       0.05,
+       1.08
+      ],
+      "M_kNm": [
+       0.49,
+       -0.21,
+       0.21
+      ],
+      "bars": [
+       2367,
+       2368
+      ]
+     }
+    }
+   }
+  },
+  {
+   "index": 24,
+   "node": 941,
+   "xyz": [
+    85.5253,
+    1.3905,
+    10.955
+   ],
+   "s_m": 9.713,
+   "band": "top",
+   "core_D_mm": 120,
+   "y_joint": false,
+   "ribs_meeting": 2,
+   "on_base_ring": false,
+   "on_crown_ring": false,
+   "delivered": {
+    "LONG": {
+     "course": {
+      "F_kN": [
+       0.08,
+       -0.06,
+       0.2
+      ],
+      "M_kNm": [
+       0.16,
+       -0.02,
+       -0.02
+      ],
+      "bars": [
+       2423,
+       2424
+      ]
+     }
+    },
+    "W-Y": {
+     "course": {
+      "F_kN": [
+       0.1,
+       -0.15,
+       0.65
+      ],
+      "M_kNm": [
+       0.44,
+       -0.15,
+       0.16
+      ],
+      "bars": [
+       2423,
+       2424
+      ]
+     }
+    }
+   }
+  },
+  {
+   "index": 25,
+   "node": 942,
+   "xyz": [
+    85.3968,
+    1.1891,
+    11.437
+   ],
+   "s_m": 10.251,
+   "band": "top",
+   "core_D_mm": 120,
+   "y_joint": false,
+   "ribs_meeting": 2,
+   "on_base_ring": false,
+   "on_crown_ring": false,
+   "delivered": {
+    "LONG": {
+     "course": {
+      "F_kN": [
+       0.07,
+       -0.08,
+       -0.01
+      ],
+      "M_kNm": [
+       0.12,
+       -0.0,
+       -0.04
+      ],
+      "bars": [
+       2479,
+       2480
+      ]
+     }
+    },
+    "W-Y": {
+     "course": {
+      "F_kN": [
+       0.14,
+       -0.28,
+       0.11
+      ],
+      "M_kNm": [
+       0.33,
+       -0.11,
+       0.12
+      ],
+      "bars": [
+       2479,
+       2480
+      ]
+     }
+    }
+   }
+  },
+  {
+   "index": 26,
+   "node": 943,
+   "xyz": [
+    85.2733,
+    0.9957,
+    11.9
+   ],
+   "s_m": 10.768,
+   "band": "top",
+   "core_D_mm": 120,
+   "y_joint": false,
+   "ribs_meeting": 2,
+   "on_base_ring": false,
+   "on_crown_ring": true,
+   "delivered": {
+    "LONG": {
+     "branch_rib": {
+      "F_kN": [
+       -0.06,
+       -0.24,
+       -0.95
+      ],
+      "M_kNm": [
+       -0.46,
+       -0.03,
+       0.02
+      ],
+      "bars": [
+       1053
+      ]
+     },
+     "crown": {
+      "F_kN": [
+       0.63,
+       1.57,
+       -0.63
+      ],
+      "M_kNm": [
+       0.89,
+       0.0,
+       -0.01
+      ],
+      "bars": [
+       3186,
+       3187
+      ]
+     }
+    },
+    "W-Y": {
+     "branch_rib": {
+      "F_kN": [
+       0.75,
+       -2.06,
+       1.06
+      ],
+      "M_kNm": [
+       -1.23,
+       -0.22,
+       -0.0
+      ],
+      "bars": [
+       1053
+      ]
+     },
+     "crown": {
+      "F_kN": [
+       -0.14,
+       5.21,
+       -4.34
+      ],
+      "M_kNm": [
+       2.43,
+       0.33,
+       0.13
+      ],
+      "bars": [
+       3186,
+       3187
+      ]
+     }
+    }
+   }
+  }
+ ],
+ "bars": [
+  {
+   "index": 0,
+   "element": 10,
+   "band": "bottom",
+   "core_D_mm": 220,
+   "length_m": 0.736,
+   "from_node": 15,
+   "to_node": 16,
+   "karamba_first_node": 15,
+   "self_weight_kN": 0.671,
+   "local_axes": {
+    "x": [
+     0.699,
+     -0.234,
+     0.676
+    ],
+    "y": [
+     0.318,
+     0.948,
+     0.0
+    ],
+    "z": [
+     -0.641,
+     0.215,
+     0.737
+    ]
+   },
+   "cases": {
+    "LONG": {
+     "ends": [
+      {
+       "node": 15,
+       "N": -38.73,
+       "Vy": 0.41,
+       "Vz": -11.96,
+       "Mt": 3.46,
+       "My": 6.39,
+       "Mz": -3.85,
+       "sigma_c_MPa": 8.15,
+       "sigma_t_MPa": -6.11
+      },
+      {
+       "node": 16,
+       "N": -38.28,
+       "Vy": 0.41,
+       "Vz": -11.47,
+       "Mt": 3.46,
+       "My": -2.23,
+       "Mz": -4.15,
+       "sigma_c_MPa": 5.51,
+       "sigma_t_MPa": -3.5
+      }
+     ],
+     "worst_compression_MPa": 8.15,
+     "worst_tension_MPa": -6.11,
+     "utilisation": 0.679,
+     "allowable_MPa": 12.0
+    },
+    "W-Y": {
+     "ends": [
+      {
+       "node": 15,
+       "N": -50.74,
+       "Vy": -3.63,
+       "Vz": -16.63,
+       "Mt": 6.88,
+       "My": 10.04,
+       "Mz": -9.29,
+       "sigma_c_MPa": 14.42,
+       "sigma_t_MPa": -11.75
+      },
+      {
+       "node": 16,
+       "N": -50.28,
+       "Vy": -3.63,
+       "Vz": -16.14,
+       "Mt": 6.88,
+       "My": -2.01,
+       "Mz": -6.62,
+       "sigma_c_MPa": 7.94,
+       "sigma_t_MPa": -5.3
+      }
+     ],
+     "worst_compression_MPa": 14.42,
+     "worst_tension_MPa": -11.75,
+     "utilisation": 0.601,
+     "allowable_MPa": 24.0
+    }
+   }
+  },
+  {
+   "index": 1,
+   "element": 97,
+   "band": "bottom",
+   "core_D_mm": 220,
+   "length_m": 0.09,
+   "from_node": 16,
+   "to_node": 108,
+   "karamba_first_node": 16,
+   "self_weight_kN": 0.082,
+   "local_axes": {
+    "x": [
+     0.367,
+     -0.326,
+     0.871
+    ],
+    "y": [
+     0.664,
+     0.748,
+     0.0
+    ],
+    "z": [
+     -0.651,
+     0.579,
+     0.491
+    ]
+   },
+   "cases": {
+    "LONG": {
+     "ends": [
+      {
+       "node": 16,
+       "N": -27.07,
+       "Vy": -6.23,
+       "Vz": 1.49,
+       "Mt": 0.84,
+       "My": 0.21,
+       "Mz": -2.63,
+       "sigma_c_MPa": 3.24,
+       "sigma_t_MPa": -1.82
+      },
+      {
+       "node": 108,
+       "N": -26.99,
+       "Vy": -6.23,
+       "Vz": 1.53,
+       "Mt": 0.84,
+       "My": 0.35,
+       "Mz": -2.07,
+       "sigma_c_MPa": 2.72,
+       "sigma_t_MPa": -1.3
+      }
+     ],
+     "worst_compression_MPa": 3.24,
+     "worst_tension_MPa": -1.82,
+     "utilisation": 0.27,
+     "allowable_MPa": 12.0
+    },
+    "W-Y": {
+     "ends": [
+      {
+       "node": 16,
+       "N": -36.98,
+       "Vy": -10.68,
+       "Vz": 0.1,
+       "Mt": 1.87,
+       "My": 1.2,
+       "Mz": -4.33,
+       "sigma_c_MPa": 5.27,
+       "sigma_t_MPa": -3.33
+      },
+      {
+       "node": 108,
+       "N": -36.91,
+       "Vy": -10.68,
+       "Vz": 0.14,
+       "Mt": 1.87,
+       "My": 1.21,
+       "Mz": -3.37,
+       "sigma_c_MPa": 4.39,
+       "sigma_t_MPa": -2.45
+      }
+     ],
+     "worst_compression_MPa": 5.27,
+     "worst_tension_MPa": -3.33,
+     "utilisation": 0.22,
+     "allowable_MPa": 24.0
+    }
+   }
+  },
+  {
+   "index": 2,
+   "element": 98,
+   "band": "bottom",
+   "core_D_mm": 220,
+   "length_m": 0.619,
+   "from_node": 108,
+   "to_node": 109,
+   "karamba_first_node": 108,
+   "self_weight_kN": 0.564,
+   "local_axes": {
+    "x": [
+     0.367,
+     -0.326,
+     0.871
+    ],
+    "y": [
+     0.665,
+     0.747,
+     0.0
+    ],
+    "z": [
+     -0.651,
+     0.579,
+     0.491
+    ]
+   },
+   "cases": {
+    "LONG": {
+     "ends": [
+      {
+       "node": 108,
+       "N": -25.29,
+       "Vy": -3.73,
+       "Vz": -0.2,
+       "Mt": 0.78,
+       "My": 0.48,
+       "Mz": -2.14,
+       "sigma_c_MPa": 2.76,
+       "sigma_t_MPa": -1.43
+      },
+      {
+       "node": 109,
+       "N": -24.8,
+       "Vy": -3.73,
+       "Vz": 0.08,
+       "Mt": 0.78,
+       "My": 0.44,
+       "Mz": 0.17,
+       "sigma_c_MPa": 1.11,
+       "sigma_t_MPa": 0.2
+      }
+     ],
+     "worst_compression_MPa": 2.76,
+     "worst_tension_MPa": -1.43,
+     "utilisation": 0.23,
+     "allowable_MPa": 12.0
+    },
+    "W-Y": {
+     "ends": [
+      {
+       "node": 108,
+       "N": -34.66,
+       "Vy": -6.94,
+       "Vz": -2.2,
+       "Mt": 1.76,
+       "My": 1.47,
+       "Mz": -3.68,
+       "sigma_c_MPa": 4.7,
+       "sigma_t_MPa": -2.88
+      },
+      {
+       "node": 109,
+       "N": -34.17,
+       "Vy": -6.94,
+       "Vz": -1.93,
+       "Mt": 1.76,
+       "My": 0.19,
+       "Mz": 0.62,
+       "sigma_c_MPa": 1.52,
+       "sigma_t_MPa": 0.28
+      }
+     ],
+     "worst_compression_MPa": 4.7,
+     "worst_tension_MPa": -2.88,
+     "utilisation": 0.196,
+     "allowable_MPa": 24.0
+    }
+   }
+  },
+  {
+   "index": 3,
+   "element": 99,
+   "band": "bottom",
+   "core_D_mm": 220,
+   "length_m": 0.462,
+   "from_node": 109,
+   "to_node": 107,
+   "karamba_first_node": 109,
+   "self_weight_kN": 0.421,
+   "local_axes": {
+    "x": [
+     0.367,
+     -0.326,
+     0.871
+    ],
+    "y": [
+     0.665,
+     0.747,
+     -0.0
+    ],
+    "z": [
+     -0.651,
+     0.579,
+     0.491
+    ]
+   },
+   "cases": {
+    "LONG": {
+     "ends": [
+      {
+       "node": 109,
+       "N": -22.33,
+       "Vy": -1.95,
+       "Vz": -0.61,
+       "Mt": 0.72,
+       "My": 0.33,
+       "Mz": -0.17,
+       "sigma_c_MPa": 0.94,
+       "sigma_t_MPa": 0.23
+      },
+      {
+       "node": 107,
+       "N": -21.96,
+       "Vy": -1.95,
+       "Vz": -0.41,
+       "Mt": 0.72,
+       "My": 0.09,
+       "Mz": 0.72,
+       "sigma_c_MPa": 1.28,
+       "sigma_t_MPa": -0.12
+      }
+     ],
+     "worst_compression_MPa": 1.28,
+     "worst_tension_MPa": -0.12,
+     "utilisation": 0.106,
+     "allowable_MPa": 12.0
+    },
+    "W-Y": {
+     "ends": [
+      {
+       "node": 109,
+       "N": -31.45,
+       "Vy": -3.65,
+       "Vz": -2.0,
+       "Mt": 1.67,
+       "My": 0.12,
+       "Mz": -0.08,
+       "sigma_c_MPa": 0.97,
+       "sigma_t_MPa": 0.69
+      },
+      {
+       "node": 107,
+       "N": -31.09,
+       "Vy": -3.65,
+       "Vz": -1.79,
+       "Mt": 1.67,
+       "My": -0.75,
+       "Mz": 1.61,
+       "sigma_c_MPa": 2.51,
+       "sigma_t_MPa": -0.88
+      }
+     ],
+     "worst_compression_MPa": 2.51,
+     "worst_tension_MPa": -0.88,
+     "utilisation": 0.105,
+     "allowable_MPa": 24.0
+    }
+   }
+  },
+  {
+   "index": 4,
+   "element": 322,
+   "band": "bottom",
+   "core_D_mm": 220,
+   "length_m": 0.134,
+   "from_node": 107,
+   "to_node": 296,
+   "karamba_first_node": 107,
+   "self_weight_kN": 0.122,
+   "local_axes": {
+    "x": [
+     0.001,
+     -0.362,
+     0.932
+    ],
+    "y": [
+     1.0,
+     0.004,
+     0.0
+    ],
+    "z": [
+     -0.004,
+     0.932,
+     0.362
+    ]
+   },
+   "cases": {
+    "LONG": {
+     "ends": [
+      {
+       "node": 107,
+       "N": -33.34,
+       "Vy": 0.01,
+       "Vz": -2.36,
+       "Mt": 0.83,
+       "My": 0.74,
+       "Mz": 0.03,
+       "sigma_c_MPa": 1.58,
+       "sigma_t_MPa": 0.17
+      },
+      {
+       "node": 296,
+       "N": -33.23,
+       "Vy": 0.01,
+       "Vz": -2.31,
+       "Mt": 0.83,
+       "My": 0.42,
+       "Mz": 0.03,
+       "sigma_c_MPa": 1.28,
+       "sigma_t_MPa": 0.47
+      }
+     ],
+     "worst_compression_MPa": 1.58,
+     "worst_tension_MPa": 0.17,
+     "utilisation": 0.132,
+     "allowable_MPa": 12.0
+    },
+    "W-Y": {
+     "ends": [
+      {
+       "node": 107,
+       "N": -39.52,
+       "Vy": -2.91,
+       "Vz": -3.96,
+       "Mt": 2.02,
+       "My": 0.76,
+       "Mz": -0.68,
+       "sigma_c_MPa": 2.01,
+       "sigma_t_MPa": 0.06
+      },
+      {
+       "node": 296,
+       "N": -39.41,
+       "Vy": -2.91,
+       "Vz": -3.91,
+       "Mt": 2.02,
+       "My": 0.23,
+       "Mz": -0.29,
+       "sigma_c_MPa": 1.39,
+       "sigma_t_MPa": 0.68
+      }
+     ],
+     "worst_compression_MPa": 2.01,
+     "worst_tension_MPa": 0.06,
+     "utilisation": 0.084,
+     "allowable_MPa": 24.0
+    }
+   }
+  },
+  {
+   "index": 5,
+   "element": 323,
+   "band": "bottom",
+   "core_D_mm": 220,
+   "length_m": 0.555,
+   "from_node": 296,
+   "to_node": 297,
+   "karamba_first_node": 296,
+   "self_weight_kN": 0.506,
+   "local_axes": {
+    "x": [
+     0.002,
+     -0.363,
+     0.932
+    ],
+    "y": [
+     1.0,
+     0.004,
+     -0.0
+    ],
+    "z": [
+     -0.004,
+     0.932,
+     0.363
+    ]
+   },
+   "cases": {
+    "LONG": {
+     "ends": [
+      {
+       "node": 296,
+       "N": -31.23,
+       "Vy": 0.05,
+       "Vz": -2.05,
+       "Mt": 0.74,
+       "My": 0.55,
+       "Mz": 0.02,
+       "sigma_c_MPa": 1.35,
+       "sigma_t_MPa": 0.3
+      },
+      {
+       "node": 297,
+       "N": -30.76,
+       "Vy": 0.05,
+       "Vz": -1.86,
+       "Mt": 0.74,
+       "My": -0.54,
+       "Mz": -0.01,
+       "sigma_c_MPa": 1.32,
+       "sigma_t_MPa": 0.29
+      }
+     ],
+     "worst_compression_MPa": 1.35,
+     "worst_tension_MPa": 0.29,
+     "utilisation": 0.112,
+     "allowable_MPa": 12.0
+    },
+    "W-Y": {
+     "ends": [
+      {
+       "node": 296,
+       "N": -37.15,
+       "Vy": -1.5,
+       "Vz": -4.02,
+       "Mt": 1.78,
+       "My": 0.56,
+       "Mz": -0.51,
+       "sigma_c_MPa": 1.71,
+       "sigma_t_MPa": 0.25
+      },
+      {
+       "node": 297,
+       "N": -36.68,
+       "Vy": -1.5,
+       "Vz": -3.84,
+       "Mt": 1.78,
+       "My": -1.62,
+       "Mz": 0.32,
+       "sigma_c_MPa": 2.54,
+       "sigma_t_MPa": -0.61
+      }
+     ],
+     "worst_compression_MPa": 2.54,
+     "worst_tension_MPa": -0.61,
+     "utilisation": 0.106,
+     "allowable_MPa": 24.0
+    }
+   }
+  },
+  {
+   "index": 6,
+   "element": 324,
+   "band": "bottom",
+   "core_D_mm": 220,
+   "length_m": 0.46,
+   "from_node": 297,
+   "to_node": 298,
+   "karamba_first_node": 297,
+   "self_weight_kN": 0.42,
+   "local_axes": {
+    "x": [
+     0.002,
+     -0.362,
+     0.932
+    ],
+    "y": [
+     1.0,
+     0.004,
+     0.0
+    ],
+    "z": [
+     -0.004,
+     0.932,
+     0.362
+    ]
+   },
+   "cases": {
+    "LONG": {
+     "ends": [
+      {
+       "node": 297,
+       "N": -28.4,
+       "Vy": 0.11,
+       "Vz": -1.49,
+       "Mt": 0.7,
+       "My": -0.4,
+       "Mz": 0.01,
+       "sigma_c_MPa": 1.13,
+       "sigma_t_MPa": 0.36
+      },
+      {
+       "node": 298,
+       "N": -28.01,
+       "Vy": 0.11,
+       "Vz": -1.34,
+       "Mt": 0.7,
+       "My": -1.05,
+       "Mz": -0.04,
+       "sigma_c_MPa": 1.75,
+       "sigma_t_MPa": -0.27
+      }
+     ],
+     "worst_compression_MPa": 1.75,
+     "worst_tension_MPa": -0.27,
+     "utilisation": 0.146,
+     "allowable_MPa": 12.0
+    },
+    "W-Y": {
+     "ends": [
+      {
+       "node": 297,
+       "N": -34.03,
+       "Vy": -0.61,
+       "Vz": -3.33,
+       "Mt": 1.66,
+       "My": -1.3,
+       "Mz": 0.03,
+       "sigma_c_MPa": 2.14,
+       "sigma_t_MPa": -0.35
+      },
+      {
+       "node": 298,
+       "N": -33.64,
+       "Vy": -0.61,
+       "Vz": -3.17,
+       "Mt": 1.66,
+       "My": -2.8,
+       "Mz": 0.31,
+       "sigma_c_MPa": 3.58,
+       "sigma_t_MPa": -1.81
+      }
+     ],
+     "worst_compression_MPa": 3.58,
+     "worst_tension_MPa": -1.81,
+     "utilisation": 0.149,
+     "allowable_MPa": 24.0
+    }
+   }
+  },
+  {
+   "index": 7,
+   "element": 469,
+   "band": "bottom",
+   "core_D_mm": 220,
+   "length_m": 0.096,
+   "from_node": 298,
+   "to_node": 425,
+   "karamba_first_node": 298,
+   "self_weight_kN": 0.087,
+   "local_axes": {
+    "x": [
+     0.357,
+     -0.347,
+     0.867
+    ],
+    "y": [
+     0.698,
+     0.716,
+     0.0
+    ],
+    "z": [
+     -0.621,
+     0.605,
+     0.498
+    ]
+   },
+   "cases": {
+    "LONG": {
+     "ends": [
+      {
+       "node": 298,
+       "N": -15.44,
+       "Vy": -1.49,
+       "Vz": 1.24,
+       "Mt": 0.36,
+       "My": -0.94,
+       "Mz": 0.52,
+       "sigma_c_MPa": 1.43,
+       "sigma_t_MPa": -0.62
+      },
+      {
+       "node": 425,
+       "N": -15.36,
+       "Vy": -1.49,
+       "Vz": 1.29,
+       "Mt": 0.36,
+       "My": -0.82,
+       "Mz": 0.66,
+       "sigma_c_MPa": 1.41,
+       "sigma_t_MPa": -0.6
+      }
+     ],
+     "worst_compression_MPa": 1.43,
+     "worst_tension_MPa": -0.62,
+     "utilisation": 0.12,
+     "allowable_MPa": 12.0
+    },
+    "W-Y": {
+     "ends": [
+      {
+       "node": 298,
+       "N": -21.07,
+       "Vy": -4.4,
+       "Vz": 4.2,
+       "Mt": 0.97,
+       "My": -2.36,
+       "Mz": 1.39,
+       "sigma_c_MPa": 3.18,
+       "sigma_t_MPa": -2.07
+      },
+      {
+       "node": 425,
+       "N": -21.0,
+       "Vy": -4.4,
+       "Vz": 4.24,
+       "Mt": 0.97,
+       "My": -1.96,
+       "Mz": 1.81,
+       "sigma_c_MPa": 3.1,
+       "sigma_t_MPa": -2.0
+      }
+     ],
+     "worst_compression_MPa": 3.18,
+     "worst_tension_MPa": -2.07,
+     "utilisation": 0.132,
+     "allowable_MPa": 24.0
+    }
+   }
+  },
+  {
+   "index": 8,
+   "element": 535,
+   "band": "middle",
+   "core_D_mm": 160,
+   "length_m": 0.584,
+   "from_node": 425,
+   "to_node": 489,
+   "karamba_first_node": 425,
+   "self_weight_kN": 0.282,
+   "local_axes": {
+    "x": [
+     0.357,
+     -0.348,
+     0.867
+    ],
+    "y": [
+     0.698,
+     0.716,
+     0.0
+    ],
+    "z": [
+     -0.621,
+     0.605,
+     0.499
+    ]
+   },
+   "cases": {
+    "LONG": {
+     "ends": [
+      {
+       "node": 425,
+       "N": -13.26,
+       "Vy": -0.5,
+       "Vz": 0.36,
+       "Mt": 0.17,
+       "My": -0.84,
+       "Mz": 0.43,
+       "sigma_c_MPa": 3.0,
+       "sigma_t_MPa": -1.68
+      },
+      {
+       "node": 489,
+       "N": -13.02,
+       "Vy": -0.5,
+       "Vz": 0.5,
+       "Mt": 0.17,
+       "My": -0.59,
+       "Mz": 0.72,
+       "sigma_c_MPa": 2.95,
+       "sigma_t_MPa": -1.66
+      }
+     ],
+     "worst_compression_MPa": 3.0,
+     "worst_tension_MPa": -1.68,
+     "utilisation": 0.25,
+     "allowable_MPa": 12.0
+    },
+    "W-Y": {
+     "ends": [
+      {
+       "node": 425,
+       "N": -17.49,
+       "Vy": -0.91,
+       "Vz": 1.31,
+       "Mt": 0.44,
+       "My": -2.07,
+       "Mz": 1.17,
+       "sigma_c_MPa": 6.78,
+       "sigma_t_MPa": -5.04
+      },
+      {
+       "node": 489,
+       "N": -17.24,
+       "Vy": -0.91,
+       "Vz": 1.45,
+       "Mt": 0.44,
+       "My": -1.26,
+       "Mz": 1.7,
+       "sigma_c_MPa": 6.13,
+       "sigma_t_MPa": -4.41
+      }
+     ],
+     "worst_compression_MPa": 6.78,
+     "worst_tension_MPa": -5.04,
+     "utilisation": 0.282,
+     "allowable_MPa": 24.0
+    }
+   }
+  },
+  {
+   "index": 9,
+   "element": 536,
+   "band": "middle",
+   "core_D_mm": 160,
+   "length_m": 0.576,
+   "from_node": 489,
+   "to_node": 490,
+   "karamba_first_node": 489,
+   "self_weight_kN": 0.278,
+   "local_axes": {
+    "x": [
+     0.357,
+     -0.348,
+     0.867
+    ],
+    "y": [
+     0.698,
+     0.716,
+     0.0
+    ],
+    "z": [
+     -0.621,
+     0.605,
+     0.498
+    ]
+   },
+   "cases": {
+    "LONG": {
+     "ends": [
+      {
+       "node": 489,
+       "N": -11.91,
+       "Vy": -0.35,
+       "Vz": 0.79,
+       "Mt": 0.16,
+       "My": -0.89,
+       "Mz": 0.53,
+       "sigma_c_MPa": 3.18,
+       "sigma_t_MPa": -1.99
+      },
+      {
+       "node": 490,
+       "N": -11.67,
+       "Vy": -0.35,
+       "Vz": 0.93,
+       "Mt": 0.16,
+       "My": -0.4,
+       "Mz": 0.73,
+       "sigma_c_MPa": 2.65,
+       "sigma_t_MPa": -1.49
+      }
+     ],
+     "worst_compression_MPa": 3.18,
+     "worst_tension_MPa": -1.99,
+     "utilisation": 0.265,
+     "allowable_MPa": 12.0
+    },
+    "W-Y": {
+     "ends": [
+      {
+       "node": 489,
+       "N": -15.87,
+       "Vy": -0.4,
+       "Vz": 1.86,
+       "Mt": 0.41,
+       "My": -2.02,
+       "Mz": 1.34,
+       "sigma_c_MPa": 6.82,
+       "sigma_t_MPa": -5.24
+      },
+      {
+       "node": 490,
+       "N": -15.63,
+       "Vy": -0.4,
+       "Vz": 2.0,
+       "Mt": 0.41,
+       "My": -0.92,
+       "Mz": 1.57,
+       "sigma_c_MPa": 5.3,
+       "sigma_t_MPa": -3.74
+      }
+     ],
+     "worst_compression_MPa": 6.82,
+     "worst_tension_MPa": -5.24,
+     "utilisation": 0.284,
+     "allowable_MPa": 24.0
+    }
+   }
+  },
+  {
+   "index": 10,
+   "element": 537,
+   "band": "middle",
+   "core_D_mm": 160,
+   "length_m": 0.042,
+   "from_node": 490,
+   "to_node": 488,
+   "karamba_first_node": 490,
+   "self_weight_kN": 0.02,
+   "local_axes": {
+    "x": [
+     0.358,
+     -0.348,
+     0.867
+    ],
+    "y": [
+     0.697,
+     0.717,
+     0.0
+    ],
+    "z": [
+     -0.621,
+     0.604,
+     0.499
+    ]
+   },
+   "cases": {
+    "LONG": {
+     "ends": [
+      {
+       "node": 490,
+       "N": -11.75,
+       "Vy": -1.56,
+       "Vz": 2.97,
+       "Mt": 0.09,
+       "My": -0.65,
+       "Mz": 0.48,
+       "sigma_c_MPa": 2.6,
+       "sigma_t_MPa": -1.44
+      },
+      {
+       "node": 488,
+       "N": -11.74,
+       "Vy": -1.56,
+       "Vz": 2.98,
+       "Mt": 0.09,
+       "My": -0.53,
+       "Mz": 0.55,
+       "sigma_c_MPa": 2.48,
+       "sigma_t_MPa": -1.31
+      }
+     ],
+     "worst_compression_MPa": 2.6,
+     "worst_tension_MPa": -1.44,
+     "utilisation": 0.217,
+     "allowable_MPa": 12.0
+    },
+    "W-Y": {
+     "ends": [
+      {
+       "node": 490,
+       "N": -16.61,
+       "Vy": -3.09,
+       "Vz": 6.32,
+       "Mt": 0.25,
+       "My": -1.49,
+       "Mz": 1.11,
+       "sigma_c_MPa": 5.44,
+       "sigma_t_MPa": -3.79
+      },
+      {
+       "node": 488,
+       "N": -16.59,
+       "Vy": -3.09,
+       "Vz": 6.33,
+       "Mt": 0.25,
+       "My": -1.22,
+       "Mz": 1.24,
+       "sigma_c_MPa": 5.15,
+       "sigma_t_MPa": -3.5
+      }
+     ],
+     "worst_compression_MPa": 5.44,
+     "worst_tension_MPa": -3.79,
+     "utilisation": 0.227,
+     "allowable_MPa": 24.0
+    }
+   }
+  },
+  {
+   "index": 11,
+   "element": 682,
+   "band": "middle",
+   "core_D_mm": 160,
+   "length_m": 0.5,
+   "from_node": 488,
+   "to_node": 618,
+   "karamba_first_node": 488,
+   "self_weight_kN": 0.241,
+   "local_axes": {
+    "x": [
+     -0.021,
+     -0.376,
+     0.927
+    ],
+    "y": [
+     0.998,
+     -0.055,
+     0.0
+    ],
+    "z": [
+     0.051,
+     0.925,
+     0.376
+    ]
+   },
+   "cases": {
+    "LONG": {
+     "ends": [
+      {
+       "node": 488,
+       "N": -12.89,
+       "Vy": -1.19,
+       "Vz": 0.46,
+       "Mt": 0.35,
+       "My": -1.13,
+       "Mz": -0.35,
+       "sigma_c_MPa": 3.59,
+       "sigma_t_MPa": -2.31
+      },
+      {
+       "node": 618,
+       "N": -12.66,
+       "Vy": -1.19,
+       "Vz": 0.56,
+       "Mt": 0.35,
+       "My": -0.88,
+       "Mz": 0.25,
+       "sigma_c_MPa": 2.9,
+       "sigma_t_MPa": -1.64
+      }
+     ],
+     "worst_compression_MPa": 3.59,
+     "worst_tension_MPa": -2.31,
+     "utilisation": 0.299,
+     "allowable_MPa": 12.0
+    },
+    "W-Y": {
+     "ends": [
+      {
+       "node": 488,
+       "N": -15.25,
+       "Vy": -2.0,
+       "Vz": 1.03,
+       "Mt": 0.81,
+       "My": -2.61,
+       "Mz": -0.69,
+       "sigma_c_MPa": 7.47,
+       "sigma_t_MPa": -5.95
+      },
+      {
+       "node": 618,
+       "N": -15.02,
+       "Vy": -2.0,
+       "Vz": 1.12,
+       "Mt": 0.81,
+       "My": -2.07,
+       "Mz": 0.31,
+       "sigma_c_MPa": 5.95,
+       "sigma_t_MPa": -4.46
+      }
+     ],
+     "worst_compression_MPa": 7.47,
+     "worst_tension_MPa": -5.95,
+     "utilisation": 0.311,
+     "allowable_MPa": 24.0
+    }
+   }
+  },
+  {
+   "index": 12,
+   "element": 683,
+   "band": "middle",
+   "core_D_mm": 160,
+   "length_m": 0.533,
+   "from_node": 618,
+   "to_node": 619,
+   "karamba_first_node": 618,
+   "self_weight_kN": 0.257,
+   "local_axes": {
+    "x": [
+     -0.02,
+     -0.376,
+     0.926
+    ],
+    "y": [
+     0.999,
+     -0.054,
+     -0.0
+    ],
+    "z": [
+     0.05,
+     0.925,
+     0.376
+    ]
+   },
+   "cases": {
+    "LONG": {
+     "ends": [
+      {
+       "node": 618,
+       "N": -10.91,
+       "Vy": -0.72,
+       "Vz": 0.8,
+       "Mt": 0.2,
+       "My": -0.9,
+       "Mz": -0.13,
+       "sigma_c_MPa": 2.8,
+       "sigma_t_MPa": -1.72
+      },
+      {
+       "node": 619,
+       "N": -10.67,
+       "Vy": -0.72,
+       "Vz": 0.9,
+       "Mt": 0.2,
+       "My": -0.45,
+       "Mz": 0.25,
+       "sigma_c_MPa": 1.81,
+       "sigma_t_MPa": -0.74
+      }
+     ],
+     "worst_compression_MPa": 2.8,
+     "worst_tension_MPa": -1.72,
+     "utilisation": 0.233,
+     "allowable_MPa": 12.0
+    },
+    "W-Y": {
+     "ends": [
+      {
+       "node": 618,
+       "N": -12.54,
+       "Vy": -1.72,
+       "Vz": 1.65,
+       "Mt": 0.49,
+       "My": -2.06,
+       "Mz": -0.41,
+       "sigma_c_MPa": 5.85,
+       "sigma_t_MPa": -4.61
+      },
+      {
+       "node": 619,
+       "N": -12.3,
+       "Vy": -1.72,
+       "Vz": 1.74,
+       "Mt": 0.49,
+       "My": -1.16,
+       "Mz": 0.51,
+       "sigma_c_MPa": 3.76,
+       "sigma_t_MPa": -2.54
+      }
+     ],
+     "worst_compression_MPa": 5.85,
+     "worst_tension_MPa": -4.61,
+     "utilisation": 0.244,
+     "allowable_MPa": 24.0
+    }
+   }
+  },
+  {
+   "index": 13,
+   "element": 684,
+   "band": "middle",
+   "core_D_mm": 160,
+   "length_m": 0.241,
+   "from_node": 619,
+   "to_node": 617,
+   "karamba_first_node": 619,
+   "self_weight_kN": 0.116,
+   "local_axes": {
+    "x": [
+     -0.021,
+     -0.376,
+     0.926
+    ],
+    "y": [
+     0.998,
+     -0.055,
+     -0.0
+    ],
+    "z": [
+     0.051,
+     0.925,
+     0.376
+    ]
+   },
+   "cases": {
+    "LONG": {
+     "ends": [
+      {
+       "node": 619,
+       "N": -7.67,
+       "Vy": -2.7,
+       "Vz": 1.29,
+       "Mt": 0.11,
+       "My": -0.54,
+       "Mz": -0.16,
+       "sigma_c_MPa": 1.79,
+       "sigma_t_MPa": -1.02
+      },
+      {
+       "node": 617,
+       "N": -7.56,
+       "Vy": -2.7,
+       "Vz": 1.34,
+       "Mt": 0.11,
+       "My": -0.23,
+       "Mz": 0.49,
+       "sigma_c_MPa": 1.72,
+       "sigma_t_MPa": -0.97
+      }
+     ],
+     "worst_compression_MPa": 1.79,
+     "worst_tension_MPa": -1.02,
+     "utilisation": 0.149,
+     "allowable_MPa": 12.0
+    },
+    "W-Y": {
+     "ends": [
+      {
+       "node": 619,
+       "N": -7.33,
+       "Vy": -5.9,
+       "Vz": 2.65,
+       "Mt": 0.31,
+       "My": -1.29,
+       "Mz": -0.38,
+       "sigma_c_MPa": 3.7,
+       "sigma_t_MPa": -2.97
+      },
+      {
+       "node": 617,
+       "N": -7.22,
+       "Vy": -5.9,
+       "Vz": 2.7,
+       "Mt": 0.31,
+       "My": -0.64,
+       "Mz": 1.05,
+       "sigma_c_MPa": 3.41,
+       "sigma_t_MPa": -2.69
+      }
+     ],
+     "worst_compression_MPa": 3.7,
+     "worst_tension_MPa": -2.97,
+     "utilisation": 0.154,
+     "allowable_MPa": 24.0
+    }
+   }
+  },
+  {
+   "index": 14,
+   "element": 810,
+   "band": "middle",
+   "core_D_mm": 160,
+   "length_m": 0.306,
+   "from_node": 617,
+   "to_node": 730,
+   "karamba_first_node": 617,
+   "self_weight_kN": 0.148,
+   "local_axes": {
+    "x": [
+     -0.347,
+     -0.352,
+     0.869
+    ],
+    "y": [
+     0.712,
+     -0.702,
+     0.0
+    ],
+    "z": [
+     0.61,
+     0.619,
+     0.494
+    ]
+   },
+   "cases": {
+    "LONG": {
+     "ends": [
+      {
+       "node": 617,
+       "N": -13.36,
+       "Vy": -0.26,
+       "Vz": 0.4,
+       "Mt": -0.01,
+       "My": -0.56,
+       "Mz": -0.46,
+       "sigma_c_MPa": 2.47,
+       "sigma_t_MPa": -1.14
+      },
+      {
+       "node": 730,
+       "N": -13.23,
+       "Vy": -0.26,
+       "Vz": 0.47,
+       "Mt": -0.01,
+       "My": -0.43,
+       "Mz": -0.38,
+       "sigma_c_MPa": 2.09,
+       "sigma_t_MPa": -0.77
+      }
+     ],
+     "worst_compression_MPa": 2.47,
+     "worst_tension_MPa": -1.14,
+     "utilisation": 0.206,
+     "allowable_MPa": 12.0
+    },
+    "W-Y": {
+     "ends": [
+      {
+       "node": 617,
+       "N": -19.17,
+       "Vy": 0.23,
+       "Vz": 1.52,
+       "Mt": 0.04,
+       "My": -1.53,
+       "Mz": -0.89,
+       "sigma_c_MPa": 5.35,
+       "sigma_t_MPa": -3.44
+      },
+      {
+       "node": 730,
+       "N": -19.04,
+       "Vy": 0.23,
+       "Vz": 1.59,
+       "Mt": 0.04,
+       "My": -1.05,
+       "Mz": -0.96,
+       "sigma_c_MPa": 4.49,
+       "sigma_t_MPa": -2.6
+      }
+     ],
+     "worst_compression_MPa": 5.35,
+     "worst_tension_MPa": -3.44,
+     "utilisation": 0.223,
+     "allowable_MPa": 24.0
+    }
+   }
+  },
+  {
+   "index": 15,
+   "element": 811,
+   "band": "middle",
+   "core_D_mm": 160,
+   "length_m": 0.564,
+   "from_node": 730,
+   "to_node": 731,
+   "karamba_first_node": 730,
+   "self_weight_kN": 0.272,
+   "local_axes": {
+    "x": [
+     -0.347,
+     -0.352,
+     0.869
+    ],
+    "y": [
+     0.712,
+     -0.702,
+     0.0
+    ],
+    "z": [
+     0.61,
+     0.619,
+     0.494
+    ]
+   },
+   "cases": {
+    "LONG": {
+     "ends": [
+      {
+       "node": 730,
+       "N": -10.71,
+       "Vy": -0.02,
+       "Vz": 0.38,
+       "Mt": -0.09,
+       "My": -0.44,
+       "Mz": -0.31,
+       "sigma_c_MPa": 1.87,
+       "sigma_t_MPa": -0.81
+      },
+      {
+       "node": 731,
+       "N": -10.47,
+       "Vy": -0.02,
+       "Vz": 0.51,
+       "Mt": -0.09,
+       "My": -0.19,
+       "Mz": -0.3,
+       "sigma_c_MPa": 1.4,
+       "sigma_t_MPa": -0.36
+      }
+     ],
+     "worst_compression_MPa": 1.87,
+     "worst_tension_MPa": -0.81,
+     "utilisation": 0.156,
+     "allowable_MPa": 12.0
+    },
+    "W-Y": {
+     "ends": [
+      {
+       "node": 730,
+       "N": -14.88,
+       "Vy": 0.12,
+       "Vz": 0.86,
+       "Mt": -0.18,
+       "My": -1.03,
+       "Mz": -0.69,
+       "sigma_c_MPa": 3.83,
+       "sigma_t_MPa": -2.35
+      },
+      {
+       "node": 731,
+       "N": -14.64,
+       "Vy": 0.12,
+       "Vz": 0.99,
+       "Mt": -0.18,
+       "My": -0.51,
+       "Mz": -0.75,
+       "sigma_c_MPa": 2.99,
+       "sigma_t_MPa": -1.54
+      }
+     ],
+     "worst_compression_MPa": 3.83,
+     "worst_tension_MPa": -2.35,
+     "utilisation": 0.159,
+     "allowable_MPa": 24.0
+    }
+   }
+  },
+  {
+   "index": 16,
+   "element": 875,
+   "band": "top",
+   "core_D_mm": 120,
+   "length_m": 0.556,
+   "from_node": 731,
+   "to_node": 793,
+   "karamba_first_node": 731,
+   "self_weight_kN": 0.151,
+   "local_axes": {
+    "x": [
+     -0.347,
+     -0.352,
+     0.869
+    ],
+    "y": [
+     0.712,
+     -0.702,
+     0.0
+    ],
+    "z": [
+     0.61,
+     0.619,
+     0.494
+    ]
+   },
+   "cases": {
+    "LONG": {
+     "ends": [
+      {
+       "node": 731,
+       "N": -8.97,
+       "Vy": -0.02,
+       "Vz": 0.16,
+       "Mt": -0.03,
+       "My": -0.23,
+       "Mz": -0.17,
+       "sigma_c_MPa": 2.46,
+       "sigma_t_MPa": -0.87
+      },
+      {
+       "node": 793,
+       "N": -8.84,
+       "Vy": -0.02,
+       "Vz": 0.23,
+       "Mt": -0.03,
+       "My": -0.12,
+       "Mz": -0.16,
+       "sigma_c_MPa": 1.94,
+       "sigma_t_MPa": -0.38
+      }
+     ],
+     "worst_compression_MPa": 2.46,
+     "worst_tension_MPa": -0.87,
+     "utilisation": 0.205,
+     "allowable_MPa": 12.0
+    },
+    "W-Y": {
+     "ends": [
+      {
+       "node": 731,
+       "N": -12.32,
+       "Vy": 0.07,
+       "Vz": 0.24,
+       "Mt": -0.08,
+       "My": -0.52,
+       "Mz": -0.39,
+       "sigma_c_MPa": 4.88,
+       "sigma_t_MPa": -2.71
+      },
+      {
+       "node": 793,
+       "N": -12.19,
+       "Vy": 0.07,
+       "Vz": 0.31,
+       "Mt": -0.08,
+       "My": -0.36,
+       "Mz": -0.42,
+       "sigma_c_MPa": 4.37,
+       "sigma_t_MPa": -2.22
+      }
+     ],
+     "worst_compression_MPa": 4.88,
+     "worst_tension_MPa": -2.71,
+     "utilisation": 0.204,
+     "allowable_MPa": 24.0
+    }
+   }
+  },
+  {
+   "index": 17,
+   "element": 927,
+   "band": "top",
+   "core_D_mm": 120,
+   "length_m": 0.006,
+   "from_node": 793,
+   "to_node": 833,
+   "karamba_first_node": 793,
+   "self_weight_kN": 0.002,
+   "local_axes": {
+    "x": [
+     -0.047,
+     -0.376,
+     0.925
+    ],
+    "y": [
+     0.992,
+     -0.124,
+     -0.0
+    ],
+    "z": [
+     0.115,
+     0.918,
+     0.379
+    ]
+   },
+   "cases": {
+    "LONG": {
+     "ends": [
+      {
+       "node": 793,
+       "N": -9.75,
+       "Vy": 1.15,
+       "Vz": 1.12,
+       "Mt": -0.05,
+       "My": -0.22,
+       "Mz": 0.2,
+       "sigma_c_MPa": 2.63,
+       "sigma_t_MPa": -0.91
+      },
+      {
+       "node": 833,
+       "N": -9.75,
+       "Vy": 1.15,
+       "Vz": 1.12,
+       "Mt": -0.05,
+       "My": -0.21,
+       "Mz": 0.2,
+       "sigma_c_MPa": 2.57,
+       "sigma_t_MPa": -0.85
+      }
+     ],
+     "worst_compression_MPa": 2.63,
+     "worst_tension_MPa": -0.91,
+     "utilisation": 0.22,
+     "allowable_MPa": 12.0
+    },
+    "W-Y": {
+     "ends": [
+      {
+       "node": 793,
+       "N": -14.21,
+       "Vy": 1.07,
+       "Vz": 2.48,
+       "Mt": -0.09,
+       "My": -0.7,
+       "Mz": 0.3,
+       "sigma_c_MPa": 5.75,
+       "sigma_t_MPa": -3.24
+      },
+      {
+       "node": 833,
+       "N": -14.21,
+       "Vy": 1.07,
+       "Vz": 2.48,
+       "Mt": -0.09,
+       "My": -0.69,
+       "Mz": 0.29,
+       "sigma_c_MPa": 5.65,
+       "sigma_t_MPa": -3.14
+      }
+     ],
+     "worst_compression_MPa": 5.75,
+     "worst_tension_MPa": -3.24,
+     "utilisation": 0.24,
+     "allowable_MPa": 24.0
+    }
+   }
+  },
+  {
+   "index": 18,
+   "element": 928,
+   "band": "top",
+   "core_D_mm": 120,
+   "length_m": 0.528,
+   "from_node": 833,
+   "to_node": 834,
+   "karamba_first_node": 833,
+   "self_weight_kN": 0.143,
+   "local_axes": {
+    "x": [
+     -0.044,
+     -0.382,
+     0.923
+    ],
+    "y": [
+     0.993,
+     -0.115,
+     0.0
+    ],
+    "z": [
+     0.106,
+     0.917,
+     0.385
+    ]
+   },
+   "cases": {
+    "LONG": {
+     "ends": [
+      {
+       "node": 833,
+       "N": -7.96,
+       "Vy": 0.31,
+       "Vz": 0.67,
+       "Mt": -0.05,
+       "My": -0.31,
+       "Mz": 0.09,
+       "sigma_c_MPa": 2.59,
+       "sigma_t_MPa": -1.18
+      },
+      {
+       "node": 834,
+       "N": -7.83,
+       "Vy": 0.31,
+       "Vz": 0.73,
+       "Mt": -0.05,
+       "My": 0.06,
+       "Mz": -0.07,
+       "sigma_c_MPa": 1.26,
+       "sigma_t_MPa": 0.12
+      }
+     ],
+     "worst_compression_MPa": 2.59,
+     "worst_tension_MPa": -1.18,
+     "utilisation": 0.216,
+     "allowable_MPa": 12.0
+    },
+    "W-Y": {
+     "ends": [
+      {
+       "node": 833,
+       "N": -11.94,
+       "Vy": 0.29,
+       "Vz": 1.53,
+       "Mt": -0.1,
+       "My": -0.78,
+       "Mz": 0.07,
+       "sigma_c_MPa": 5.7,
+       "sigma_t_MPa": -3.59
+      },
+      {
+       "node": 834,
+       "N": -11.81,
+       "Vy": 0.29,
+       "Vz": 1.59,
+       "Mt": -0.1,
+       "My": 0.04,
+       "Mz": -0.08,
+       "sigma_c_MPa": 1.57,
+       "sigma_t_MPa": 0.52
+      }
+     ],
+     "worst_compression_MPa": 5.7,
+     "worst_tension_MPa": -3.59,
+     "utilisation": 0.237,
+     "allowable_MPa": 24.0
+    }
+   }
+  },
+  {
+   "index": 19,
+   "element": 929,
+   "band": "top",
+   "core_D_mm": 120,
+   "length_m": 0.524,
+   "from_node": 834,
+   "to_node": 835,
+   "karamba_first_node": 834,
+   "self_weight_kN": 0.142,
+   "local_axes": {
+    "x": [
+     -0.044,
+     -0.382,
+     0.923
+    ],
+    "y": [
+     0.993,
+     -0.115,
+     0.0
+    ],
+    "z": [
+     0.106,
+     0.917,
+     0.385
+    ]
+   },
+   "cases": {
+    "LONG": {
+     "ends": [
+      {
+       "node": 834,
+       "N": -6.36,
+       "Vy": 0.03,
+       "Vz": 0.41,
+       "Mt": -0.07,
+       "My": -0.1,
+       "Mz": 0.0,
+       "sigma_c_MPa": 1.12,
+       "sigma_t_MPa": 0.0
+      },
+      {
+       "node": 835,
+       "N": -6.23,
+       "Vy": 0.03,
+       "Vz": 0.47,
+       "Mt": -0.07,
+       "My": 0.14,
+       "Mz": -0.01,
+       "sigma_c_MPa": 1.35,
+       "sigma_t_MPa": -0.25
+      }
+     ],
+     "worst_compression_MPa": 1.35,
+     "worst_tension_MPa": -0.25,
+     "utilisation": 0.113,
+     "allowable_MPa": 12.0
+    },
+    "W-Y": {
+     "ends": [
+      {
+       "node": 834,
+       "N": -9.97,
+       "Vy": -0.01,
+       "Vz": 0.84,
+       "Mt": -0.16,
+       "My": -0.27,
+       "Mz": -0.02,
+       "sigma_c_MPa": 2.49,
+       "sigma_t_MPa": -0.72
+      },
+      {
+       "node": 835,
+       "N": -9.84,
+       "Vy": -0.01,
+       "Vz": 0.9,
+       "Mt": -0.16,
+       "My": 0.18,
+       "Mz": -0.01,
+       "sigma_c_MPa": 1.96,
+       "sigma_t_MPa": -0.22
+      }
+     ],
+     "worst_compression_MPa": 2.49,
+     "worst_tension_MPa": -0.72,
+     "utilisation": 0.104,
+     "allowable_MPa": 24.0
+    }
+   }
+  },
+  {
+   "index": 20,
+   "element": 930,
+   "band": "top",
+   "core_D_mm": 120,
+   "length_m": 0.352,
+   "from_node": 835,
+   "to_node": 836,
+   "karamba_first_node": 835,
+   "self_weight_kN": 0.095,
+   "local_axes": {
+    "x": [
+     -0.044,
+     -0.382,
+     0.923
+    ],
+    "y": [
+     0.993,
+     -0.115,
+     0.0
+    ],
+    "z": [
+     0.106,
+     0.917,
+     0.385
+    ]
+   },
+   "cases": {
+    "LONG": {
+     "ends": [
+      {
+       "node": 835,
+       "N": -5.06,
+       "Vy": 0.28,
+       "Vz": 0.35,
+       "Mt": -0.09,
+       "My": -0.04,
+       "Mz": 0.04,
+       "sigma_c_MPa": 0.74,
+       "sigma_t_MPa": 0.15
+      },
+      {
+       "node": 836,
+       "N": -4.97,
+       "Vy": 0.28,
+       "Vz": 0.39,
+       "Mt": -0.09,
+       "My": 0.1,
+       "Mz": -0.06,
+       "sigma_c_MPa": 1.11,
+       "sigma_t_MPa": -0.23
+      }
+     ],
+     "worst_compression_MPa": 1.11,
+     "worst_tension_MPa": -0.23,
+     "utilisation": 0.092,
+     "allowable_MPa": 12.0
+    },
+    "W-Y": {
+     "ends": [
+      {
+       "node": 835,
+       "N": -8.24,
+       "Vy": 0.29,
+       "Vz": 0.79,
+       "Mt": -0.23,
+       "My": -0.2,
+       "Mz": -0.01,
+       "sigma_c_MPa": 1.94,
+       "sigma_t_MPa": -0.48
+      },
+      {
+       "node": 836,
+       "N": -8.15,
+       "Vy": 0.29,
+       "Vz": 0.83,
+       "Mt": -0.23,
+       "My": 0.08,
+       "Mz": -0.11,
+       "sigma_c_MPa": 1.53,
+       "sigma_t_MPa": -0.09
+      }
+     ],
+     "worst_compression_MPa": 1.94,
+     "worst_tension_MPa": -0.48,
+     "utilisation": 0.081,
+     "allowable_MPa": 24.0
+    }
+   }
+  },
+  {
+   "index": 21,
+   "element": 1044,
+   "band": "top",
+   "core_D_mm": 120,
+   "length_m": 0.175,
+   "from_node": 836,
+   "to_node": 939,
+   "karamba_first_node": 836,
+   "self_weight_kN": 0.047,
+   "local_axes": {
+    "x": [
+     -0.239,
+     -0.374,
+     0.896
+    ],
+    "y": [
+     0.843,
+     -0.538,
+     -0.0
+    ],
+    "z": [
+     0.482,
+     0.755,
+     0.444
+    ]
+   },
+   "cases": {
+    "LONG": {
+     "ends": [
+      {
+       "node": 836,
+       "N": -4.58,
+       "Vy": -0.74,
+       "Vz": 0.15,
+       "Mt": -0.1,
+       "My": 0.1,
+       "Mz": -0.03,
+       "sigma_c_MPa": 0.99,
+       "sigma_t_MPa": -0.18
+      },
+      {
+       "node": 939,
+       "N": -4.53,
+       "Vy": -0.74,
+       "Vz": 0.17,
+       "Mt": -0.1,
+       "My": 0.12,
+       "Mz": 0.1,
+       "sigma_c_MPa": 1.35,
+       "sigma_t_MPa": -0.55
+      }
+     ],
+     "worst_compression_MPa": 1.35,
+     "worst_tension_MPa": -0.55,
+     "utilisation": 0.112,
+     "allowable_MPa": 12.0
+    },
+    "W-Y": {
+     "ends": [
+      {
+       "node": 836,
+       "N": -7.71,
+       "Vy": -1.7,
+       "Vz": 0.71,
+       "Mt": -0.23,
+       "My": 0.08,
+       "Mz": -0.09,
+       "sigma_c_MPa": 1.4,
+       "sigma_t_MPa": -0.04
+      },
+      {
+       "node": 939,
+       "N": -7.67,
+       "Vy": -1.7,
+       "Vz": 0.73,
+       "Mt": -0.23,
+       "My": 0.2,
+       "Mz": 0.2,
+       "sigma_c_MPa": 2.38,
+       "sigma_t_MPa": -1.02
+      }
+     ],
+     "worst_compression_MPa": 2.38,
+     "worst_tension_MPa": -1.02,
+     "utilisation": 0.099,
+     "allowable_MPa": 24.0
+    }
+   }
+  },
+  {
+   "index": 22,
+   "element": 1045,
+   "band": "top",
+   "core_D_mm": 120,
+   "length_m": 0.537,
+   "from_node": 939,
+   "to_node": 940,
+   "karamba_first_node": 939,
+   "self_weight_kN": 0.146,
+   "local_axes": {
+    "x": [
+     -0.239,
+     -0.374,
+     0.896
+    ],
+    "y": [
+     0.843,
+     -0.538,
+     0.0
+    ],
+    "z": [
+     0.482,
+     0.755,
+     0.444
+    ]
+   },
+   "cases": {
+    "LONG": {
+     "ends": [
+      {
+       "node": 939,
+       "N": -3.81,
+       "Vy": -0.3,
+       "Vz": 0.24,
+       "Mt": -0.11,
+       "My": -0.02,
+       "Mz": -0.05,
+       "sigma_c_MPa": 0.68,
+       "sigma_t_MPa": -0.0
+      },
+      {
+       "node": 940,
+       "N": -3.68,
+       "Vy": -0.3,
+       "Vz": 0.31,
+       "Mt": -0.11,
+       "My": 0.12,
+       "Mz": 0.11,
+       "sigma_c_MPa": 1.3,
+       "sigma_t_MPa": -0.65
+      }
+     ],
+     "worst_compression_MPa": 1.3,
+     "worst_tension_MPa": -0.65,
+     "utilisation": 0.109,
+     "allowable_MPa": 12.0
+    },
+    "W-Y": {
+     "ends": [
+      {
+       "node": 939,
+       "N": -6.28,
+       "Vy": -1.13,
+       "Vz": 0.63,
+       "Mt": -0.27,
+       "My": -0.13,
+       "Mz": -0.28,
+       "sigma_c_MPa": 2.39,
+       "sigma_t_MPa": -1.28
+      },
+      {
+       "node": 940,
+       "N": -6.15,
+       "Vy": -1.13,
+       "Vz": 0.7,
+       "Mt": -0.27,
+       "My": 0.23,
+       "Mz": 0.32,
+       "sigma_c_MPa": 2.88,
+       "sigma_t_MPa": -1.79
+      }
+     ],
+     "worst_compression_MPa": 2.88,
+     "worst_tension_MPa": -1.79,
+     "utilisation": 0.12,
+     "allowable_MPa": 24.0
+    }
+   }
+  },
+  {
+   "index": 23,
+   "element": 1046,
+   "band": "top",
+   "core_D_mm": 120,
+   "length_m": 0.54,
+   "from_node": 940,
+   "to_node": 941,
+   "karamba_first_node": 940,
+   "self_weight_kN": 0.147,
+   "local_axes": {
+    "x": [
+     -0.239,
+     -0.374,
+     0.896
+    ],
+    "y": [
+     0.843,
+     -0.538,
+     0.0
+    ],
+    "z": [
+     0.482,
+     0.755,
+     0.444
+    ]
+   },
+   "cases": {
+    "LONG": {
+     "ends": [
+      {
+       "node": 940,
+       "N": -3.08,
+       "Vy": -0.19,
+       "Vz": 0.27,
+       "Mt": -0.1,
+       "My": -0.01,
+       "Mz": -0.01,
+       "sigma_c_MPa": 0.39,
+       "sigma_t_MPa": 0.16
+      },
+      {
+       "node": 941,
+       "N": -2.95,
+       "Vy": -0.19,
+       "Vz": 0.34,
+       "Mt": -0.1,
+       "My": 0.15,
+       "Mz": 0.09,
+       "sigma_c_MPa": 1.3,
+       "sigma_t_MPa": -0.78
+      }
+     ],
+     "worst_compression_MPa": 1.3,
+     "worst_tension_MPa": -0.78,
+     "utilisation": 0.109,
+     "allowable_MPa": 12.0
+    },
+    "W-Y": {
+     "ends": [
+      {
+       "node": 940,
+       "N": -5.25,
+       "Vy": -0.91,
+       "Vz": 0.68,
+       "Mt": -0.27,
+       "My": -0.06,
+       "Mz": -0.17,
+       "sigma_c_MPa": 1.5,
+       "sigma_t_MPa": -0.57
+      },
+      {
+       "node": 941,
+       "N": -5.12,
+       "Vy": -0.91,
+       "Vz": 0.75,
+       "Mt": -0.27,
+       "My": 0.33,
+       "Mz": 0.32,
+       "sigma_c_MPa": 3.18,
+       "sigma_t_MPa": -2.28
+      }
+     ],
+     "worst_compression_MPa": 3.18,
+     "worst_tension_MPa": -2.28,
+     "utilisation": 0.133,
+     "allowable_MPa": 24.0
+    }
+   }
+  },
+  {
+   "index": 24,
+   "element": 1047,
+   "band": "top",
+   "core_D_mm": 120,
+   "length_m": 0.538,
+   "from_node": 941,
+   "to_node": 942,
+   "karamba_first_node": 941,
+   "self_weight_kN": 0.146,
+   "local_axes": {
+    "x": [
+     -0.239,
+     -0.374,
+     0.896
+    ],
+    "y": [
+     0.843,
+     -0.538,
+     0.0
+    ],
+    "z": [
+     0.482,
+     0.755,
+     0.444
+    ]
+   },
+   "cases": {
+    "LONG": {
+     "ends": [
+      {
+       "node": 941,
+       "N": -2.53,
+       "Vy": -0.17,
+       "Vz": 0.35,
+       "Mt": -0.09,
+       "My": 0.01,
+       "Mz": 0.02,
+       "sigma_c_MPa": 0.34,
+       "sigma_t_MPa": 0.11
+      },
+      {
+       "node": 942,
+       "N": -2.4,
+       "Vy": -0.17,
+       "Vz": 0.42,
+       "Mt": -0.09,
+       "My": 0.22,
+       "Mz": 0.11,
+       "sigma_c_MPa": 1.64,
+       "sigma_t_MPa": -1.22
+      }
+     ],
+     "worst_compression_MPa": 1.64,
+     "worst_tension_MPa": -1.22,
+     "utilisation": 0.137,
+     "allowable_MPa": 12.0
+    },
+    "W-Y": {
+     "ends": [
+      {
+       "node": 941,
+       "N": -4.6,
+       "Vy": -0.92,
+       "Vz": 0.86,
+       "Mt": -0.24,
+       "My": 0.06,
+       "Mz": -0.09,
+       "sigma_c_MPa": 1.02,
+       "sigma_t_MPa": -0.2
+      },
+      {
+       "node": 942,
+       "N": -4.46,
+       "Vy": -0.92,
+       "Vz": 0.93,
+       "Mt": -0.24,
+       "My": 0.54,
+       "Mz": 0.41,
+       "sigma_c_MPa": 4.39,
+       "sigma_t_MPa": -3.6
+      }
+     ],
+     "worst_compression_MPa": 4.39,
+     "worst_tension_MPa": -3.6,
+     "utilisation": 0.183,
+     "allowable_MPa": 24.0
+    }
+   }
+  },
+  {
+   "index": 25,
+   "element": 1048,
+   "band": "top",
+   "core_D_mm": 120,
+   "length_m": 0.517,
+   "from_node": 942,
+   "to_node": 943,
+   "karamba_first_node": 942,
+   "self_weight_kN": 0.14,
+   "local_axes": {
+    "x": [
+     -0.239,
+     -0.374,
+     0.896
+    ],
+    "y": [
+     0.843,
+     -0.538,
+     0.0
+    ],
+    "z": [
+     0.482,
+     0.755,
+     0.444
+    ]
+   },
+   "cases": {
+    "LONG": {
+     "ends": [
+      {
+       "node": 942,
+       "N": -2.18,
+       "Vy": -0.23,
+       "Vz": 0.51,
+       "Mt": -0.08,
+       "My": 0.1,
+       "Mz": 0.07,
+       "sigma_c_MPa": 0.92,
+       "sigma_t_MPa": -0.53
+      },
+      {
+       "node": 943,
+       "N": -2.05,
+       "Vy": -0.23,
+       "Vz": 0.57,
+       "Mt": -0.08,
+       "My": 0.38,
+       "Mz": 0.19,
+       "sigma_c_MPa": 2.7,
+       "sigma_t_MPa": -2.34
+      }
+     ],
+     "worst_compression_MPa": 2.7,
+     "worst_tension_MPa": -2.34,
+     "utilisation": 0.225,
+     "allowable_MPa": 12.0
+    },
+    "W-Y": {
+     "ends": [
+      {
+       "node": 942,
+       "N": -4.38,
+       "Vy": -1.18,
+       "Vz": 1.15,
+       "Mt": -0.22,
+       "My": 0.33,
+       "Mz": 0.11,
+       "sigma_c_MPa": 2.46,
+       "sigma_t_MPa": -1.68
+      },
+      {
+       "node": 943,
+       "N": -4.26,
+       "Vy": -1.18,
+       "Vz": 1.21,
+       "Mt": -0.22,
+       "My": 0.94,
+       "Mz": 0.72,
+       "sigma_c_MPa": 7.38,
+       "sigma_t_MPa": -6.63
+      }
+     ],
+     "worst_compression_MPa": 7.38,
+     "worst_tension_MPa": -6.63,
+     "utilisation": 0.307,
+     "allowable_MPa": 24.0
+    }
+   }
+  }
+ ],
+ "rib_self_weight_total_kN": 5.65,
+ "path_length_m": 10.768
+}

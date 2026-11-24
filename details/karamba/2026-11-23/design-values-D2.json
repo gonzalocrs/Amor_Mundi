@@ -1,0 +1,214 @@
+{
+ "model": "D2: printed casing tied to the ribs through the tubes; bed joints compression-only (end walls as compression-only trusses, Karamba Tension/Compression Eliminator per load case); head joints open (courses E x 0.02). Karamba 3.1, 2 m canvases polyframe2/stepped-<roof>-karamba-2m-2026-11-23.gh. Allowables Fc36 12 / 24 MPa; soil 200 / 400 kPa assumed; footing mu 0.5.",
+ "sign": "N + tension (kN); stresses compression +",
+ "15x10": {
+  "rib_worst_long_term": {
+   "util_pct": 76,
+   "member": "rib_bottom",
+   "case": "LIVEY",
+   "stress_MPa": 9.1
+  },
+  "rib_worst_short_term": {
+   "util_pct": 60,
+   "member": "rib_bottom",
+   "case": "W-Y",
+   "stress_MPa": 14.4
+  },
+  "rib_cores_mm": {
+   "bottom": 220,
+   "middle": 160,
+   "top": 120
+  },
+  "base_ring": {
+   "N_kN_long": [
+    36.0,
+    88.8
+   ],
+   "N_kN_short": [
+    24.5,
+    111.0
+   ],
+   "M_kNm_max": 27.8,
+   "steel_mm2_needed_long": 413,
+   "steel_mm2_needed_short": 322,
+   "bars": "8-D16 (1,592 mm2)"
+  },
+  "crown_ring": {
+   "N_kN_long": [
+    -5.0,
+    -1.0
+   ],
+   "N_kN_short": [
+    -14.6,
+    6.0
+   ],
+   "M_kNm_max": 7.9,
+   "util_short": {
+    "util_pct": 17,
+    "member": "crown",
+    "case": "W-X",
+    "stress_MPa": 4.2
+   }
+  },
+  "columns": {
+   "N_kN_long": [
+    -107.9,
+    -61.5
+   ],
+   "N_kN_short": [
+    -137.6,
+    -41.0
+   ],
+   "M_kNm_max": 34.4,
+   "util_long": {
+    "util_pct": 22,
+    "member": "column",
+    "case": "LIVEY",
+    "stress_MPa": 2.7
+   },
+   "util_short": {
+    "util_pct": 28,
+    "member": "column",
+    "case": "W45",
+    "stress_MPa": 6.7
+   }
+  },
+  "deflection_mm": {
+   "LONG": 5.4,
+   "max": 15.6,
+   "max_case": "W+Y",
+   "second_order_max": 15.9
+  },
+  "buckling_factor_1": 43.3,
+  "footing": {
+   "width_m": 1.2,
+   "depth_m": 0.5,
+   "base_level_m": -0.8,
+   "bearing_kPa_long": 68,
+   "bearing_kPa_short": 108,
+   "tipping_FS_min": 1.7,
+   "tipping_case": "W45",
+   "sliding_FS_min": 2.04,
+   "sliding_case": "W-Y",
+   "all_ok": true
+  },
+  "weight_LONG_kN": 1664,
+  "weight_LONG_t": 169.6,
+  "casing": {
+   "share_of_weight_through_casing": 0.333,
+   "end_walls_lifting_off_max": 63,
+   "end_walls_total": 576,
+   "tube_core_shear_MPa_max": 0.049
+  },
+  "supports": 20,
+  "support_V_kN_long": [
+   69,
+   99
+  ]
+ },
+ "10x10": {
+  "rib_worst_long_term": {
+   "util_pct": 60,
+   "member": "rib_bottom",
+   "case": "LIVEX",
+   "stress_MPa": 7.2
+  },
+  "rib_worst_short_term": {
+   "util_pct": 45,
+   "member": "rib_bottom",
+   "case": "W+Y",
+   "stress_MPa": 10.8
+  },
+  "rib_cores_mm": {
+   "bottom": 180,
+   "middle": 140,
+   "top": 120
+  },
+  "base_ring": {
+   "N_kN_long": [
+    32.6,
+    50.7
+   ],
+   "N_kN_short": [
+    29.3,
+    54.2
+   ],
+   "M_kNm_max": 14.0,
+   "steel_mm2_needed_long": 236,
+   "steel_mm2_needed_short": 157,
+   "bars": "8-D16 (1,592 mm2)"
+  },
+  "crown_ring": {
+   "N_kN_long": [
+    -7.4,
+    -4.7
+   ],
+   "N_kN_short": [
+    -15.8,
+    2.9
+   ],
+   "M_kNm_max": 5.1,
+   "util_short": {
+    "util_pct": 12,
+    "member": "crown",
+    "case": "W+Y",
+    "stress_MPa": 2.8
+   }
+  },
+  "columns": {
+   "N_kN_long": [
+    -66.8,
+    -39.9
+   ],
+   "N_kN_short": [
+    -80.8,
+    -25.2
+   ],
+   "M_kNm_max": 16.5,
+   "util_long": {
+    "util_pct": 17,
+    "member": "column",
+    "case": "LIVEX",
+    "stress_MPa": 2.0
+   },
+   "util_short": {
+    "util_pct": 24,
+    "member": "column",
+    "case": "W45",
+    "stress_MPa": 5.8
+   }
+  },
+  "deflection_mm": {
+   "LONG": 1.8,
+   "max": 5.3,
+   "max_case": "W-X",
+   "second_order_max": 5.3
+  },
+  "buckling_factor_1": 85.5,
+  "footing": {
+   "width_m": 0.85,
+   "depth_m": 0.5,
+   "base_level_m": -0.8,
+   "bearing_kPa_long": 57,
+   "bearing_kPa_short": 101,
+   "tipping_FS_min": 1.68,
+   "tipping_case": "W45",
+   "sliding_FS_min": 2.99,
+   "sliding_case": "W+Y",
+   "all_ok": true
+  },
+  "weight_LONG_kN": 831,
+  "weight_LONG_t": 84.7,
+  "casing": {
+   "share_of_weight_through_casing": 0.36,
+   "end_walls_lifting_off_max": 12,
+   "end_walls_total": 240,
+   "tube_core_shear_MPa_max": 0.031
+  },
+  "supports": 16,
+  "support_V_kN_long": [
+   45,
+   61
+  ]
+ }
+}
