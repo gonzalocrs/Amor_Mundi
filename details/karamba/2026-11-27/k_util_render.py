@@ -60,10 +60,11 @@ def build(doc, roof, v, lc, li):
         a2 = att.Duplicate(); a2.ColorSource = Rhino.DocObjects.ObjectColorSource.ColorFromObject; a2.ObjectColor = c
         doc.Objects.AddMesh(m, a2); bb.Union(m.GetBoundingBox(True))
     fat = att.Duplicate(); fat.ColorSource = Rhino.DocObjects.ObjectColorSource.ColorFromObject; fat.ObjectColor = System.Drawing.Color.FromArgb(222, 222, 222)
-    for l in doc.Layers:
-        if not l.IsDeleted and l.FullPath.startswith(roof + " complete v3e-ring-step::") and "footing" in l.Name:
-            for o in doc.Objects.FindByLayer(l) or []:
-                doc.Objects.Add(o.Geometry.Duplicate(), fat); bb.Union(o.Geometry.GetBoundingBox(True))
+    # no footing / ground in the Karamba renders (Gonzalo 2026-11-27: 'we don't care about that')
+    # for l in doc.Layers:
+    # if not l.IsDeleted and l.FullPath.startswith(roof + " complete v3e-ring-step::") and "footing" in l.Name:
+    # for o in doc.Objects.FindByLayer(l) or []:
+    # doc.Objects.Add(o.Geometry.Duplicate(), fat); bb.Union(o.Geometry.GetBoundingBox(True))
     return bb, umax
 
 

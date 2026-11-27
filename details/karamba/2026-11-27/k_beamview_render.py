@@ -131,10 +131,11 @@ def render(doc, roof, case, lc, mode="ColoredCrossSectionStress", show=None, d=N
     for m in meshes:
         doc.Objects.AddMesh(m, att); bb.Union(m.GetBoundingBox(True))
     att.ColorSource = Rhino.DocObjects.ObjectColorSource.ColorFromObject; att.ObjectColor = System.Drawing.Color.FromArgb(222, 222, 222)
-    for l in doc.Layers:                             # footing from the model, light grey
-        if not l.IsDeleted and l.FullPath.startswith(roof + " complete v3e-ring-step::") and "footing" in l.Name:
-            for o in doc.Objects.FindByLayer(l) or []:
-                doc.Objects.Add(o.Geometry.Duplicate(), att); bb.Union(o.Geometry.GetBoundingBox(True))
+    # no footing / ground in the Karamba renders (Gonzalo 2026-11-27: 'we don't care about that')
+    # for l in doc.Layers:                             # footing from the model, light grey
+    # if not l.IsDeleted and l.FullPath.startswith(roof + " complete v3e-ring-step::") and "footing" in l.Name:
+    # for o in doc.Objects.FindByLayer(l) or []:
+    # doc.Objects.Add(o.Geometry.Duplicate(), att); bb.Union(o.Geometry.GetBoundingBox(True))
     for l in doc.Layers:
         if not l.IsDeleted: l.IsVisible = (l.Index == li)
     d.PreviewMode = Grasshopper.Kernel.GH_PreviewMode.Disabled
