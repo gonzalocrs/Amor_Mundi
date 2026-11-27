@@ -1,1 +1,90 @@
-{"15x10": {"xl": 7.587999999999994, "yl": 5.0351, "corner_col": [-6.425299999999993, -4.2024], "outer_m": [16.376, 11.27], "block_m": [2.363, 2.033], "solids": 1, "solid": true, "valid": true, "volume_m3": 32.23, "feet_inside": "80/80", "min_plan_edge_m": 0.263, "col_offsets": [0.0, 0.066, 0.833, 0.135, 0.008, 0.0, 0.008, 0.135, 0.833, 0.066, 0.0, 0.066, 0.833, 0.135, 0.008, 0.0, 0.008, 0.135, 0.833, 0.066], "centreline_m": 25.25}, "10x10": {"xl": 5.069999999999993, "yl": 5.07, "corner_col": [-4.263300000000001, -4.263300000000001], "outer_m": [10.99, 10.99], "block_m": [1.732, 1.732], "solids": 1, "solid": true, "valid": true, "volume_m3": 18.79, "feet_inside": "64/64", "min_plan_edge_m": 0.224, "col_offsets": [0.04, 0.807, 0.04, 0.0, 0.04, 0.807, 0.04, 0.0, 0.04, 0.807, 0.04, 0.0, 0.04, 0.807, 0.04, 0.0], "centreline_m": 20.28}}
+{
+ "15x10": {
+  "xl": 7.558,
+  "yl": 5.0051,
+  "corner_col": [
+   -6.425299999999993,
+   -4.2024
+  ],
+  "outer_m": [
+   16.316,
+   11.21
+  ],
+  "block_m": [
+   2.363,
+   2.033
+  ],
+  "solids": 1,
+  "solid": true,
+  "valid": true,
+  "volume_m3": 32.23,
+  "feet_inside": "80/80",
+  "min_plan_edge_m": 0.263,
+  "col_offsets": [
+   0.066,
+   0.827,
+   0.135,
+   0.008,
+   0.0,
+   0.008,
+   0.135,
+   0.827,
+   0.066,
+   0.0,
+   0.066,
+   0.827,
+   0.135,
+   0.008,
+   0.0,
+   0.008,
+   0.135,
+   0.827,
+   0.066,
+   0.0
+  ],
+  "centreline_m": 25.25,
+  "shift_2026_11_27": "strip and corner blocks moved 30 mm inward (clean offset of the outline), widths unchanged"
+ },
+ "10x10": {
+  "xl": 5.04,
+  "yl": 5.04,
+  "corner_col": [
+   -4.263300000000001,
+   -4.263300000000001
+  ],
+  "outer_m": [
+   10.93,
+   10.93
+  ],
+  "block_m": [
+   1.732,
+   1.732
+  ],
+  "solids": 1,
+  "solid": true,
+  "valid": true,
+  "volume_m3": 18.79,
+  "feet_inside": "64/64",
+  "min_plan_edge_m": 0.224,
+  "col_offsets": [
+   0.001,
+   0.041,
+   0.799,
+   0.041,
+   0.001,
+   0.041,
+   0.799,
+   0.041,
+   0.001,
+   0.041,
+   0.799,
+   0.041,
+   0.001,
+   0.041,
+   0.799,
+   0.041
+  ],
+  "centreline_m": 20.28,
+  "shift_2026_11_27": "strip and corner blocks moved 30 mm inward (clean offset of the outline), widths unchanged"
+ }
+}
