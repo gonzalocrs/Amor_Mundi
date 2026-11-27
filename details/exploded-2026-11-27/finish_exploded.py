@@ -82,3 +82,12 @@ for roof in ("15x10", "10x10"):
     data[roof]["global"] = dict(weight_kN=v["weight_LONG_kN"], max_displacement_mm=c0["disp_mm"], buckling_factor=round(c0["buckling"], 1))
 json.dump(data, open(os.path.join(HERE, "elements-data.json"), "w"), indent=1)
 print("elements-data.json written")
+
+# Gonzalo 2026-11-27: "not diameter of metal or anything like it" - no rebar or bar sizes on the drawings
+for r in data.values():
+    for e in r.values():
+        if isinstance(e, dict):
+            e.pop("rebar", None)
+            for s_ in (e["section"] if isinstance(e.get("section"), list) else []): s_.pop("rebar", None)
+            if "bars" in str(e.get("check", "")): e["check"] = e["check"].split(", bars")[0]
+json.dump(data, open(os.path.join(HERE, "elements-data.json"), "w"), indent=1)

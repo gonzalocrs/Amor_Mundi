@@ -22,7 +22,6 @@
     2.363,
     2.033
    ],
-   "rebar": "D13 @ 200 both ways, to be confirmed",
    "check": "bearing 124 kPa short-term (400 assumed), tipping FS 1.60, sliding FS 2.32"
   },
   "columns": {
@@ -39,7 +38,6 @@
    ],
    "volume_m3": 6.96,
    "section": "420 (radial) x 360 mm",
-   "rebar": "8D16, hoops D10 @ 100",
    "check": "N 42 to 136 kN, utilisation 23 % (Fc 36)"
   },
   "base ring step": {
@@ -56,8 +54,7 @@
    ],
    "volume_m3": 10.7,
    "section": "cast ring 528 x 400 mm (typical width) in a 3 cm printed U formwork",
-   "rebar": "8D16, D10 stirrups @ 150",
-   "check": "tension 108 kN (typhoon), bending 27.6 kNm, bars 365 of 603 mm2 per face"
+   "check": "tension 108 kN (typhoon), bending 27.6 kNm"
   },
   "rib net": {
    "count": 1080,
@@ -76,20 +73,17 @@
     {
      "band": "bottom",
      "cast_core_mm": 220,
-     "printed_tube_mm": 280,
-     "rebar": "2D12, to be confirmed"
+     "printed_tube_mm": 280
     },
     {
      "band": "middle",
      "cast_core_mm": 160,
-     "printed_tube_mm": 220,
-     "rebar": "2D10, to be confirmed"
+     "printed_tube_mm": 220
     },
     {
      "band": "top",
      "cast_core_mm": 120,
-     "printed_tube_mm": 180,
-     "rebar": "2D8, to be confirmed"
+     "printed_tube_mm": 180
     }
    ],
    "check": "worst bottom band 76 % long-term (Fc 36: 12 MPa long, 24 MPa short)",
@@ -125,7 +119,6 @@
    ],
    "volume_m3": 1.54,
    "section": "cast ring 250 x 250 mm in the printed top-course U formwork",
-   "rebar": "4D12, D8 @ 150",
    "check": "compression up to 13 kN, 15 % (Fc 36)"
   },
   "global": {
@@ -157,7 +150,6 @@
     1.732,
     1.732
    ],
-   "rebar": "D13 @ 200 both ways, to be confirmed",
    "check": "bearing 132 kPa short-term (400 assumed), tipping FS 1.60, sliding FS 3.68"
   },
   "columns": {
@@ -174,7 +166,6 @@
    ],
    "volume_m3": 4.0,
    "section": "362 (radial) x 300 mm",
-   "rebar": "4D16, hoops D10 @ 100",
    "check": "N 35 to 82 kN, utilisation 19 % (Fc 36)"
   },
   "base ring step": {
@@ -191,8 +182,7 @@
    ],
    "volume_m3": 9.02,
    "section": "cast ring 552 x 400 mm (typical width) in a 3 cm printed U formwork",
-   "rebar": "8D16, D10 stirrups @ 150",
-   "check": "tension 52 kN (typhoon), bending 20.1 kNm, bars 258 of 603 mm2 per face"
+   "check": "tension 52 kN (typhoon), bending 20.1 kNm"
   },
   "rib net": {
    "count": 604,
@@ -211,20 +201,17 @@
     {
      "band": "bottom",
      "cast_core_mm": 180,
-     "printed_tube_mm": 240,
-     "rebar": "2D12, to be confirmed"
+     "printed_tube_mm": 240
     },
     {
      "band": "middle",
      "cast_core_mm": 140,
-     "printed_tube_mm": 200,
-     "rebar": "2D10, to be confirmed"
+     "printed_tube_mm": 200
     },
     {
      "band": "top",
      "cast_core_mm": 120,
-     "printed_tube_mm": 180,
-     "rebar": "2D8, to be confirmed"
+     "printed_tube_mm": 180
     }
    ],
    "check": "worst bottom band 60 % long-term (Fc 36: 12 MPa long, 24 MPa short)",
@@ -260,7 +247,6 @@
    ],
    "volume_m3": 1.82,
    "section": "cast ring 250 x 250 mm in the printed top-course U formwork",
-   "rebar": "4D12, D8 @ 150",
    "check": "compression up to 14 kN, 10 % (Fc 36)"
   },
   "global": {
