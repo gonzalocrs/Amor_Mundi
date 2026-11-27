@@ -363,6 +363,17 @@ def foot_check(D, B, trib, Df=0.8, tf=0.5):
     return worst
 
 
+def ring_mmax(D):
+    """largest ring bending moment of all 10 cases, resultant sqrt(My2 + Mz2) (the value in design-values-*.json)"""
+    f = D["forces"]; best = (0.0, "")
+    for lc in LCS:
+        for i in D["idx"]["ring"]:
+            for t in (0, 1):
+                m = math.hypot(f[lc]["My"][2 * i + t], f[lc]["Mz"][2 * i + t])
+                if m > best[0]: best = (m, lc)
+    return best
+
+
 def sheet_rings_columns(no, R):
     pg = Page(no, "Rings, columns and footings", "The base ring ties the foot thrust of the ribs (tension), the crown ring gathers them at the top (compression). Columns carry the ring to the rectangular strip footing; footing checked by hand from the Karamba reactions.")
     pg.header()
@@ -379,7 +390,7 @@ def sheet_rings_columns(no, R):
         pg.text(x, y, "BASE RING %s (TIE), HAND CHECK AGAINST KARAMBA" % sec_props(roof, "ring")[3].upper().replace("X", "x"), 3.0, bold=True); y += 5
         for t in ("Outward foot thrust of the ribs (LONG): H = %.0f kN on a ring perimeter of %.1f m: q = %.1f kN/m." % (Hf, per, q),
                   "Hoop tension, ring taken as a circle of the same perimeter: r = %.2f m, T = q r = %.1f x %.2f = %.0f kN." % (req, q, req, T),
-                  "Karamba: N = %+.0f to %+.0f kN LONG, up to %+.0f kN SHORT (tension all round); M up to %.1f kNm." % (a["N"][0], a["N"][1], b["N"][1], max(max(abs(v) for v in b["My"]), max(abs(v) for v in b["Mz"]))),
+                  "Karamba: N = %+.0f to %+.0f kN LONG, up to %+.0f kN SHORT (tension all round); M up to %.1f kNm (resultant of My and Mz, %s)." % ((a["N"][0], a["N"][1], b["N"][1]) + ring_mmax(D)),
                   "The ring also ties what the printed pieces push out, so Karamba is above the rib-only hand value.",
                   "Bars for the tension: As = %.0f kN / 215 MPa = %d mm2 long-term, %.0f / 345 = %d mm2 short-term; 8D16 = 1,592 mm2." % (a["N"][1], round(a["N"][1] / 0.215), b["N"][1], round(b["N"][1] / 0.345))):
             pg.text(x, y, t, 2.5); y += 4.2
@@ -628,6 +639,7 @@ def build(outdir):
         subprocess.run([EDGE, "--headless=new", "--disable-gpu", "--no-pdf-header-footer", "--print-to-pdf=" + base + ".pdf", url],
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=180)
         out.append(base + ".pdf"); print(name, flush=True)
+    sys.path.append(os.path.expanduser(r"~\.rhinocode\py39-rh8\site-envs\default-n129H2zH"))   # pypdf lives in Rhino's default site-env
     import pypdf
     w = pypdf.PdfWriter()
     for p in out:
