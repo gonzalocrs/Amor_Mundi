@@ -1,0 +1,306 @@
+{
+ "source": "stepped-roofs-final-2026-11-27.3dm (read only) and the Karamba D2 run at the final sizes (details/karamba/2026-11-27)",
+ "density_t_m3": 2.4,
+ "methods": {
+  "measured": "sum of the Rhino solid volumes on that layer (VolumeMassProperties)",
+  "length_x_section": "Karamba rib centreline length per band x the section (cast core: pi d^2/4; printed tube annulus: pi (D^2 - d^2)/4); the Rhino rib solids overlap at the node balls, so they are given as a cross-check only"
+ },
+ "15x10": {
+  "ribs": {
+   "bands": {
+    "bottom": {
+     "centreline_length_m": 212.1,
+     "cast_core_mm": 220,
+     "printed_tube_outer_mm": 280,
+     "cast_core_m3": 8.06,
+     "printed_tube_annulus_m3": 5.0,
+     "method": "length_x_section"
+    },
+    "middle": {
+     "centreline_length_m": 159.6,
+     "cast_core_mm": 160,
+     "printed_tube_outer_mm": 220,
+     "cast_core_m3": 3.21,
+     "printed_tube_annulus_m3": 2.86,
+     "method": "length_x_section"
+    },
+    "top": {
+     "centreline_length_m": 127.3,
+     "cast_core_mm": 120,
+     "printed_tube_outer_mm": 180,
+     "cast_core_m3": 1.44,
+     "printed_tube_annulus_m3": 1.8,
+     "method": "length_x_section"
+    }
+   },
+   "cast_cores_m3": 12.71,
+   "printed_tubes_m3": 9.66,
+   "cross_check_measured_solids": {
+    "cast_core_solids_m3": 15.295,
+    "printed_tube_solids_minus_cores_m3": 12.74,
+    "note": "solids overlap at the node balls and run into the rings, so they read higher"
+   }
+  },
+  "base_ring": {
+   "printed_U_formwork_m3": 1.914,
+   "cast_ring_m3": 8.783,
+   "method": "measured"
+  },
+  "crown_ring": {
+   "printed_U_and_room_band_m3": 0.675,
+   "cast_ring_m3": 0.864,
+   "method": "measured"
+  },
+  "printed_courses": {
+   "pieces_m3": 28.399,
+   "growth_bands_m3": 11.572,
+   "total_m3": 39.97,
+   "method": "measured"
+  },
+  "columns": {
+   "cast_m3": 6.955,
+   "method": "measured"
+  },
+  "strip_footing": {
+   "cast_m3": 32.088,
+   "method": "measured"
+  },
+  "totals": {
+   "printed_m3": 52.22,
+   "printed_weight": {
+    "t": 125.3,
+    "kN": 1229
+   },
+   "cast_above_footing_m3": 29.32,
+   "cast_above_footing_weight": {
+    "t": 70.4,
+    "kN": 690
+   },
+   "cast_ribs_only_m3": 12.71,
+   "cast_ribs_only_weight": {
+    "t": 30.5,
+    "kN": 299
+   },
+   "cast_incl_footing_m3": 61.4,
+   "cast_incl_footing_weight": {
+    "t": 147.4,
+    "kN": 1446
+   }
+  },
+  "forces_D2": {
+   "roof_weight_in_Karamba_LONG_kN": 1742,
+   "ribs": {
+    "worst_long_term": {
+     "util_pct": 76,
+     "member": "rib_bottom",
+     "case": "LIVEY",
+     "stress_MPa": 9.1
+    },
+    "worst_short_term": {
+     "util_pct": 62,
+     "member": "rib_bottom",
+     "case": "W-Y",
+     "stress_MPa": 14.8
+    }
+   },
+   "base_ring_tension_kN": {
+    "long": [
+     35.3,
+     88.4
+    ],
+    "short": [
+     23.3,
+     107.5
+    ]
+   },
+   "base_ring_M_max_kNm": 27.6,
+   "crown_ring_N_kN": {
+    "long": [
+     -4.9,
+     -0.9
+    ],
+    "short": [
+     -12.9,
+     5.0
+    ]
+   },
+   "columns_N_kN": {
+    "long": [
+     -108.3,
+     -68.2
+    ],
+    "short": [
+     -136.5,
+     -41.6
+    ]
+   },
+   "columns_M_max_kNm": 35.2,
+   "support_reaction_V_kN_long": [
+    77,
+    99
+   ],
+   "footing": {
+    "width_m": 1.2,
+    "depth_m": 0.5,
+    "base_level_m": -0.8,
+    "bearing_kPa_long": 71,
+    "bearing_kPa_short": 124,
+    "tipping_FS_min": 1.6,
+    "tipping_case": "W+X",
+    "sliding_FS_min": 2.32,
+    "sliding_case": "W-Y",
+    "all_ok": true
+   },
+   "sign": "N + tension, - compression"
+  }
+ },
+ "10x10": {
+  "ribs": {
+   "bands": {
+    "bottom": {
+     "centreline_length_m": 110.3,
+     "cast_core_mm": 180,
+     "printed_tube_outer_mm": 240,
+     "cast_core_m3": 2.81,
+     "printed_tube_annulus_m3": 2.18,
+     "method": "length_x_section"
+    },
+    "middle": {
+     "centreline_length_m": 78.2,
+     "cast_core_mm": 140,
+     "printed_tube_outer_mm": 200,
+     "cast_core_m3": 1.2,
+     "printed_tube_annulus_m3": 1.25,
+     "method": "length_x_section"
+    },
+    "top": {
+     "centreline_length_m": 99.1,
+     "cast_core_mm": 120,
+     "printed_tube_outer_mm": 180,
+     "cast_core_m3": 1.12,
+     "printed_tube_annulus_m3": 1.4,
+     "method": "length_x_section"
+    }
+   },
+   "cast_cores_m3": 5.13,
+   "printed_tubes_m3": 4.84,
+   "cross_check_measured_solids": {
+    "cast_core_solids_m3": 5.958,
+    "printed_tube_solids_minus_cores_m3": 6.06,
+    "note": "solids overlap at the node balls and run into the rings, so they read higher"
+   }
+  },
+  "base_ring": {
+   "printed_U_formwork_m3": 1.569,
+   "cast_ring_m3": 7.451,
+   "method": "measured"
+  },
+  "crown_ring": {
+   "printed_U_and_room_band_m3": 0.798,
+   "cast_ring_m3": 1.019,
+   "method": "measured"
+  },
+  "printed_courses": {
+   "pieces_m3": 13.827,
+   "growth_bands_m3": 5.731,
+   "total_m3": 19.56,
+   "method": "measured"
+  },
+  "columns": {
+   "cast_m3": 3.996,
+   "method": "measured"
+  },
+  "strip_footing": {
+   "cast_m3": 18.691,
+   "method": "measured"
+  },
+  "totals": {
+   "printed_m3": 26.76,
+   "printed_weight": {
+    "t": 64.2,
+    "kN": 630
+   },
+   "cast_above_footing_m3": 17.6,
+   "cast_above_footing_weight": {
+    "t": 42.2,
+    "kN": 414
+   },
+   "cast_ribs_only_m3": 5.13,
+   "cast_ribs_only_weight": {
+    "t": 12.3,
+    "kN": 121
+   },
+   "cast_incl_footing_m3": 36.29,
+   "cast_incl_footing_weight": {
+    "t": 87.1,
+    "kN": 854
+   }
+  },
+  "forces_D2": {
+   "roof_weight_in_Karamba_LONG_kN": 931,
+   "ribs": {
+    "worst_long_term": {
+     "util_pct": 60,
+     "member": "rib_bottom",
+     "case": "LIVEX",
+     "stress_MPa": 7.2
+    },
+    "worst_short_term": {
+     "util_pct": 47,
+     "member": "rib_bottom",
+     "case": "W+Y",
+     "stress_MPa": 11.2
+    }
+   },
+   "base_ring_tension_kN": {
+    "long": [
+     34.2,
+     50.1
+    ],
+    "short": [
+     30.0,
+     52.1
+    ]
+   },
+   "base_ring_M_max_kNm": 20.1,
+   "crown_ring_N_kN": {
+    "long": [
+     -6.8,
+     -4.7
+    ],
+    "short": [
+     -14.1,
+     2.6
+    ]
+   },
+   "columns_N_kN": {
+    "long": [
+     -67.3,
+     -48.8
+    ],
+    "short": [
+     -81.7,
+     -34.7
+    ]
+   },
+   "columns_M_max_kNm": 16.7,
+   "support_reaction_V_kN_long": [
+    55,
+    62
+   ],
+   "footing": {
+    "width_m": 0.85,
+    "depth_m": 0.5,
+    "base_level_m": -0.8,
+    "bearing_kPa_long": 61,
+    "bearing_kPa_short": 132,
+    "tipping_FS_min": 1.6,
+    "tipping_case": "EQY",
+    "sliding_FS_min": 3.68,
+    "sliding_case": "W+Y",
+    "all_ok": true
+   },
+   "sign": "N + tension, - compression"
+  }
+ }
+}
