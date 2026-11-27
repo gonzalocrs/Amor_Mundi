@@ -64,6 +64,10 @@ def build(doc, roof, lc, lim, layer_index, sect=None):
                 if pa.Z > zr: pa = G.Point3d(pa.X, pa.Y, zr)
                 if pb.Z > zr: pb = G.Point3d(pb.X, pb.Y, zr)
                 if pa.DistanceTo(pb) < 1e-3: continue
+                # the column continues below the Karamba support (+-0.00) to the top of the footing (-0.30), same box,
+                # same colours as at its base, so it reads as one column standing on the footing (2026-11-27)
+                if abs(pa.Z) < 1e-6: pa = G.Point3d(pa.X, pa.Y, -0.30)
+                if abs(pb.Z) < 1e-6: pb = G.Point3d(pb.X, pb.Y, -0.30)
             x, y, z = axes(pa, pb); L = pa.DistanceTo(pb)
             ends = []
             for t, (n, p, xin) in enumerate(((na, pa, x), (nb, pb, -x))):

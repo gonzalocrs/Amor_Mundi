@@ -31,6 +31,9 @@ def build(doc, roof, v, lc, li):
     ghost.ColorSource = Rhino.DocObjects.ObjectColorSource.ColorFromObject; ghost.ObjectColor = System.Drawing.Color.FromArgb(200, 200, 200)
     for i, (g, a, b) in enumerate(D["els"]):
         pa, pb = G.Point3d(*N[a]), G.Point3d(*N[b])
+        if g == "column":                                 # down to the top of the footing, same colour (2026-11-27)
+            if abs(pa.Z) < 1e-6: pa = G.Point3d(pa.X, pa.Y, -0.30)
+            if abs(pb.Z) < 1e-6: pb = G.Point3d(pb.X, pb.Y, -0.30)
         if g in ("course", "fin"):
             doc.Objects.AddLine(pa, pb, ghost); continue
         if g == "arch": g2 = "ring"
@@ -71,6 +74,6 @@ def run(doc, cases):
         bb, umax = build(doc, roof, v, lc, li)
         for l in doc.Layers:
             if not l.IsDeleted: l.IsVisible = (l.Index == li)
-        K.capture(doc, bb, os.path.join(PNG, "formwork-%s-%s.png" % (roof, v)))
+        for _ in (0, 1): K.capture(doc, bb, os.path.join(PNG, "formwork-%s-%s.png" % (roof, v)), wires=False)   # twice: a display-mode change shows from the next capture on
         out["%s %s" % (roof, v)] = {"case": lc, "max_util_short": round(umax, 3)}
     return out

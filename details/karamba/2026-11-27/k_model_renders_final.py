@@ -13,12 +13,48 @@ CASES = {("15x10", "LONG"): ("LONG", 0.4), ("15x10", "SHORT"): ("W-Y", 0.7), ("1
 RIBS = ["rib_bottom", "rib_middle", "rib_top"]
 
 
+def column_stubs(doc, roof, li):
+    """the part of each column below the Karamba supports (+-0.00) down to the top of the footing (-0.30), at the
+    column's real section (long side radial), plain light grey like the footing: it carries no Karamba stress colour,
+    it only shows that the columns stand on the footing (Gonzalo 2026-11-27: 'why is this levitating?')"""
+    here = os.path.dirname(os.path.abspath(__file__))
+    D = json.load(open(os.path.join(here, "forces-%s.json" % roof)))
+    cols = json.load(open(os.path.join(here, "model_columns_final.json")))[roof]["cols"]
+    feet = sorted({tuple(D["nodes"][n]) for g, a, b in D["els"] if g == "column" for n in (a, b) if abs(D["nodes"][n][2]) < 1e-6})
+    grey = System.Drawing.Color.FromArgb(222, 222, 222)
+    att = Rhino.DocObjects.ObjectAttributes(); att.LayerIndex = li
+    att.ColorSource = Rhino.DocObjects.ObjectColorSource.ColorFromObject; att.ObjectColor = grey
+    ids = []
+    for (x, y, z) in feet:
+        c = min(cols, key=lambda c: (c["cx"] - x) ** 2 + (c["cy"] - y) ** 2)
+        u = G.Vector3d(c["long_dir"][0], c["long_dir"][1], 0); u.Unitize(); v = G.Vector3d.CrossProduct(G.Vector3d.ZAxis, u)
+        pl = G.Plane(G.Point3d(x, y, -0.30), u, v)
+        box = G.Box(pl, G.Interval(-c["radial_m"] / 2, c["radial_m"] / 2), G.Interval(-c["width_m"] / 2, c["width_m"] / 2), G.Interval(0, 0.30))
+        m = G.Mesh.CreateFromBox(box, 1, 1, 1)
+        for _k in range(m.Vertices.Count): m.VertexColors.Add(grey)
+        m.Normals.ComputeNormals()
+        ids.append(doc.Objects.AddMesh(m, att))
+    return ids
+
+
+_GHOST = {}
+
+
 def ghost_material(doc):
-    i = doc.Materials.Find("karamba ghost casing", True)
-    if i < 0:
-        m = Rhino.DocObjects.Material(); m.Name = "karamba ghost casing"; m.DiffuseColor = System.Drawing.Color.FromArgb(235, 235, 235)
-        m.Transparency = 0.82; i = doc.Materials.Add(m)
+    """one transparent material for the casing ghost (set after Add + CommitChanges, so Rhino 8 shows the transparency)"""
+    i = _GHOST.get(doc.RuntimeSerialNumber)
+    if i is None:
+        m = Rhino.DocObjects.Material(); m.Name = "karamba ghost casing"; i = doc.Materials.Add(m)
+        mm = doc.Materials[i]; mm.DiffuseColor = System.Drawing.Color.FromArgb(235, 235, 235); mm.Transparency = 0.6; mm.CommitChanges()
+        _GHOST[doc.RuntimeSerialNumber] = i
     return i
+
+
+def shoot(doc, bb, path):
+    """shaded capture without mesh wires; captured twice because a display-mode change only shows from the next
+    capture on (the first one is overwritten)"""
+    K.capture(doc, bb, path, wires=False)
+    K.capture(doc, bb, path, wires=False)
 
 
 def run(doc, cases=None, log=print):
@@ -33,19 +69,22 @@ def run(doc, cases=None, log=print):
         for o in doc.Objects.FindByLayer(doc.Layers[li]) or []: bb.Union(o.Geometry.GetBoundingBox(True))
         for l in doc.Layers:
             if not l.IsDeleted: l.IsVisible = (l.Index == li)
-        K.capture2(doc, bb, os.path.join(OUT, "karamba-model-%s-%s-frame-only.png" % (roof, case)), li)
+        shoot(doc, bb, os.path.join(OUT, "karamba-model-%s-%s-frame-only.png" % (roof, case)))
         # full: printed casing of the final model as a ghost on the same layer
         mi = ghost_material(doc); ids = []
         att = Rhino.DocObjects.ObjectAttributes(); att.LayerIndex = li
         att.MaterialSource = Rhino.DocObjects.ObjectMaterialSource.MaterialFromObject; att.MaterialIndex = mi
-        att.ColorSource = Rhino.DocObjects.ObjectColorSource.ColorFromObject; att.ObjectColor = System.Drawing.Color.FromArgb(235, 235, 235)
+        att.ColorSource = Rhino.DocObjects.ObjectColorSource.ColorFromObject; att.ObjectColor = System.Drawing.Color.FromArgb(195, 195, 195)
         for l in doc.Layers:
             if not l.IsDeleted and l.FullPath.startswith(roof + " complete v3e-ring-step::") and ("printed pieces" in l.Name or "top course" in l.Name or "printed U formwork" in l.Name):
                 for o in doc.Objects.FindByLayer(l) or []:
-                    ids.append(doc.Objects.Add(o.Geometry.Duplicate(), att))
+                    # ghost = the piece outlines as thin light-grey lines (a transparent material is not shown by
+                    # every display mode; lines read the same everywhere and keep the structure visible)
+                    for c in G.Curve.JoinCurves(o.Geometry.DuplicateEdgeCurves(False), 0.001):
+                        ids.append(doc.Objects.AddCurve(c, att))
         for l in doc.Layers:
             if not l.IsDeleted: l.IsVisible = (l.Index == li)
-        K.capture2(doc, bb, os.path.join(OUT, "karamba-model-%s-%s.png" % (roof, case)), li)
+        shoot(doc, bb, os.path.join(OUT, "karamba-model-%s-%s.png" % (roof, case)))
         for i in ids: doc.Objects.Delete(i, True)
         info["legend_min_kN_cm2"], info["legend_max_kN_cm2"] = -lim, lim
         legends["%s %s" % (roof, case)] = info
